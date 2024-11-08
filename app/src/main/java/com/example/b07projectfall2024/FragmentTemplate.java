@@ -24,10 +24,10 @@ import org.w3c.dom.Text;
 
 public abstract class FragmentTemplate extends Fragment {
 
-    protected void loadFragment(Fragment fragment) {
+    protected void loadFragment(Fragment fragment, boolean addToStack) {
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, fragment);
-        transaction.addToBackStack(null);
+        if (addToStack) transaction.addToBackStack(null);
         transaction.commit();
     }
 }

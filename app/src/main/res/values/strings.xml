@@ -10,6 +10,11 @@
     <string name="spinner">Spinner</string>
     <string name="manage_items">Manage Items</string>
 
+    <string name="name">Name</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="confirm_password">Confirm Password</string>
+
     <string-array name="categories_array">
         <item>Books</item>
         <item>Movies</item>

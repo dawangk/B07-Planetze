@@ -37,5 +37,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Login" />
+
+        <Button
+            android:id="@+id/Login_registerRedirect"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Register" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -39,4 +39,13 @@
         android:text="@string/manage_items"
         app:layout_constraintBottom_toBottomOf="parent" />
 
+    <TextView
+        android:id="@+id/NameTest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/buttonRecyclerView"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="111dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

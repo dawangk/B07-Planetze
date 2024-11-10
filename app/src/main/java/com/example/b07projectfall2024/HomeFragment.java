@@ -5,28 +5,33 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.textview.MaterialTextView;
 
 import org.w3c.dom.Text;
 
-public class HomeFragment extends FragmentTemplate {
+public class HomeFragment extends AppCompatActivity {
 
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_home_fragment, container, false);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_home_fragment);
 
-        Button buttonRecyclerView = view.findViewById(R.id.buttonRecyclerView);
-        Button buttonScroller = view.findViewById(R.id.buttonScroller);
-        Button buttonSpinner = view.findViewById(R.id.buttonSpinner);
-        Button buttonManageItems = view.findViewById(R.id.buttonManageItems);
+        Button buttonRecyclerView = findViewById(R.id.buttonRecyclerView);
+        Button buttonScroller = findViewById(R.id.buttonScroller);
+        Button buttonSpinner = findViewById(R.id.buttonSpinner);
+        Button buttonManageItems = findViewById(R.id.buttonManageItems);
 
-        MaterialTextView t = view.findViewById(R.id.NameTest);
+        TextView t = findViewById(R.id.NameTest);
 
         if(UserInformation.getUserInfo() != null){
             t.setText(UserInformation.getUserInfo().getString("name"));
@@ -57,7 +62,11 @@ public class HomeFragment extends FragmentTemplate {
             @Override
             public void onClick(View v) { loadFragment(new ManageItemsFragment(), true);}
         });
-
-        return view;
+    }
+    private void loadFragment(Fragment fragment, boolean addToStack) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, fragment);
+        if (addToStack) transaction.addToBackStack(null);
+        transaction.commit();
     }
 }

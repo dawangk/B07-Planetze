@@ -1,5 +1,6 @@
 package com.example.b07projectfall2024;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,27 +13,26 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
 
-    FirebaseDatabase db;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        db = FirebaseDatabase.getInstance("https://b07-demo-summer-2024-default-rtdb.firebaseio.com/");
-        DatabaseReference myRef = db.getReference("testDemo");
+//        setContentView(R.layout.activity_login);
 
 //        myRef.setValue("B07 Demo!");
 
-        if (savedInstanceState == null) {
-            loadFragment(new LoginFragment(), false);
-        }else if(FirebaseAuth.getInstance().getCurrentUser() == null) {
-            loadFragment(new LoginFragment(), false);
-        } else{
-            loadFragment(new HomeFragment(), false);
-        }
+//        startActivity(new Intent(MainActivity.this, LoginActivity.class));
+//        finish();
 
-        myRef.child("movies").setValue("B07 Demo!");
+        if (savedInstanceState == null) {
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            finish();
+        }else if(FirebaseAuth.getInstance().getCurrentUser() == null) {
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            finish();
+        }else{
+            startActivity(new Intent(MainActivity.this, HomeFragment.class));
+            finish();
+        }
     }
 
     private void loadFragment(Fragment fragment, boolean addToStack) {

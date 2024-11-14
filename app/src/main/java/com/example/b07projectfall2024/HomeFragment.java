@@ -1,5 +1,6 @@
 package com.example.b07projectfall2024;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,13 +14,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.b07projectfall2024.LoginPage.LoginActivityView;
 import com.google.android.material.textview.MaterialTextView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import org.w3c.dom.Text;
 
 public class HomeFragment extends AppCompatActivity {
 
-
+    private FirebaseAuth mAuth;
     @Nullable
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +34,8 @@ public class HomeFragment extends AppCompatActivity {
         Button buttonSpinner = findViewById(R.id.buttonSpinner);
         Button buttonManageItems = findViewById(R.id.buttonManageItems);
 
+        mAuth = FirebaseAuth.getInstance();
+
         TextView t = findViewById(R.id.NameTest);
 
         if(UserInformation.getUserInfo() != null){
@@ -40,7 +45,9 @@ public class HomeFragment extends AppCompatActivity {
         buttonRecyclerView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadFragment(new RecyclerViewFragment(), true);
+//                loadFragment(new RecyclerViewFragment(), true);
+                mAuth.signOut();
+                startActivity(new Intent(HomeFragment.this, MainActivity.class));
             }
         });
 

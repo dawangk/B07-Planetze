@@ -7,9 +7,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.b07projectfall2024.LoginPage.LoginActivityView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,14 +22,11 @@ public class MainActivity extends AppCompatActivity {
 //        startActivity(new Intent(MainActivity.this, LoginActivity.class));
 //        finish();
 
-        if (savedInstanceState == null) {
-            startActivity(new Intent(MainActivity.this, LoginActivity.class));
-            finish();
-        }else if(FirebaseAuth.getInstance().getCurrentUser() == null) {
-            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+        if(FirebaseAuth.getInstance().getCurrentUser() != null){
+            startActivity(new Intent(MainActivity.this, HomeFragment.class));
             finish();
         }else{
-            startActivity(new Intent(MainActivity.this, HomeFragment.class));
+            startActivity(new Intent(MainActivity.this, LoginActivityView.class));
             finish();
         }
     }

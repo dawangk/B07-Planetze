@@ -23,6 +23,14 @@ public class RegisterActivityModel {
         mAuth = FirebaseAuth.getInstance();
     }
 
+    /*
+    Attempt to create a new user with email, password and name.
+    If task is successful and a new user is successfully created, send an email verification email
+    as well as add the name of the user to the database with field name filled.
+
+    As the firebase library automatically logs the device in after registration logout immediately after
+    a successful registration and redirect to the login page.
+     */
     public void RegisterUser(RegisterActivityPresenter presenter, String email, String password, String name){
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
@@ -30,13 +38,15 @@ public class RegisterActivityModel {
                 if (task.isSuccessful()) {
                     FirebaseUser user = mAuth.getCurrentUser();
                     if(user!=null) {
-                        user.sendEmailVerification();
+                        user.sendEmailVerification();//send email
+
+                        //Store user's name into the db
                         Map<String, String> m = new HashMap<String, String>();
                         m.put("name", name);
                         db.collection("users").document(user.getUid()).set(m).addOnSuccessListener(
                                 documentReference -> {
                                     presenter.PageRedirect(LoginActivityView.class);
-                                    mAuth.signOut();
+                                    mAuth.signOut();//log user out
                                 }
                         );
                     }

@@ -12,12 +12,21 @@ public class LoginActivityPresenter {
         this.model = model;
     }
 
+    /*
+    * Check if basic params for login fields (email and password) meet basic criteria
+    * If so then attempt to authenticate the user with firebase
+    * otherwise set an error notice in the problem field
+    *
+    * The basic criteria are indicated as so:
+    * - email isnt empty
+    * - password isnt empty
+    * - password is at least 6 characters long
+    * */
     public void Login(String email, String password){
         if (email.isEmpty()) {
             view.SetErrorField("EmailError", "Email is required");
             return;
         }
-
         if (password.isEmpty()) {
             view.SetErrorField("PasswordError", "Password is required");
             return;
@@ -28,7 +37,12 @@ public class LoginActivityPresenter {
         model.LoginUser(this, email, password);
     }
 
-    public <T extends AppCompatActivity> void PageRedirect(Class<T> TargetPage) {
-        view.startActivity(new Intent(view, TargetPage));
+    /*
+        Given an Activity Class, TargetPage, redirects the current view to the target activity/page
+     */
+    public <T extends AppCompatActivity> Intent PageRedirect(Class<T> TargetPage) {
+        Intent tmpIntent = new Intent(view, TargetPage);
+        view.startActivity(tmpIntent);
+        return tmpIntent;
     }
 }

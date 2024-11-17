@@ -45,6 +45,7 @@ public class RegisterActivityView extends AppCompatActivity {
         InputFields.put("PasswordField", (EditText)findViewById(R.id.Register_passwordField));
         InputFields.put("VerifyPasswordField", (EditText)findViewById(R.id.Register_verifyPasswordField));
 
+        //redirect user to login page
         loginRedirect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,6 +53,7 @@ public class RegisterActivityView extends AppCompatActivity {
             }
         });
 
+        //attempt to create a new user with the field params
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,6 +66,11 @@ public class RegisterActivityView extends AppCompatActivity {
         });
     }
 
+    /*
+    Given the FieldName and ErrorMsg
+    If FieldName exists within this view then call setError on that given field with Error message ErrorMsg
+    as well as requesting focus.
+     */
     public void SetErrorField(String FieldName, String ErrorMsg){
         if(InputFields.containsKey(FieldName)){
             InputFields.get(FieldName).setError(ErrorMsg);

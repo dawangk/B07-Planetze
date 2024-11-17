@@ -16,6 +16,12 @@ public class ForgotPasswordModel {
     public ForgotPasswordModel(){
         mAuth = FirebaseAuth.getInstance();
     }
+
+    /*
+    Sends a reset password email to the provided email
+    If successful then notify users it was successful
+    Otherwise, give user the error message returned by firebase
+     */
     public void sendEmail(ForgotPasswordPresenter presenter, String email){
         mAuth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

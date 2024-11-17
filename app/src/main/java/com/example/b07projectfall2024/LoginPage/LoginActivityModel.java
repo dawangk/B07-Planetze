@@ -22,6 +22,12 @@ public class LoginActivityModel {
         db = FirebaseFirestore.getInstance();
     }
 
+    /*
+        Logs in the user by authenticating user information with firebase
+        If authentication succeeds check if user email is verified
+        if not sign user out immediately
+        otherwise, retrieve and store user information from firestore db
+     */
     public void LoginUser(LoginActivityPresenter presenter, String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {

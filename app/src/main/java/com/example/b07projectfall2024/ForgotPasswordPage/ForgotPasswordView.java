@@ -32,6 +32,7 @@ public class ForgotPasswordView extends AppCompatActivity {
 
         EmailField = findViewById(R.id.ForgotPassword_ResetEmailField);
 
+        //Redirect user to Login page
         ReturnToLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -39,6 +40,7 @@ public class ForgotPasswordView extends AppCompatActivity {
             }
         });
 
+        //Attempt to send a reset password email
         SubmitEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -48,6 +50,7 @@ public class ForgotPasswordView extends AppCompatActivity {
         });
     }
 
+    //Set error in EmailField with message ErrorMsg and request focus onto the field
     public void EmailFieldError(String ErrorMsg){
         EmailField.setError(ErrorMsg);
         EmailField.requestFocus();

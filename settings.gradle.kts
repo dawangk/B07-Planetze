@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "B07 Fall 2024"
+rootProject.name = "B07 Project Fall 2024"
 include(":app")

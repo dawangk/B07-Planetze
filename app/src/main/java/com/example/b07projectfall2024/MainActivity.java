@@ -40,8 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        int stackCount = getSupportFragmentManager().getBackStackEntryCount();
-        if (stackCount > 1) {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
             getSupportFragmentManager().popBackStack();
         } else {
             super.onBackPressed();

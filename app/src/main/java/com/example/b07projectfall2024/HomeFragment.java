@@ -1,5 +1,4 @@
 package com.example.b07projectfall2024;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -45,35 +44,36 @@ public class HomeFragment extends AppCompatActivity {
         buttonRecyclerView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                loadFragment(new RecyclerViewFragment(), true);
-                mAuth.signOut();
-                startActivity(new Intent(HomeFragment.this, MainActivity.class));
+                loadFragment(new RecyclerViewFragment());
             }
         });
 
         buttonScroller.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadFragment(new ScrollerFragment(), true);
+                loadFragment(new ScrollerFragment());
             }
         });
 
         buttonSpinner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadFragment(new SpinnerFragment(), true);
+                loadFragment(new SpinnerFragment());
             }
         });
 
         buttonManageItems.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) { loadFragment(new ManageItemsFragment(), true);}
+            public void onClick(View v) { loadFragment(new ManageItemsFragment());}
         });
+
+        return view;
     }
-    private void loadFragment(Fragment fragment, boolean addToStack) {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+    private void loadFragment(Fragment fragment) {
+        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, fragment);
-        if (addToStack) transaction.addToBackStack(null);
+        transaction.addToBackStack(null);
         transaction.commit();
     }
 }

@@ -39,7 +39,7 @@ public class HomeFragment extends AppCompatActivity {
         TextView t = findViewById(R.id.NameTest);
 
         if(UserInformation.getUserInfo() != null){
-            t.setText(UserInformation.getUserInfo().getString("name"));
+            t.setText((String)UserInformation.getUserInfo().get("name"));
         }
 
         buttonRecyclerView.setOnClickListener(new View.OnClickListener() {

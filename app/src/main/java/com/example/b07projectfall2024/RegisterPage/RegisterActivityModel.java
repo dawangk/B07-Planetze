@@ -10,6 +10,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -17,9 +19,9 @@ import java.util.Map;
 
 public class RegisterActivityModel {
     private FirebaseAuth mAuth;
-    private FirebaseFirestore db;
+    private DatabaseReference db;
     public RegisterActivityModel(){
-        db = FirebaseFirestore.getInstance();
+        db = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
     }
 
@@ -43,7 +45,7 @@ public class RegisterActivityModel {
                         //Store user's name into the db
                         Map<String, String> m = new HashMap<String, String>();
                         m.put("name", name);
-                        db.collection("users").document(user.getUid()).set(m).addOnSuccessListener(
+                        db.child("users").child(user.getUid()).setValue(m).addOnSuccessListener(
                                 documentReference -> {
                                     presenter.PageRedirect(LoginActivityView.class);
                                     mAuth.signOut();//log user out

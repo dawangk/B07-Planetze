@@ -5,9 +5,10 @@ import android.view.MenuItem;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
+import com.example.b07projectfall2024.NavigationBar.EntryInputs.EntryNavigatorPage;
 import com.example.b07projectfall2024.NavigationBar.DashboardFragment;
-import com.example.b07projectfall2024.NavigationBar.NewEntryFragment;
 import com.example.b07projectfall2024.NavigationBar.SettingsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -25,13 +26,13 @@ public class HomeActivity extends AppCompatActivity
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
         // Load the default fragment
-        if (savedInstanceState == null) {
-            bottomNavigationView.setSelectedItemId(R.id.dashboard);
-        }
+//        if (savedInstanceState == null) {
+//            bottomNavigationView.setSelectedItemId(R.id.dashboard);
+//        }
     }
 
     // Fragments to be used in the BottomNavigationView
-    NewEntryFragment newEntryFragment = new NewEntryFragment();
+    EntryNavigatorPage newEntryFragment = new EntryNavigatorPage(this);
     DashboardFragment dashboardFragment = new DashboardFragment();
     SettingsFragment settingsFragment = new SettingsFragment();
 
@@ -51,13 +52,17 @@ public class HomeActivity extends AppCompatActivity
 
         // Replace the current fragment with the selected one
         if (selectedFragment != null) {
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.flFragment, selectedFragment)
-                    .commit();
+            loadFragment(selectedFragment, true);
             return true;
         }
 
         return false;
+    }
+
+    public void loadFragment(Fragment fragment, boolean addToStack) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, fragment);
+        if (addToStack) transaction.addToBackStack(null);
+        transaction.commit();
     }
 }

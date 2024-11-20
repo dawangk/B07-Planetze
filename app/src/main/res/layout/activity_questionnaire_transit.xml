@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Questionnaire.QuestionnaireTransitActivity"
-    android:background="#a9bcd0"
+    android:background="@color/light_gray"
     android:orientation="vertical">
 
     <ImageView
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:gravity="left"
         android:text="How often do you use public\ntransportation (bus, train, subway)?"
-        android:textColor="#1b1b1e"
+        android:textColor="@color/black"
         android:fontFamily="@font/reg_font"
         android:textSize="20dp"
         android:layout_marginTop="-10dp"
@@ -38,7 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Never"
-            android:textColor="#1b1b1e"
+            android:textColor="@color/black"
             android:textSize="20dp"
             android:fontFamily="@font/reg_font"
             android:layout_marginTop="-10dp"

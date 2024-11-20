@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Questionnaire.QuestionnaireActivity2"
-    android:background="#a9bcd0"
+    android:background="@color/light_gray"
     android:orientation="vertical">
 
     <ImageView
@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="Let's get started!"
-        android:textColor="#1b1b1e"
+        android:textColor="@color/black"
         android:fontFamily="@font/bold_font"
         android:textSize="25dp">
 
@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:gravity="left"
         android:text="Do you own or regularly use a car?"
-        android:textColor="#1b1b1e"
+        android:textColor="@color/black"
         android:fontFamily="@font/reg_font"
         android:textSize="20dp"
         android:layout_marginTop="10dp"
@@ -51,7 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Yes"
-            android:textColor="#1b1b1e"
+            android:textColor="@color/black"
             android:textSize="20dp"
             android:fontFamily="@font/reg_font"
             android:layout_marginTop="15dp"
@@ -62,7 +62,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="No"
-            android:textColor="#1b1b1e"
+            android:textColor="@color/black"
             android:textSize="20dp"
             android:fontFamily="@font/reg_font"
             android:layout_marginTop="15dp"
@@ -78,8 +78,8 @@
         android:text="Next"
         android:textStyle="bold"
         android:fontFamily="@font/bold_font"
-        android:textColor="#d8dbe2"
-        android:backgroundTint="#373f51"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/dark_gray"
         android:layout_gravity="right"
         android:layout_marginEnd="20dp"
         android:visibility="visible"/>

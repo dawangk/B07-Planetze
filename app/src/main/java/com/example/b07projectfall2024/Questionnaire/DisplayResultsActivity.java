@@ -1,4 +1,4 @@
-package com.example.b07projectfall2024;
+package com.example.b07projectfall2024.Questionnaire;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,6 +6,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.b07projectfall2024.R;
 
 public class DisplayResultsActivity extends AppCompatActivity {
 

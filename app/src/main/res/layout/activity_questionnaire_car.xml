@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".QuestionnaireCarActivity"
+    android:background="#a9bcd0"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_gravity="center"
+        android:src="@drawable/app_logo_no_bg"
+        android:padding="30dp">
+    </ImageView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:text="What type of car do you drive?"
+        android:textColor="#1b1b1e"
+        android:fontFamily="@font/reg_font"
+        android:textSize="20dp"
+        android:layout_marginTop="-10dp"
+        android:padding="10dp"
+        android:textStyle="bold">
+    </TextView>
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/gasoline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Gasoline"
+            android:textColor="#1b1b1e"
+            android:textSize="20dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-10dp"
+            android:layout_marginStart="20dp" />
+
+        <RadioButton
+            android:id="@+id/diesel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Diesel"
+            android:textColor="#1b1b1e"
+            android:textSize="20dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-10dp"
+            android:layout_marginStart="20dp"/>
+
+        <RadioButton
+            android:id="@+id/hybrid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hybrid"
+            android:textColor="#1b1b1e"
+            android:textSize="20dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-10dp"
+            android:layout_marginStart="20dp"/>
+
+        <RadioButton
+            android:id="@+id/electric"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Electric"
+            android:textColor="#1b1b1e"
+            android:textSize="20dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-10dp"
+            android:layout_marginStart="20dp"/>
+
+        <RadioButton
+            android:id="@+id/idk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="I don't know"
+            android:textColor="#1b1b1e"
+            android:textSize="20dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-10dp"
+            android:layout_marginStart="20dp"/>
+
+    </RadioGroup>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:text="How many kilometers/miles do you drive per year?"
+        android:textColor="#1b1b1e"
+        android:fontFamily="@font/reg_font"
+        android:textSize="20dp"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        android:textStyle="bold">
+    </TextView>
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/option1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Up to 5,000 km (3,000 miles)"
+            android:textColor="#1b1b1e"
+            android:textSize="17dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-10dp"
+            android:layout_marginStart="15dp"/>
+
+        <RadioButton
+            android:id="@+id/option2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="5,000-10,000 km (3,000-6,000 miles)"
+            android:textColor="#1b1b1e"
+            android:textSize="17dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-10dp"
+            android:layout_marginStart="15dp"/>
+
+        <RadioButton
+            android:id="@+id/option3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10,000-15,000 km (6,000-9,000 miles)"
+            android:textColor="#1b1b1e"
+            android:textSize="17dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-10dp"
+            android:layout_marginStart="15dp"/>
+
+        <RadioButton
+            android:id="@+id/option4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="15,000-20,000 km (9,000-12,000 miles)"
+            android:textColor="#1b1b1e"
+            android:textSize="17dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-10dp"
+            android:layout_marginStart="15dp"/>
+
+        <RadioButton
+            android:id="@+id/option5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="20,000-25,000 km (12,000-15,000 miles)"
+            android:textColor="#1b1b1e"
+            android:textSize="17dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-10dp"
+            android:layout_marginStart="15dp"/>
+
+        <RadioButton
+            android:id="@+id/option6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="More than 25,000 km (15,000 miles)"
+            android:textColor="#1b1b1e"
+            android:textSize="17dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-10dp"
+            android:layout_marginStart="15dp"/>
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Next"
+        android:textStyle="bold"
+        android:fontFamily="@font/bold_font"
+        android:textColor="#d8dbe2"
+        android:backgroundTint="#373f51"
+        android:layout_gravity="right"
+        android:layout_marginEnd="20dp"/>
+
+</LinearLayout>

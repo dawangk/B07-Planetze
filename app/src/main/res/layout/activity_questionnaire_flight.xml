@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".QuestionnaireFlightActivity"
+    android:background="#a9bcd0"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_gravity="center"
+        android:src="@drawable/app_logo_no_bg"
+        android:padding="30dp">
+    </ImageView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:text="How many short haul flights (less than 1,500km / 932 miles) have you taken in the past year?"
+        android:textColor="#1b1b1e"
+        android:fontFamily="@font/reg_font"
+        android:textSize="20dp"
+        android:layout_marginTop="-10dp"
+        android:padding="10dp"
+        android:textStyle="bold">
+    </TextView>
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/never"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="None"
+            android:textColor="#1b1b1e"
+            android:textSize="18dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-10dp"
+            android:layout_marginStart="20dp" />
+
+        <RadioButton
+            android:id="@+id/occasionally"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1-2 flights"
+            android:textColor="#1b1b1e"
+            android:textSize="18dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-15dp"
+            android:layout_marginStart="20dp"/>
+
+        <RadioButton
+            android:id="@+id/frequently"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3-5 flights"
+            android:textColor="#1b1b1e"
+            android:textSize="18dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-15dp"
+            android:layout_marginStart="20dp"/>
+
+        <RadioButton
+            android:id="@+id/supfrequently"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="6-10 flights"
+            android:textColor="#1b1b1e"
+            android:textSize="18dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-15dp"
+            android:layout_marginStart="20dp"/>
+
+        <RadioButton
+            android:id="@+id/always"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="More than 10 flights"
+            android:textColor="#1b1b1e"
+            android:textSize="18dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-15dp"
+            android:layout_marginStart="20dp"/>
+
+    </RadioGroup>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:text="How many long haul flights (more than 1,500km / 932 miles) have you taken in the past year?"
+        android:textColor="#1b1b1e"
+        android:fontFamily="@font/reg_font"
+        android:textSize="20dp"
+        android:padding="10dp"
+        android:textStyle="bold">
+    </TextView>
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/never2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="None"
+            android:textColor="#1b1b1e"
+            android:textSize="18dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-10dp"
+            android:layout_marginStart="20dp" />
+
+        <RadioButton
+            android:id="@+id/occasionally2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1-2 flights"
+            android:textColor="#1b1b1e"
+            android:textSize="18dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-15dp"
+            android:layout_marginStart="20dp"/>
+
+        <RadioButton
+            android:id="@+id/frequently2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3-5 flights"
+            android:textColor="#1b1b1e"
+            android:textSize="18dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-15dp"
+            android:layout_marginStart="20dp"/>
+
+        <RadioButton
+            android:id="@+id/supfrequently2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="6-10 flights"
+            android:textColor="#1b1b1e"
+            android:textSize="18dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-15dp"
+            android:layout_marginStart="20dp"/>
+
+        <RadioButton
+            android:id="@+id/always2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="More than 10 flights"
+            android:textColor="#1b1b1e"
+            android:textSize="18dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-15dp"
+            android:layout_marginStart="20dp"/>
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Next"
+        android:textStyle="bold"
+        android:fontFamily="@font/bold_font"
+        android:textColor="#d8dbe2"
+        android:backgroundTint="#373f51"
+        android:layout_gravity="right"
+        android:layout_marginEnd="20dp"/>
+
+</LinearLayout>

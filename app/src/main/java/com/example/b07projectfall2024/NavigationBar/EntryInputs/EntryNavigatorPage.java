@@ -32,7 +32,7 @@ public class EntryNavigatorPage extends Fragment {
         buttonTransport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                home.loadFragment(new TransportEntryPage(home), true);
+                home.loadFragment(new TransportEntryPage(), true);
             }
         });
 

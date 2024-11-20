@@ -1,6 +1,7 @@
 package com.example.b07projectfall2024.NavigationBar.EntryInputs;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,75 +24,91 @@ import com.example.b07projectfall2024.R;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
 public class TransportEntryPage extends Fragment {
 
-    private HomeActivity home;
-
-    public TransportEntryPage(HomeActivity home){
-        this.home = home;
-    }
+    private Context currentContext;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_transport_entry, container, false);
 
-        Spinner dropdownMenu = view.findViewById(R.id.TransportEntry_TransportType);
+        currentContext = getContext();
+
         LinearLayout CarContainer = view.findViewById(R.id.TransportEntry_CarOption);
         LinearLayout PublicContainer = view.findViewById(R.id.TransportEntry_PublicOption);
         LinearLayout PlaneContainer = view.findViewById(R.id.TransportEntry_FlightOption);
+
         Button Submit = view.findViewById(R.id.TransportEntry_SubmitButton);
 
-        String[] dropdownItems = {"", "Public Transport", "Car", "Plane"};
+        Spinner TransportDropDown = view.findViewById(R.id.TransportEntry_TransportType);
+        Spinner DistanceUnitDropDown = view.findViewById(R.id.TrasportEntry_DistanceUnit);
+        Spinner CarTypeDropDown = view.findViewById(R.id.TransportEntry_CarType);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                home,
+        String[] TransportTypeDropDownItems = {"", "Public Transport", "Car", "Plane"};
+        String[] DistanceUnitDropDownItems = {"Kilometers", "Miles"};
+        String[] CarTypeDropDownItems = {"Gasoline", "Diesel", "Hybrid", "Electric"};
+
+        SpinnerInit(DistanceUnitDropDown, DistanceUnitDropDownItems);
+        SpinnerInit(CarTypeDropDown, CarTypeDropDownItems);
+
+        HashMap<String, LinearLayout> DynamicFieldsMap = new HashMap<String, LinearLayout>();
+
+        DynamicFieldsMap.put("Public Transport", PublicContainer);
+        DynamicFieldsMap.put("Car", CarContainer);
+        DynamicFieldsMap.put("Plane", PlaneContainer);
+
+        TransportTypeInit(TransportDropDown, TransportTypeDropDownItems, DynamicFieldsMap, Submit);
+
+        TextView dateTextView = view.findViewById(R.id.TransportEntry_Date);
+        DateFieldInit(dateTextView);
+
+        return view;
+    }
+
+    private void SpinnerInit(Spinner DropDown, String[] DropDownItems){
+        ArrayAdapter<String> TransportTypeAdapter = new ArrayAdapter<>(
+                currentContext,
                 android.R.layout.simple_spinner_item,
-                dropdownItems
+                DropDownItems
         );
 
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        TransportTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        DropDown.setAdapter(TransportTypeAdapter);
+    }
 
-        dropdownMenu.setAdapter(adapter);
+    private void TransportTypeInit(Spinner TransportDropDown, String[] TransportTypeDropDownItems, HashMap<String, LinearLayout> DynamicFieldsMap, Button Submit){
+        SpinnerInit(TransportDropDown, TransportTypeDropDownItems);
 
-        dropdownMenu.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        TransportDropDown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedItem = parent.getItemAtPosition(position).toString();
 
-                CarContainer.setVisibility(View.GONE);
-                PublicContainer.setVisibility(View.GONE);
-                PlaneContainer.setVisibility(View.GONE);
+                for(LinearLayout i: DynamicFieldsMap.values()) i.setVisibility(View.GONE);
+
                 Submit.setVisibility(View.GONE);
 
                 if(selectedItem.isEmpty()) return;
-
-                Submit.setVisibility(View.VISIBLE);
-
-                switch (selectedItem){
-                    case "Public Transport":
-                        PublicContainer.setVisibility(View.VISIBLE);
-                        break;
-                    case "Car":
-                        CarContainer.setVisibility(View.VISIBLE);
-                        break;
-                    case "Plane":
-                        PlaneContainer.setVisibility(View.VISIBLE);
-                        break;
+                if(!DynamicFieldsMap.containsKey(selectedItem)){
+                    Toast.makeText(currentContext, "Key Value Error", Toast.LENGTH_SHORT).show();
+                    return;
                 }
-
-                Toast.makeText(home, "Selected: " + selectedItem, Toast.LENGTH_SHORT).show();
+                Submit.setVisibility(View.VISIBLE);
+                DynamicFieldsMap.get(selectedItem).setVisibility(View.VISIBLE);
+                Toast.makeText(currentContext, "Selected: " + selectedItem, Toast.LENGTH_SHORT).show();
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
         });
+    }
 
 
-        TextView dateTextView = view.findViewById(R.id.TransportEntry_Date);
-
+    private void DateFieldInit(TextView dateTextView){
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         String todayDate = dateFormat.format(calendar.getTime());
@@ -104,7 +121,7 @@ public class TransportEntryPage extends Fragment {
             int day = calendar.get(Calendar.DAY_OF_MONTH);
 
             DatePickerDialog datePickerDialog = new DatePickerDialog(
-                    home,
+                    currentContext,
                     (view1, selectedYear, selectedMonth, selectedDay) -> {
                         calendar.set(selectedYear, selectedMonth, selectedDay);
                         String selectedDate = dateFormat.format(calendar.getTime());
@@ -116,7 +133,6 @@ public class TransportEntryPage extends Fragment {
             );
             datePickerDialog.show();
         });
-
-        return view;
     }
+
 }

@@ -13,6 +13,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.example.b07projectfall2024.R;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class LoginActivityModel {

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".QuestionnaireHousingActivity"
+    tools:context=".Questionnaire.QuestionnaireHousingActivity"
     android:background="#a9bcd0"
     android:orientation="vertical">
 

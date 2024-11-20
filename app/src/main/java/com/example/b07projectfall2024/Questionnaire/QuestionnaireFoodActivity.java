@@ -1,4 +1,4 @@
-package com.example.b07projectfall2024;
+package com.example.b07projectfall2024.Questionnaire;
 
 import android.os.Bundle;
 
@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
-import android.content.Intent;;
+import android.content.Intent;;import com.example.b07projectfall2024.R;
 
 public class QuestionnaireFoodActivity extends AppCompatActivity {
 

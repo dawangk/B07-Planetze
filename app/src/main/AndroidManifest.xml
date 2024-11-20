@@ -10,7 +10,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.B07ProjectFall2024"
+        android:theme="@style/AppTheme"
         tools:targetApi="31">
         <activity
             android:name=".ItemAdapater"
@@ -28,7 +28,7 @@
             android:name=".RecyclerViewFragment"
             android:exported="false" />
         <activity
-            android:name=".HomeFragment"
+            android:name=".HomeActivity"
             android:exported="false" />
         <activity
             android:name=".Activity2"

@@ -13,6 +13,8 @@ firebaseAuth = "23.1.0"
 firebaseFirestore = "25.1.1"
 mockito = "5.5.0"
 dexmaker = "2.28.1"
+navigationFragment = "2.8.4"
+navigationUi = "2.8.4"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -28,6 +30,8 @@ firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore
 mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
 mockito-android = { group = "org.mockito", name = "mockito-android", version.ref = "mockito" }
 dexmaker-mockito = { group = "com.linkedin.dexmaker", name = "dexmaker-mockito", version.ref = "dexmaker" }
+navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "navigationFragment" }
+navigation-ui = { group = "androidx.navigation", name = "navigation-ui", version.ref = "navigationUi" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

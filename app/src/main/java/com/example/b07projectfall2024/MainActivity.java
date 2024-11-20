@@ -15,15 +15,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_login);
-
-//        myRef.setValue("B07 Demo!");
-
-//        startActivity(new Intent(MainActivity.this, LoginActivity.class));
-//        finish();
 
         if(FirebaseAuth.getInstance().getCurrentUser() != null){
-            startActivity(new Intent(MainActivity.this, HomeFragment.class));
+            startActivity(new Intent(MainActivity.this, HomeActivity.class));
             finish();
         }else{
             startActivity(new Intent(MainActivity.this, LoginActivityView.class));

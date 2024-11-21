@@ -36,6 +36,13 @@ public class EntryNavigatorPage extends Fragment {
             }
         });
 
+        buttonFood.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                home.loadFragment(new FoodEntryPage(), true);
+            }
+        });
+
         return view;
     }
 

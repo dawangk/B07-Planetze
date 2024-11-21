@@ -183,7 +183,6 @@ public class TransportEntryPage extends Fragment {
                 TransportType = selectedItem;
 
                 for(LinearLayout i: DynamicFieldsMap.values()) i.setVisibility(View.GONE);
-
                 Submit.setVisibility(View.GONE);
 
                 if(selectedItem.isEmpty()) return;

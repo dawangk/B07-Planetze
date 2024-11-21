@@ -43,6 +43,13 @@ public class EntryNavigatorPage extends Fragment {
             }
         });
 
+        buttonShopping.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                home.loadFragment(new ConsumptionEntry(), true);
+            }
+        });
+
         return view;
     }
 

@@ -29,10 +29,12 @@ public class HomeFragment extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_fragment);
 
+
         Button buttonRecyclerView = findViewById(R.id.buttonRecyclerView);
         Button buttonScroller = findViewById(R.id.buttonScroller);
         Button buttonSpinner = findViewById(R.id.buttonSpinner);
         Button buttonManageItems = findViewById(R.id.buttonManageItems);
+        Button logoutButton = findViewById(R.id.logoutButton); // New Logout Button
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -68,6 +70,19 @@ public class HomeFragment extends AppCompatActivity {
         buttonManageItems.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { loadFragment(new ManageItemsFragment(), true);}
+        });
+
+        // Logout button click listener
+        logoutButton.setOnClickListener(view -> {
+            mAuth.signOut(); // Sign out from Firebase
+            Intent intent = new Intent(HomeFragment.this, LoginActivityView.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+
+            // Redirect to Login Page
+            startActivity(intent);
+
+            // Close current activity
+            finish();
         });
     }
     private void loadFragment(Fragment fragment, boolean addToStack) {

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -35,6 +36,7 @@ public class LoginActivityView extends AppCompatActivity {
         InputFields.put("EmailField", (EditText)findViewById(R.id.loginEmailField));
         InputFields.put("PasswordField", (EditText)findViewById(R.id.loginPasswordField));
 
+        //Redirect user back to Register page
         registerRedirect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -42,6 +44,9 @@ public class LoginActivityView extends AppCompatActivity {
             }
         });
 
+        /*
+        On click attempt to login the user in with email and password fields
+         */
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -53,6 +58,7 @@ public class LoginActivityView extends AppCompatActivity {
             }
         });
 
+        //Redirect user to forgot password page
         ForgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,11 +67,24 @@ public class LoginActivityView extends AppCompatActivity {
         });
     }
 
+    /*
+    Given the FieldName and ErrorMsg
+    If FieldName exists within this view then call setError on that given field with Error message ErrorMsg
+    as well as requesting focus.
+     */
     public void SetErrorField(String FieldName, String ErrorMsg){
         if(InputFields.containsKey(FieldName)){
             InputFields.get(FieldName).setError(ErrorMsg);
             InputFields.get(FieldName).requestFocus();
         }
+    }
+
+    /*
+     * Displays a toast message for invalid login attempts or other user notifications.
+     * @param message The message to display in the toast.
+     */
+    public void showToastMessage(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
 }

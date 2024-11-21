@@ -25,7 +25,9 @@ public class MainActivity extends AppCompatActivity {
         if(FirebaseAuth.getInstance().getCurrentUser() != null){
             startActivity(new Intent(MainActivity.this, HomeFragment.class));
             finish();
-        }else{
+        }
+
+        else{
             startActivity(new Intent(MainActivity.this, LoginActivityView.class));
             finish();
         }
@@ -47,4 +49,5 @@ public class MainActivity extends AppCompatActivity {
             super.onBackPressed();
         }
     }
+
 }

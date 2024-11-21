@@ -40,6 +40,10 @@ public class LoginActivityModel {
                                 });
                             }
                         }
+
+                        else {
+                            presenter.onLoginFailed("Invalid email and/or password");
+                        }
                     }
                 });
     }

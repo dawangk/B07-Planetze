@@ -8,7 +8,9 @@ import android.widget.Button;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.b07projectfall2024.LoginPage.LoginActivityView;
 import com.example.b07projectfall2024.Questionnaire.QuestionnaireActivity;
+import com.example.b07projectfall2024.RegisterPage.RegisterActivityView;
 
 public class WelcomeActivity extends AppCompatActivity {
 
@@ -25,19 +27,22 @@ public class WelcomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(WelcomeActivity.this, QuestionnaireActivity.class);
+                Intent intent = new Intent(WelcomeActivity.this, RegisterActivityView.class);
                 startActivity(intent);
                 finish();
             }
         });
 
-        /** returning_user.setOnClickListener(new View.OnClickListener() {
+        returning_user.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
 
-        Intent intent = new Intent
+            Intent intent = new Intent(WelcomeActivity.this, LoginActivityView.class);
+            startActivity(intent);
+            finish();
+
         }
-        }); **/
+        });
 
     }
 }

@@ -121,7 +121,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="60dp"
-        android:backgroundTint="#373f51"
+        android:backgroundTint="@color/dark_gray"
         android:text="Next"
         android:textColor="#d8dbe2"
         android:padding="10dp"

@@ -57,7 +57,7 @@ public class QuestionnaireTransitActivity extends AppCompatActivity {
                         emissions2 += 4095;
                     }
 
-                } else if (frequently.isChecked() || always.isChecked()) {
+                } else if (frequently.isChecked()) {
 
                     if (option1.isChecked()) {
                         emissions2 += 573;
@@ -70,6 +70,21 @@ public class QuestionnaireTransitActivity extends AppCompatActivity {
                     } else if (option5.isChecked()) {
                         emissions2 += 9555;
                     }
+
+                } else if (always.isChecked()) {
+
+                    if (option1.isChecked()) {
+                        emissions2 += 1050;
+                    } else if (option2.isChecked()) {
+                        emissions2 += 2363;
+                    } else if (option3.isChecked()) {
+                        emissions2 += 4103;
+                    } else if (option4.isChecked()) {
+                        emissions2 += 9611;
+                    } else if (option5.isChecked()) {
+                        emissions2 += 13750;
+                    }
+
                 }
 
                 //Checking if user responded

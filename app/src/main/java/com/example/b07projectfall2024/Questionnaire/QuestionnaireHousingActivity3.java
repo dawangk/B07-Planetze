@@ -3,12 +3,18 @@ package com.example.b07projectfall2024.Questionnaire;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.View;
 import android.widget.Button;
 import android.content.Intent;
 import android.widget.RadioButton;;import com.example.b07projectfall2024.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class QuestionnaireHousingActivity3 extends AppCompatActivity {
 
@@ -44,6 +50,8 @@ public class QuestionnaireHousingActivity3 extends AppCompatActivity {
         RadioButton other = findViewById(R.id.other);
         next = findViewById(R.id.next);
 
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,7 +73,7 @@ public class QuestionnaireHousingActivity3 extends AppCompatActivity {
                 }
 
                 if (gas.isChecked()) {
-                    energy_type2 = "gas";
+                    energy_type2 = "natural gas";
                 } else if (electricity.isChecked()) {
                     energy_type2 = "electricity";
                 } else if (oil.isChecked()) {
@@ -78,31 +86,23 @@ public class QuestionnaireHousingActivity3 extends AppCompatActivity {
                     energy_type2 = "other";
                 }
 
-                double emissions2 = emissions;
-
                 //Checking if user responded
                 if (monthly_bill != 0 && !energy_type2.isEmpty()) {
 
-
-                    //DO CALCULATIONS via PlanetZe formula
-
-                    //If both energy sources are not the same, we add 233kg to our calculations
-                    if (!energy_type.equals(energy_type2)) {
-                        emissions2 += 233;
-                    }
-
-                    //Note: this branch already checked if user responded
-                    //TEMPORARY: Storing the emissions from housing
-                    double housing_emissions = emissions2 - emissions;
-
                     //Moving to fourth set of housing questions
                     Intent intent = new Intent(QuestionnaireHousingActivity3.this, QuestionnaireHousingActivity4.class);
-                    intent.putExtra("current_emissions", emissions2);
-                    intent.putExtra("housing_emissions", housing_emissions);
+                    intent.putExtra("current_emissions", emissions);
                     intent.putExtra("diet_emissions", diet_emissions);
                     intent.putExtra("car_emissions", car_emissions);
                     intent.putExtra("transit_emissions", transit_emissions);
                     intent.putExtra("flight_emissions", flight_emissions);
+                    intent.putExtra("house_type", house_type);
+                    intent.putExtra("num_people", num_people);
+                    intent.putExtra("house_size", house_size);
+                    intent.putExtra("energy_type", energy_type);
+                    intent.putExtra("energy_type2", energy_type2);
+                    intent.putExtra("monthly_bill", monthly_bill);
+
                     startActivity(intent);
                     finish();
                 }

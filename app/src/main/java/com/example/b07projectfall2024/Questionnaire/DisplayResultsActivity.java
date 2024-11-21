@@ -35,16 +35,17 @@ public class DisplayResultsActivity extends AppCompatActivity {
         TextView consumption_emissions_text = findViewById(R.id.consumption_emissions);
         Button next = findViewById(R.id.next);
 
+        double kg_to_tons = 0.00110231;
         //Displaying the user's total carbon emissions
-        total_emissions_text.setText((final_emissions * 0.00110231) + " tons");
+        total_emissions_text.setText((final_emissions * kg_to_tons) + " tons");
 
         //Displaying the breakdown of the user's carbon emissions
-        car_emissions_text.setText("Car Emissions: " + (car_emissions * 0.00110231) + " tons");
-        transit_emissions_text.setText("Transit Emissions: " + (transit_emissions * 0.00110231) + " tons");
-        flight_emissions_text.setText("Flight Emissions: " + (flight_emissions * 0.00110231) + "tons");
-        diet_emissions_text.setText("Diet Emissions: " + (diet_emissions * 0.00110231)+ " tons");
-        housing_emissions_text.setText("Housing Emissions: " + (housing_emissions * 0.00110231) + " tons");
-        consumption_emissions_text.setText("Consumption Emissions: " + (consumption_emissions * 0.00110231) + " tons");
+        car_emissions_text.setText("Car Emissions: " + (car_emissions * kg_to_tons) + " tons");
+        transit_emissions_text.setText("Transit Emissions: " + (transit_emissions * kg_to_tons) + " tons");
+        flight_emissions_text.setText("Flight Emissions: " + (flight_emissions * kg_to_tons) + "tons");
+        diet_emissions_text.setText("Diet Emissions: " + (diet_emissions * kg_to_tons)+ " tons");
+        housing_emissions_text.setText("Housing Emissions: " + (housing_emissions * kg_to_tons) + " tons");
+        consumption_emissions_text.setText("Consumption Emissions: " + (consumption_emissions * kg_to_tons) + " tons");
 
         }
 }

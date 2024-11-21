@@ -37,7 +37,7 @@
             android:name=".MainActivity"
             android:exported="false" />
         <activity
-            android:name=".WelcomeActivity"
+            android:name=".Questionnaire.QuestionnaireActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -58,7 +58,7 @@
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name=".Questionnaire.QuestionnaireActivity"
+            android:name=".WelcomeActivity"
             android:exported="false" />
         <activity
             android:name=".Questionnaire.QuestionnaireActivity2"
@@ -105,19 +105,6 @@
         <activity
             android:name=".Questionnaire.DisplayResultsActivity"
             android:exported="false" />
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     </application>
 

@@ -37,7 +37,6 @@ public class QuestionnaireHousingActivity2 extends AppCompatActivity {
         RadioButton oil = findViewById(R.id.oil);
         RadioButton propane = findViewById(R.id.propane);
         RadioButton wood = findViewById(R.id.wood);
-        RadioButton other = findViewById(R.id.other);
         next = findViewById(R.id.next);
 
         next.setOnClickListener(new View.OnClickListener() {
@@ -49,15 +48,15 @@ public class QuestionnaireHousingActivity2 extends AppCompatActivity {
 
                 //Asking and storing the responses of prerequisite questions for main question in housing 3
                 if (min.isChecked()) {
-                    size = "min";
+                    size = "min_size";
                 } else if (mid.isChecked()) {
-                    size = "mid";
+                    size = "mid_size";
                 } else if (max.isChecked()) {
-                    size = "max";
+                    size = "max_size";
                 }
 
                 if (gas.isChecked()) {
-                    energy_type = "gas";
+                    energy_type = "natural gas";
                 } else if (electricity.isChecked()) {
                     energy_type = "electricity";
                 } else if (oil.isChecked()) {
@@ -66,8 +65,6 @@ public class QuestionnaireHousingActivity2 extends AppCompatActivity {
                     energy_type = "propane";
                 } else if (wood.isChecked()) {
                     energy_type = "wood";
-                } else if (other.isChecked()) {
-                    energy_type = "other";
                 }
 
                 //Checking if user responded

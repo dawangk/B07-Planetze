@@ -139,17 +139,6 @@
             android:layout_marginTop="-10dp"
             android:layout_marginStart="15dp"/>
 
-        <RadioButton
-            android:id="@+id/other"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Other"
-            android:textColor="#1b1b1e"
-            android:textSize="17dp"
-            android:fontFamily="@font/reg_font"
-            android:layout_marginTop="-10dp"
-            android:layout_marginStart="15dp"/>
-
     </RadioGroup>
 
     <Button

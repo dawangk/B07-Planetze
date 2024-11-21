@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     tools:context=".Questionnaire.QuestionnaireActivity"
     android:background="#a9bcd0"
-    android:gravity="center"
     android:orientation="vertical">
 
 
@@ -49,14 +48,14 @@
         android:layout_marginRight="20dp"
         android:layout_marginTop="60dp"
         android:backgroundTint="#373f51"
-        android:text="I am a New User"
+        android:text="I am a new user"
         android:textColor="#d8dbe2"
         android:padding="10dp"
-        android:textSize="25dp"
+        android:textSize="20dp"
         android:fontFamily="@font/bold_font"
-        android:textStyle="bold"
         android:id="@+id/new_user"
-        android:visibility="visible">
+        android:visibility="visible"
+        android:textAllCaps="false">
 
     </Button>
 
@@ -67,14 +66,14 @@
         android:layout_marginRight="20dp"
         android:layout_marginTop="10dp"
         android:backgroundTint="#373f51"
-        android:text="I am a Returning User"
+        android:text="I am a returning user"
         android:textColor="#d8dbe2"
         android:padding="10dp"
-        android:textSize="25dp"
+        android:textSize="20dp"
         android:fontFamily="@font/bold_font"
-        android:textStyle="bold"
         android:id="@+id/returning_user"
-        android:visibility="visible">
+        android:visibility="visible"
+        android:textAllCaps="false">
 
     </Button>
 

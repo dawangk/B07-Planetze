@@ -42,7 +42,6 @@ public class QuestionnaireConsumptionActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                double emissions2 = emissions;
                 double amount = 0;
                 double rate = 0;
 
@@ -65,17 +64,14 @@ public class QuestionnaireConsumptionActivity extends AppCompatActivity {
                     rate = 1;
                 }
 
-                emissions2 += amount * rate;
+                double consumption_emissions = amount * rate;
 
                 //Checking if user responded
-                if (emissions2 != emissions) {
-
-                    //TEMPORARY: Storing the emissions from consumption
-                    double consumption_emissions = emissions2 - emissions;
+                if (consumption_emissions != 0) {
 
                     //Moving to the next set of consumption questions
                     Intent intent = new Intent(QuestionnaireConsumptionActivity.this, QuestionnaireConsumptionActivity2.class);
-                    intent.putExtra("current_emissions", emissions2);
+                    intent.putExtra("current_emissions", emissions);
                     intent.putExtra("consumption_emissions", consumption_emissions);
                     intent.putExtra("diet_emissions", diet_emissions);
                     intent.putExtra("car_emissions", car_emissions);

@@ -50,7 +50,7 @@ public class QuestionnaireHousingActivity extends AppCompatActivity {
                 if (detached.isChecked()) {
                     type = "detached";
                 } else if (semi_detached.isChecked()) {
-                    type = "semi_detached";
+                    type = "semi-detached";
                 } else if (townhouse.isChecked()) {
                     type = "townhouse";
                 } else if (condo.isChecked()) {

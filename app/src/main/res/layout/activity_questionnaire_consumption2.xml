@@ -44,7 +44,7 @@
             android:layout_marginStart="15dp"/>
 
         <RadioButton
-            android:id="@+id/mid"
+            android:id="@+id/less"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="1"
@@ -55,7 +55,7 @@
             android:layout_marginStart="15dp"/>
 
         <RadioButton
-            android:id="@+id/more"
+            android:id="@+id/mid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="2"
@@ -66,10 +66,21 @@
             android:layout_marginStart="15dp"/>
 
         <RadioButton
+            android:id="@+id/more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3"
+            android:textColor="#1b1b1e"
+            android:textSize="17dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-10dp"
+            android:layout_marginStart="15dp"/>
+
+        <RadioButton
             android:id="@+id/max"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="3 or more"
+            android:text="4 or more"
             android:textColor="#1b1b1e"
             android:textSize="17dp"
             android:fontFamily="@font/reg_font"

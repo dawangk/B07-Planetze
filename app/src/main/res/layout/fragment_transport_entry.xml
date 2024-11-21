@@ -44,7 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="297dp"
             android:orientation="vertical"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/textView7"
@@ -53,7 +53,7 @@
                 android:text="Distance Driven" />
 
             <EditText
-                android:id="@+id/editTextNumber2"
+                android:id="@+id/TransportEntry_DistanceDriven"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -90,7 +90,7 @@
                 android:text="Time on Public Transport" />
 
             <EditText
-                android:id="@+id/editTextNumber"
+                android:id="@+id/TransportEntry_PublicTime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -109,10 +109,10 @@
                 android:id="@+id/textView11"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Number of flights:" />
+                android:text="Time on Flight:" />
 
             <EditText
-                android:id="@+id/editTextNumber3"
+                android:id="@+id/TransportEntry_FlightTime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -123,7 +123,7 @@
             android:id="@+id/TransportEntry_SubmitButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Button"
+            android:text="Submit"
             android:visibility="gone" />
 
     </LinearLayout>

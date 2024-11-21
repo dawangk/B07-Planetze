@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -20,6 +21,10 @@ import androidx.fragment.app.Fragment;
 
 import com.example.b07projectfall2024.HomeActivity;
 import com.example.b07projectfall2024.R;
+import com.example.b07projectfall2024.RegisterPage.RegisterActivityView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -31,11 +36,23 @@ import java.util.Locale;
 public class TransportEntryPage extends Fragment {
 
     private Context currentContext;
+    private String CarDistanceUnit;
+    private String CarType;
+
+    private String TransportType;
+
+    private DatabaseReference db;
+    private FirebaseAuth mAuth;
+
+    private String CurrentSelectedDate;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_transport_entry, container, false);
+
+        db = FirebaseDatabase.getInstance().getReference();
+        mAuth = FirebaseAuth.getInstance();
 
         currentContext = getContext();
 
@@ -53,21 +70,69 @@ public class TransportEntryPage extends Fragment {
         String[] DistanceUnitDropDownItems = {"Kilometers", "Miles"};
         String[] CarTypeDropDownItems = {"Gasoline", "Diesel", "Hybrid", "Electric"};
 
-        SpinnerInit(DistanceUnitDropDown, DistanceUnitDropDownItems);
-        SpinnerInit(CarTypeDropDown, CarTypeDropDownItems);
-
         HashMap<String, LinearLayout> DynamicFieldsMap = new HashMap<String, LinearLayout>();
 
         DynamicFieldsMap.put("Public Transport", PublicContainer);
         DynamicFieldsMap.put("Car", CarContainer);
         DynamicFieldsMap.put("Plane", PlaneContainer);
 
+        DistanceUnitDropDownInit(DistanceUnitDropDown, DistanceUnitDropDownItems);
+        CarTypeDropDownInit(CarTypeDropDown, CarTypeDropDownItems);
         TransportTypeInit(TransportDropDown, TransportTypeDropDownItems, DynamicFieldsMap, Submit);
 
         TextView dateTextView = view.findViewById(R.id.TransportEntry_Date);
         DateFieldInit(dateTextView);
 
+        Submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UploadTranportEntry(view);
+            }
+        });
+
         return view;
+    }
+
+    private void UploadTranportEntry(View view){
+        if(TransportType.isEmpty()) return;
+
+
+        HashMap<String, Object> data = new HashMap<>();
+
+        data.put("type", "transportation");
+
+        switch (TransportType){
+            case "Public Transport":
+                int TimeOnPublic = Integer.parseInt(((EditText) view.findViewById(R.id.TransportEntry_PublicTime)).getText().toString());
+                data.put("TransportationType", "Public");
+                data.put("TimeOnPublic", TimeOnPublic);
+                break;
+            case "Car":
+                int DistanceDriven = Integer.parseInt(((EditText) view.findViewById(R.id.TransportEntry_DistanceDriven)).getText().toString());
+                data.put("TransportationType", "Car");
+                if(CarDistanceUnit.equals("Miles")){
+                    data.put("Distance", (int)(DistanceDriven*1.60934));
+                }else{
+                    data.put("Distance", DistanceDriven);
+                }
+                data.put("CarType", CarType);
+                break;
+            case "Plane":
+                int FlightTime = Integer.parseInt(((EditText) view.findViewById(R.id.TransportEntry_FlightTime)).getText().toString());
+                data.put("TransportationType", "Plane");
+                data.put("FlightTime", FlightTime);
+                break;
+        }
+
+        DatabaseReference ChildRef = db.child("users").child(mAuth.getUid()).child("entries").child(CurrentSelectedDate).push();
+        ChildRef.setValue(data)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(currentContext, "Successfully stored entry", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(currentContext, "Error: "+task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void SpinnerInit(Spinner DropDown, String[] DropDownItems){
@@ -81,6 +146,32 @@ public class TransportEntryPage extends Fragment {
         DropDown.setAdapter(TransportTypeAdapter);
     }
 
+    private void DistanceUnitDropDownInit(Spinner DistanceUnitDropDown, String[] DistanceUnitDropDownItems){
+        SpinnerInit(DistanceUnitDropDown, DistanceUnitDropDownItems);
+
+        DistanceUnitDropDown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                CarDistanceUnit = parent.getItemAtPosition(position).toString();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+    }
+
+    private void CarTypeDropDownInit(Spinner CarTypeDropDown, String[] CarTypeDropDownItems){
+        SpinnerInit(CarTypeDropDown, CarTypeDropDownItems);
+
+        CarTypeDropDown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                CarType = parent.getItemAtPosition(position).toString();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+    }
+
     private void TransportTypeInit(Spinner TransportDropDown, String[] TransportTypeDropDownItems, HashMap<String, LinearLayout> DynamicFieldsMap, Button Submit){
         SpinnerInit(TransportDropDown, TransportTypeDropDownItems);
 
@@ -88,6 +179,8 @@ public class TransportEntryPage extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedItem = parent.getItemAtPosition(position).toString();
+
+                TransportType = selectedItem;
 
                 for(LinearLayout i: DynamicFieldsMap.values()) i.setVisibility(View.GONE);
 
@@ -114,6 +207,7 @@ public class TransportEntryPage extends Fragment {
         String todayDate = dateFormat.format(calendar.getTime());
 
         dateTextView.setText(todayDate);
+        CurrentSelectedDate = todayDate;
 
         dateTextView.setOnClickListener(v -> {
             int year = calendar.get(Calendar.YEAR);
@@ -126,6 +220,7 @@ public class TransportEntryPage extends Fragment {
                         calendar.set(selectedYear, selectedMonth, selectedDay);
                         String selectedDate = dateFormat.format(calendar.getTime());
                         dateTextView.setText(selectedDate);
+                        CurrentSelectedDate = selectedDate;
                     },
                     year,
                     month,

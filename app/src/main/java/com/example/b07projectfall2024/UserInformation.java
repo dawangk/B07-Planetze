@@ -9,10 +9,7 @@ public class UserInformation {
     public static void setUserInfo(DataSnapshot NewUserInfo){
         UserInfo = (HashMap<String, Object>) NewUserInfo.getValue();
     }
-
     public static HashMap<String, Object> getUserInfo(){
         return UserInfo;
     }
-
-
 }

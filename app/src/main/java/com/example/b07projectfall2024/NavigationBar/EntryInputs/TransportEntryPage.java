@@ -97,20 +97,18 @@ public class TransportEntryPage extends Fragment {
     }
 
     /*
-    Uploads the Transport entry under the entry/{Date} directory to firebase for the current user
+    Uploads the Transport entry under the entry/{Date}/transportation directory to firebase for the current user
     (where Date is the selected date) in the following format:
     3 cases to consider: Transport type is "Public Transport", "Car", or "Plane":
     Case "Public Transport":
         The information with the following format will be uploaded to firebase:
         {
-            type: "transportation",
             TransportationType: "Public",
             TimeOnPublic: Integer
         }
     Case "Car":
         The information with the following format will be uploaded to firebase:
         {
-            type: "transportation",
             TransportationType: "Car",
             Distance: Integer,
             CarType: String
@@ -118,7 +116,6 @@ public class TransportEntryPage extends Fragment {
     Case "Plane":
         The information with the following format will be uploaded to firebase:
         {
-            type: "transportation",
             TransportationType: "Plane",
             FlightTime: Integer
         }
@@ -154,9 +151,7 @@ public class TransportEntryPage extends Fragment {
                 return;
         }
 
-        data.put("type", "transportation");
-
-        DatabaseReference ChildRef = db.child("users").child(mAuth.getUid()).child("entries").child(CurrentSelectedDate).push();
+        DatabaseReference ChildRef = db.child("users").child(mAuth.getUid()).child("entries").child(CurrentSelectedDate).child("transportation").push();
         ChildRef.setValue(data)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {

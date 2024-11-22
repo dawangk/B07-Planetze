@@ -79,13 +79,12 @@ public class ConsumptionEntry extends Fragment {
     }
 
     /*
-    Uploads the Transport entry under the entry/{Date} directory to firebase for the current user
+    Uploads the Transport entry under the entry/{Date}/consumption directory to firebase for the current user
     (where Date is the selected date) in the following format:
     2 cases to consider: Transport type is either "Clothes" or "Electronics":
     Case "Clothes":
         The information with the following format will be uploaded to firebase:
         {
-            type: "consumption",
             BoughtItem: "Clothes",
             EcoFriendly: Boolean,
             NmbClothingBought: Integer
@@ -93,7 +92,6 @@ public class ConsumptionEntry extends Fragment {
     Case "Electronics":
         The information with the following format will be uploaded to firebase:
         {
-            type: "consumption",
             BoughtItem: "Electronics",
             NmbLargeElectronics: Integer
         }
@@ -117,11 +115,9 @@ public class ConsumptionEntry extends Fragment {
                 Toast.makeText(currentContext, "Selected Item Key Error", Toast.LENGTH_SHORT).show();
                 return;
         }
-
-        data.put("type", "consumption");
         data.put("BoughtItem", SelectedItemType);
 
-        DatabaseReference ChildRef = db.child("users").child(mAuth.getUid()).child("entries").child(CurrentSelectedDate).push();
+        DatabaseReference ChildRef = db.child("users").child(mAuth.getUid()).child("entries").child(CurrentSelectedDate).child("consumption").push();
         ChildRef.setValue(data)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {

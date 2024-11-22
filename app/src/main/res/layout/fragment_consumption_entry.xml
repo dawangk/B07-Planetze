@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -7,36 +8,47 @@
     <LinearLayout
         android:layout_width="409dp"
         android:layout_height="729dp"
+        android:layout_marginTop="16dp"
         android:orientation="vertical"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="1dp">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textView21"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Shopping Entry"
+            android:textSize="34sp" />
 
         <TextView
             android:id="@+id/textView13"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Date:" />
+            android:text="Date (Click to change):"
+            android:textSize="24sp" />
 
         <TextView
             android:id="@+id/ConsumptionEntry_Date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView" />
+            android:text="TextView"
+            android:textSize="20sp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Type of item bought:" />
+            android:text="Type of item bought:"
+            android:textSize="24sp" />
 
         <Spinner
             android:id="@+id/ConsumptionEntry_ItemType"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="36dp" />
 
         <LinearLayout
             android:id="@+id/ConsumptionEntry_ClothingFields"
             android:layout_width="match_parent"
-            android:layout_height="121dp"
+            android:layout_height="140dp"
             android:orientation="vertical"
             android:visibility="gone">
 
@@ -44,7 +56,8 @@
                 android:id="@+id/textView17"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Pairs of clothes bought" />
+                android:text="Pairs of clothes bought"
+                android:textSize="24sp" />
 
             <EditText
                 android:id="@+id/ConsumptionEntry_NmbClothing"
@@ -53,24 +66,19 @@
                 android:ems="10"
                 android:inputType="number" />
 
-            <TextView
-                android:id="@+id/textView18"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="TextView" />
-
             <Switch
                 android:id="@+id/ConsumptionEntry_EcoFriendly"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Did the clothing come from eco friendly sources?" />
+                android:text="Does the clothing come from eco friendly sources?"
+                android:textSize="20sp" />
 
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/ConsumptionEntry_ElectronicsFields"
             android:layout_width="match_parent"
-            android:layout_height="84dp"
+            android:layout_height="87dp"
             android:orientation="vertical"
             android:visibility="gone">
 
@@ -78,7 +86,8 @@
                 android:id="@+id/textView19"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Number of electronics bought" />
+                android:text="Number of electronics bought"
+                android:textSize="24sp" />
 
             <EditText
                 android:id="@+id/ConsumptionEntry_NmbElectronics"
@@ -93,6 +102,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Submit"
+            android:textSize="24sp"
             android:visibility="gone" />
 
     </LinearLayout>

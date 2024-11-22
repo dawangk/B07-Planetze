@@ -8,8 +8,7 @@
     <LinearLayout
         android:layout_width="409dp"
         android:layout_height="729dp"
-        android:layout_marginStart="2dp"
-        android:layout_marginBottom="2dp"
+        android:layout_marginTop="16dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -17,32 +16,42 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
+            android:id="@+id/textView18"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Transportation Entry"
+            android:textSize="34sp" />
+
+        <TextView
             android:id="@+id/textView5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Date:" />
+            android:text="Date (Click to change):"
+            android:textSize="24sp" />
 
         <TextView
             android:id="@+id/TransportEntry_Date"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/textView6"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Transport Type" />
+            android:text="Transport Type"
+            android:textSize="24sp" />
 
         <Spinner
             android:id="@+id/TransportEntry_TransportType"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:spinnerMode="dropdown" />
 
         <LinearLayout
             android:id="@+id/TransportEntry_CarOption"
             android:layout_width="match_parent"
-            android:layout_height="297dp"
+            android:layout_height="243dp"
             android:orientation="vertical"
             android:visibility="gone">
 
@@ -50,30 +59,39 @@
                 android:id="@+id/textView7"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Distance Driven" />
+                android:text="Distance Driven"
+                android:textSize="24sp" />
 
             <EditText
                 android:id="@+id/TransportEntry_DistanceDriven"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:ems="10"
                 android:inputType="number" />
+
+            <TextView
+                android:id="@+id/textView16"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:text="Unit of Measurement:" />
 
             <Spinner
                 android:id="@+id/TrasportEntry_DistanceUnit"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="48dp" />
 
             <TextView
                 android:id="@+id/textView8"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Car Type" />
+                android:text="Car Type"
+                android:textSize="24dp" />
 
             <Spinner
                 android:id="@+id/TransportEntry_CarType"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="48dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -87,12 +105,13 @@
                 android:id="@+id/textView10"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Time on Public Transport" />
+                android:text="Time on Public Transport (Hours)"
+                android:textSize="24sp" />
 
             <EditText
                 android:id="@+id/TransportEntry_PublicTime"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:ems="10"
                 android:inputType="number" />
 
@@ -109,12 +128,13 @@
                 android:id="@+id/textView11"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Time on Flight:" />
+                android:text="Time on Flight (Hours)"
+                android:textSize="24dp" />
 
             <EditText
                 android:id="@+id/TransportEntry_FlightTime"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:ems="10"
                 android:inputType="number" />
         </LinearLayout>
@@ -124,6 +144,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Submit"
+            android:textSize="24sp"
             android:visibility="gone" />
 
     </LinearLayout>

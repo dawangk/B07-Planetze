@@ -8,37 +8,54 @@
     <LinearLayout
         android:layout_width="411dp"
         android:layout_height="732dp"
+        android:layout_marginTop="16dp"
         android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
+            android:id="@+id/textView20"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Food Entry"
+            android:textSize="34sp" />
+
+        <TextView
+            android:id="@+id/textView14"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Date (Click to change):"
+            android:textSize="24sp" />
+
+        <TextView
             android:id="@+id/FoodEntry_Date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Date:" />
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/textView12"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Type of meal" />
+            android:text="Type of meal"
+            android:textSize="24sp" />
 
         <Spinner
             android:id="@+id/FoodEntry_MealType"
             android:layout_width="409dp"
-            android:layout_height="wrap_content" />
+            android:layout_height="48dp" />
 
         <TextView
             android:id="@+id/textView9"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Amount of food thrown away" />
+            android:text="Amount of food thrown away (%)"
+            android:textSize="24sp" />
 
         <EditText
             android:id="@+id/FoodEntry_WastedFood"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:ems="10"
             android:inputType="numberDecimal" />
 
@@ -46,6 +63,7 @@
             android:id="@+id/FoodEntry_Submit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Button" />
+            android:text="Submit"
+            android:textSize="24sp" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

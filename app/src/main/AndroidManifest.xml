@@ -13,25 +13,7 @@
         android:theme="@style/Theme.B07ProjectFall2024"
         tools:targetApi="31">
         <activity
-            android:name=".ItemAdapater"
-            android:exported="false" />
-        <activity
-            android:name=".Item"
-            android:exported="false" />
-        <activity
-            android:name=".Item2"
-            android:exported="false" />
-        <activity
-            android:name=".SpinnerFragment"
-            android:exported="false" />
-        <activity
-            android:name=".RecyclerViewFragment"
-            android:exported="false" />
-        <activity
             android:name=".HomeActivity"
-            android:exported="false" />
-        <activity
-            android:name=".Activity2"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

@@ -79,6 +79,18 @@
         android:textColor="@color/black"
         android:textSize="22dp"
         android:fontFamily="@font/reg_font">
+    </TextView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="5dp"
+        android:padding="4.1dp"
+        android:text="You only need to do this once"
+        android:textColor="@color/black"
+        android:textSize="15dp"
+        android:fontFamily="@font/reg_font">
 
     </TextView>
 
@@ -87,7 +99,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="20dp"
         android:backgroundTint="@color/dark_gray"
         android:text="Get Started"
         android:textColor="@color/white"

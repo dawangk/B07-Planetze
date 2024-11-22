@@ -2,12 +2,21 @@ package com.example.b07projectfall2024.Questionnaire;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.b07projectfall2024.MainActivity;
 import com.example.b07projectfall2024.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class DisplayResultsActivity extends AppCompatActivity {
 
@@ -43,9 +52,40 @@ public class DisplayResultsActivity extends AppCompatActivity {
         car_emissions_text.setText("Car Emissions: " + (car_emissions * kg_to_tons) + " tons");
         transit_emissions_text.setText("Transit Emissions: " + (transit_emissions * kg_to_tons) + " tons");
         flight_emissions_text.setText("Flight Emissions: " + (flight_emissions * kg_to_tons) + "tons");
-        diet_emissions_text.setText("Diet Emissions: " + (diet_emissions * kg_to_tons)+ " tons");
+        diet_emissions_text.setText("Diet Emissions: " + (diet_emissions * kg_to_tons) + " tons");
         housing_emissions_text.setText("Housing Emissions: " + (housing_emissions * kg_to_tons) + " tons");
         consumption_emissions_text.setText("Consumption Emissions: " + (consumption_emissions * kg_to_tons) + " tons");
 
-        }
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                DatabaseReference db = FirebaseDatabase.getInstance().getReference();
+                FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                FirebaseUser user = mAuth.getCurrentUser();
+
+                Map<String, Double> m = new HashMap<String, Double>();
+                m.put("total_emissions", final_emissions * kg_to_tons);
+                m.put("car_emissions", car_emissions * kg_to_tons);
+                m.put("transit_emissions", transit_emissions * kg_to_tons);
+                m.put("flight_emissions", flight_emissions * kg_to_tons);
+                m.put("diet_emissions", diet_emissions * kg_to_tons);
+                m.put("housing_emissions", housing_emissions * kg_to_tons);
+                m.put("consumption_emissions", consumption_emissions * kg_to_tons);
+
+                db.child("users").child(user.getUid()).child("questionnaire_emissions").setValue(m).addOnSuccessListener(
+                        documentReference -> {
+
+                            Intent intent2 = new Intent(DisplayResultsActivity.this, MainActivity.class);
+                            startActivity(intent2);
+                            finish();
+
+                        }
+                );
+
+            }
+        });
+
+
+    }
 }

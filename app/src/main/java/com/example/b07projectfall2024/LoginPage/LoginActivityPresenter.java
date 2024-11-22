@@ -18,8 +18,8 @@ public class LoginActivityPresenter {
     * otherwise set an error notice in the problem field
     *
     * The basic criteria are indicated as so:
-    * - email isnt empty
-    * - password isnt empty
+    * - email isn't empty
+    * - password isn't empty
     * - password is at least 6 characters long
     * */
     public void Login(String email, String password){

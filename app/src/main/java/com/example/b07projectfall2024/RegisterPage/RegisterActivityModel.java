@@ -45,6 +45,7 @@ public class RegisterActivityModel {
                         //Store user's name into the db
                         Map<String, String> m = new HashMap<String, String>();
                         m.put("name", name);
+                        m.put("new_user", "yes");
                         db.child("users").child(user.getUid()).setValue(m).addOnSuccessListener(
                                 documentReference -> {
                                     presenter.PageRedirect(LoginActivityView.class);

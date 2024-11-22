@@ -29,5 +29,11 @@
         app:menu="@menu/bottom_nav_menu"
         app:itemIconSize="40dp"/>
 
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

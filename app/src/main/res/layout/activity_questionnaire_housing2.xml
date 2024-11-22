@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Questionnaire.QuestionnaireHousingActivity2"
+    android:background="#a9bcd0"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_gravity="center"
+        android:src="@drawable/app_logo_no_bg"
+        android:padding="30dp">
+    </ImageView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:text="What is the size of your home?"
+        android:textColor="#1b1b1e"
+        android:fontFamily="@font/reg_font"
+        android:textSize="20dp"
+        android:padding="10dp"
+        android:textStyle="bold">
+    </TextView>
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/min"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Under 1000 sq. ft."
+            android:textColor="#1b1b1e"
+            android:textSize="17dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-10dp"
+            android:layout_marginStart="15dp"/>
+
+        <RadioButton
+            android:id="@+id/mid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1000-2000 sq. ft."
+            android:textColor="#1b1b1e"
+            android:textSize="17dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-10dp"
+            android:layout_marginStart="15dp"/>
+
+        <RadioButton
+            android:id="@+id/max"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Over 2000 sq. ft."
+            android:textColor="#1b1b1e"
+            android:textSize="17dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-10dp"
+            android:layout_marginStart="15dp"/>
+
+    </RadioGroup>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:text="What type of energy do you use to heat your home?"
+        android:textColor="#1b1b1e"
+        android:fontFamily="@font/reg_font"
+        android:textSize="20dp"
+        android:padding="10dp"
+        android:textStyle="bold">
+    </TextView>
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/gas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Natural Gas"
+            android:textColor="#1b1b1e"
+            android:textSize="17dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-10dp"
+            android:layout_marginStart="15dp"/>
+
+        <RadioButton
+            android:id="@+id/electricity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Electricity"
+            android:textColor="#1b1b1e"
+            android:textSize="17dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-10dp"
+            android:layout_marginStart="15dp"/>
+
+        <RadioButton
+            android:id="@+id/oil"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Oil"
+            android:textColor="#1b1b1e"
+            android:textSize="17dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-10dp"
+            android:layout_marginStart="15dp"/>
+
+        <RadioButton
+            android:id="@+id/propane"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Propane"
+            android:textColor="#1b1b1e"
+            android:textSize="17dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-10dp"
+            android:layout_marginStart="15dp"/>
+
+        <RadioButton
+            android:id="@+id/wood"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Wood"
+            android:textColor="#1b1b1e"
+            android:textSize="17dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-10dp"
+            android:layout_marginStart="15dp"/>
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Next"
+        android:textStyle="bold"
+        android:fontFamily="@font/bold_font"
+        android:textColor="#d8dbe2"
+        android:backgroundTint="#373f51"
+        android:layout_gravity="right"
+        android:layout_marginEnd="20dp"/>
+
+</LinearLayout>

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Questionnaire.QuestionnaireMeatActivity"
+    android:background="#a9bcd0"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_gravity="center"
+        android:src="@drawable/app_logo_no_bg"
+        android:padding="30dp">
+    </ImageView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:text="How often do you eat the following animal-based products?"
+        android:textColor="#1b1b1e"
+        android:fontFamily="@font/reg_font"
+        android:textSize="20dp"
+        android:layout_marginTop="-10dp"
+        android:padding="10dp"
+        android:textStyle="bold">
+    </TextView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:text="Beef"
+        android:textColor="#1b1b1e"
+        android:fontFamily="@font/reg_font"
+        android:textSize="18dp"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        android:textStyle="bold">
+    </TextView>
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/daily"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Daily"
+            android:textColor="#1b1b1e"
+            android:textSize="17dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-10dp"
+            android:layout_marginStart="15dp"/>
+
+        <RadioButton
+            android:id="@+id/frequently"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Frequently (3-5 times/week)"
+            android:textColor="#1b1b1e"
+            android:textSize="17dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-10dp"
+            android:layout_marginStart="15dp"/>
+
+        <RadioButton
+            android:id="@+id/occasionally"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Occasionally (1-2 times/week)"
+            android:textColor="#1b1b1e"
+            android:textSize="17dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-10dp"
+            android:layout_marginStart="15dp"/>
+
+        <RadioButton
+            android:id="@+id/never"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Never"
+            android:textColor="#1b1b1e"
+            android:textSize="17dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-10dp"
+            android:layout_marginStart="15dp"/>
+
+    </RadioGroup>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:text="Pork"
+        android:textColor="#1b1b1e"
+        android:fontFamily="@font/reg_font"
+        android:textSize="18dp"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        android:textStyle="bold">
+    </TextView>
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/daily2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Daily"
+            android:textColor="#1b1b1e"
+            android:textSize="17dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-10dp"
+            android:layout_marginStart="15dp"/>
+
+        <RadioButton
+            android:id="@+id/frequently2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Frequently (3-5 times/week)"
+            android:textColor="#1b1b1e"
+            android:textSize="17dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-10dp"
+            android:layout_marginStart="15dp"/>
+
+        <RadioButton
+            android:id="@+id/occasionally2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Occasionally (1-2 times/week)"
+            android:textColor="#1b1b1e"
+            android:textSize="17dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-10dp"
+            android:layout_marginStart="15dp"/>
+
+        <RadioButton
+            android:id="@+id/never2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Never"
+            android:textColor="#1b1b1e"
+            android:textSize="17dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-10dp"
+            android:layout_marginStart="15dp"/>
+
+    </RadioGroup>
+
+
+
+    <Button
+        android:id="@+id/next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Next"
+        android:textStyle="bold"
+        android:fontFamily="@font/bold_font"
+        android:textColor="#d8dbe2"
+        android:backgroundTint="#373f51"
+        android:layout_gravity="right"
+        android:layout_marginEnd="20dp"/>
+
+</LinearLayout>

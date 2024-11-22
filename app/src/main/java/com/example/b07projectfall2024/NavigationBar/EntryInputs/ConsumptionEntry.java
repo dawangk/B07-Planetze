@@ -50,10 +50,12 @@ public class ConsumptionEntry extends Fragment {
 
         currentContext = getContext();
 
+        //item drop down
         Spinner ItemTypeDropDown = view.findViewById(R.id.ConsumptionEntry_ItemType);
 
         String[] ItemTypeItems = {"", "Clothes", "Electronics"};
 
+        //Helps map each layout to its respective drop down item value
         HashMap<String, LinearLayout> DynamicFieldsMap = new HashMap<>();
 
         DynamicFieldsMap.put("Clothes", view.findViewById(R.id.ConsumptionEntry_ClothingFields));
@@ -61,7 +63,7 @@ public class ConsumptionEntry extends Fragment {
 
         Button Submit = view.findViewById(R.id.ConsumptionEntry_Submit);
 
-        SpinnerInit(ItemTypeDropDown, ItemTypeItems,DynamicFieldsMap, Submit);
+        ItemTypeDropDownInit(ItemTypeDropDown, ItemTypeItems,DynamicFieldsMap, Submit);
 
         TextView dateTextView = view.findViewById(R.id.ConsumptionEntry_Date);
         DateFieldInit(dateTextView);
@@ -76,6 +78,26 @@ public class ConsumptionEntry extends Fragment {
         return view;
     }
 
+    /*
+    Uploads the Transport entry under the entry/{Date} directory to firebase for the current user
+    (where Date is the selected date) in the following format:
+    2 cases to consider: Transport type is either "Clothes" or "Electronics":
+    Case "Clothes":
+        The information with the following format will be uploaded to firebase:
+        {
+            type: "consumption",
+            BoughtItem: "Clothes",
+            EcoFriendly: Boolean,
+            NmbClothingBought: Integer
+        }
+    Case "Electronics":
+        The information with the following format will be uploaded to firebase:
+        {
+            type: "consumption",
+            BoughtItem: "Electronics",
+            NmbLargeElectronics: Integer
+        }
+     */
     private void UploadConsumptionEntry(View view){
         if(SelectedItemType.isEmpty()) return;
         HashMap<String, Object> data = new HashMap<>();
@@ -111,7 +133,12 @@ public class ConsumptionEntry extends Fragment {
 
     }
 
-    private void SpinnerInit(Spinner DropDown, String[] DropDownItems, HashMap<String, LinearLayout> DynamicFieldsMap, Button Submit){
+    /*
+        Initializes ItemTypeDropDown
+        In its listener, along with setting the Transport type it also helps toggle fields visibility
+        depending on the selected transportation type
+     */
+    private void ItemTypeDropDownInit(Spinner DropDown, String[] DropDownItems, HashMap<String, LinearLayout> DynamicFieldsMap, Button Submit){
         ArrayAdapter<String> TransportTypeAdapter = new ArrayAdapter<>(
                 currentContext,
                 android.R.layout.simple_spinner_item,
@@ -146,7 +173,7 @@ public class ConsumptionEntry extends Fragment {
         });
     }
 
-
+    //Initializes DateField allowing users to select any date
     private void DateFieldInit(TextView dateTextView){
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());

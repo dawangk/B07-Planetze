@@ -10,7 +10,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,18 +18,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.b07projectfall2024.HomeActivity;
 import com.example.b07projectfall2024.R;
-import com.example.b07projectfall2024.RegisterPage.RegisterActivityView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 
 public class FoodEntryPage extends Fragment {
@@ -52,11 +47,12 @@ public class FoodEntryPage extends Fragment {
 
         currentContext = getContext();
 
+        //item drop down
         Spinner MealType = view.findViewById(R.id.FoodEntry_MealType);
 
         String[] MealTypeItems = {"", "Vegetarian", "Pork", "Beef", "Fish", "Chicken"};
 
-        SpinnerInit(MealType, MealTypeItems);
+        SelectedMealSpinnerInit(MealType, MealTypeItems);
 
         TextView dateTextView = view.findViewById(R.id.FoodEntry_Date);
         DateFieldInit(dateTextView);
@@ -73,6 +69,15 @@ public class FoodEntryPage extends Fragment {
         return view;
     }
 
+    /*
+    Uploads the Transport entry under the entry/{Date} directory to firebase for the current user
+    (where Date is the selected date) in the following format:
+        {
+            type: "food",
+            MealType: String,
+            ThrownFood: Integer
+        }
+     */
     private void UploadFoodEntry(View view){
         HashMap<String, Object> data = new HashMap<>();
 
@@ -97,7 +102,8 @@ public class FoodEntryPage extends Fragment {
 
     }
 
-    private void SpinnerInit(Spinner DropDown, String[] DropDownItems){
+    //Initializes the spinner, MealType
+    private void SelectedMealSpinnerInit(Spinner DropDown, String[] DropDownItems){
         ArrayAdapter<String> TransportTypeAdapter = new ArrayAdapter<>(
                 currentContext,
                 android.R.layout.simple_spinner_item,
@@ -117,7 +123,7 @@ public class FoodEntryPage extends Fragment {
         });
     }
 
-
+    //Initializes DateField allowing users to select any date
     private void DateFieldInit(TextView dateTextView){
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());

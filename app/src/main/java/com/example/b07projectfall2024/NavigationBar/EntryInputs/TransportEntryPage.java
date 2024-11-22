@@ -56,12 +56,14 @@ public class TransportEntryPage extends Fragment {
 
         currentContext = getContext();
 
+        //default hidden layouts (will become visible depending on selected transportation type)
         LinearLayout CarContainer = view.findViewById(R.id.TransportEntry_CarOption);
         LinearLayout PublicContainer = view.findViewById(R.id.TransportEntry_PublicOption);
         LinearLayout PlaneContainer = view.findViewById(R.id.TransportEntry_FlightOption);
 
         Button Submit = view.findViewById(R.id.TransportEntry_SubmitButton);
 
+        //item drop downs
         Spinner TransportDropDown = view.findViewById(R.id.TransportEntry_TransportType);
         Spinner DistanceUnitDropDown = view.findViewById(R.id.TrasportEntry_DistanceUnit);
         Spinner CarTypeDropDown = view.findViewById(R.id.TransportEntry_CarType);
@@ -70,6 +72,7 @@ public class TransportEntryPage extends Fragment {
         String[] DistanceUnitDropDownItems = {"Kilometers", "Miles"};
         String[] CarTypeDropDownItems = {"Gasoline", "Diesel", "Hybrid", "Electric"};
 
+        //Helps map each layout to its respective drop down item value
         HashMap<String, LinearLayout> DynamicFieldsMap = new HashMap<String, LinearLayout>();
 
         DynamicFieldsMap.put("Public Transport", PublicContainer);
@@ -93,13 +96,37 @@ public class TransportEntryPage extends Fragment {
         return view;
     }
 
+    /*
+    Uploads the Transport entry under the entry/{Date} directory to firebase for the current user
+    (where Date is the selected date) in the following format:
+    3 cases to consider: Transport type is "Public Transport", "Car", or "Plane":
+    Case "Public Transport":
+        The information with the following format will be uploaded to firebase:
+        {
+            type: "transportation",
+            TransportationType: "Public",
+            TimeOnPublic: Integer
+        }
+    Case "Car":
+        The information with the following format will be uploaded to firebase:
+        {
+            type: "transportation",
+            TransportationType: "Car",
+            Distance: Integer,
+            CarType: String
+        }
+    Case "Plane":
+        The information with the following format will be uploaded to firebase:
+        {
+            type: "transportation",
+            TransportationType: "Plane",
+            FlightTime: Integer
+        }
+     */
     private void UploadTranportEntry(View view){
         if(TransportType.isEmpty()) return;
 
-
         HashMap<String, Object> data = new HashMap<>();
-
-        data.put("type", "transportation");
 
         switch (TransportType){
             case "Public Transport":
@@ -122,7 +149,12 @@ public class TransportEntryPage extends Fragment {
                 data.put("TransportationType", "Plane");
                 data.put("FlightTime", FlightTime);
                 break;
+            default:
+                Toast.makeText(currentContext, "Key error on upload", Toast.LENGTH_SHORT).show();
+                return;
         }
+
+        data.put("type", "transportation");
 
         DatabaseReference ChildRef = db.child("users").child(mAuth.getUid()).child("entries").child(CurrentSelectedDate).push();
         ChildRef.setValue(data)
@@ -135,6 +167,7 @@ public class TransportEntryPage extends Fragment {
                 });
     }
 
+    //Assigns the given DropDownItems to the Spinner object, DropDown
     private void SpinnerInit(Spinner DropDown, String[] DropDownItems){
         ArrayAdapter<String> TransportTypeAdapter = new ArrayAdapter<>(
                 currentContext,
@@ -146,6 +179,7 @@ public class TransportEntryPage extends Fragment {
         DropDown.setAdapter(TransportTypeAdapter);
     }
 
+    //Initializes DistanceUnitDropDown
     private void DistanceUnitDropDownInit(Spinner DistanceUnitDropDown, String[] DistanceUnitDropDownItems){
         SpinnerInit(DistanceUnitDropDown, DistanceUnitDropDownItems);
 
@@ -159,6 +193,7 @@ public class TransportEntryPage extends Fragment {
         });
     }
 
+    //Initializes CarTypeDropDown
     private void CarTypeDropDownInit(Spinner CarTypeDropDown, String[] CarTypeDropDownItems){
         SpinnerInit(CarTypeDropDown, CarTypeDropDownItems);
 
@@ -172,6 +207,11 @@ public class TransportEntryPage extends Fragment {
         });
     }
 
+    /*
+        Initializes TransportType
+        In its listener, along with setting the Transport type it also helps toggle fields visibility
+        depending on the selected transportation type
+     */
     private void TransportTypeInit(Spinner TransportDropDown, String[] TransportTypeDropDownItems, HashMap<String, LinearLayout> DynamicFieldsMap, Button Submit){
         SpinnerInit(TransportDropDown, TransportTypeDropDownItems);
 
@@ -200,6 +240,7 @@ public class TransportEntryPage extends Fragment {
     }
 
 
+    //Initializes DateField allowing users to select any date
     private void DateFieldInit(TextView dateTextView){
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());

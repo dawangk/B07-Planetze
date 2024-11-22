@@ -85,7 +85,5 @@ public class DisplayResultsActivity extends AppCompatActivity {
 
             }
         });
-
-
     }
 }

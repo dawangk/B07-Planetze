@@ -25,10 +25,10 @@ public class HomeActivity extends AppCompatActivity
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
-        // Load the default fragment
-//        if (savedInstanceState == null) {
-//            bottomNavigationView.setSelectedItemId(R.id.dashboard);
-//        }
+        //Load the default fragment
+        if (savedInstanceState == null) {
+            bottomNavigationView.setSelectedItemId(R.id.dashboard);
+        }
     }
 
     // Fragments to be used in the BottomNavigationView

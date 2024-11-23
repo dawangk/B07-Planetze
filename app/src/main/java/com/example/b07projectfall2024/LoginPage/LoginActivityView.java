@@ -4,7 +4,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.b07projectfall2024.ForgotPasswordPage.ForgotPasswordView;
@@ -76,6 +78,17 @@ public class LoginActivityView extends AppCompatActivity {
             InputFields.get(FieldName).setError(ErrorMsg);
             InputFields.get(FieldName).requestFocus();
         }
+    }
+
+    /*
+     Show a dialog box for general errors (e.g., invalid email and/or password)
+     */
+    public void ShowPopupMessage(String message) {
+        new AlertDialog.Builder(this)
+                .setTitle("Login Error")
+                .setMessage(message)
+                .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                .show();
     }
 
 }

@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class LoginActivityPresenter {
     private LoginActivityView view;
     private LoginActivityModel model;
+
     public LoginActivityPresenter(LoginActivityView view, LoginActivityModel model){
         this.view = view;
         this.model = model;
@@ -23,18 +24,30 @@ public class LoginActivityPresenter {
     * - password is at least 6 characters long
     * */
     public void Login(String email, String password){
+        if (email.isEmpty() && password.isEmpty()) {
+            view.ShowPopupMessage("Email and Password are required.");
+            return;
+        }
         if (email.isEmpty()) {
-            view.SetErrorField("EmailError", "Email is required");
+            view.ShowPopupMessage("Email is required.");
             return;
         }
         if (password.isEmpty()) {
-            view.SetErrorField("PasswordError", "Password is required");
+            view.ShowPopupMessage("Password is required.");
             return;
-        }else if (password.length()<6) {
-            view.SetErrorField("PasswordError", "Password must be at least 6 characters in length");
+        }
+        if (password.length() < 6) {
+            view.ShowPopupMessage("Password must be at least 6 characters long.");
             return;
         }
         model.LoginUser(this, email, password);
+    }
+
+    /*
+    Show a general error message as a Toast
+     */
+    public void ShowErrorPopup(String message) {
+        view.ShowPopupMessage(message);
     }
 
     /*

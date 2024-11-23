@@ -74,8 +74,13 @@ public class LoginActivityModel {
                                             }
                                         });
                                     }
+
                                 });
                             }
+                        }
+
+                        else {
+                            presenter.ShowErrorPopup("Invalid email and/or password.");
                         }
                     }
                 });

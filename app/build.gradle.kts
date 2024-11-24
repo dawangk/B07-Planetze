@@ -32,9 +32,9 @@ android {
             res {
                 srcDirs("src\\main\\res", "src\\main\\res\\2",
                     "src\\main\\res",
-                    "src\\main\\res\\layout\\questionnaire", "src\\main\\res", "src\\main\\res\\layout\\user-activity",
+                    "src\\main\\res\\layouts\\questionnaire", "src\\main\\res", "src\\main\\res\\layouts\\user-activity",
                     "src\\main\\res",
-                    "src\\main\\res\\layout\\new-entry", "src\\main\\res", "src\\main\\res\\layout\\menu"
+                    "src\\main\\res\\layouts\\new-entry", "src\\main\\res", "src\\main\\res\\layouts\\menu"
                 )
             }
         }

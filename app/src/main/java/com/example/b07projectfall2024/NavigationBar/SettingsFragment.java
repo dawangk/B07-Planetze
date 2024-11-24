@@ -48,16 +48,7 @@ public class SettingsFragment extends Fragment {
         darkModeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                /* checking if the switch is turned on, if on, then switch to night mode,
-                *  otherwise, change back to day mode
-                */
-                if (isChecked) {
-                    // setting theme to night mode
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                } else {
-                    // setting theme to light theme
-                    AppCompatDelegate.setDefaultNightMode (AppCompatDelegate.MODE_NIGHT_NO);
-                }
+                toggleMode(isChecked);
             }
         });
 
@@ -75,5 +66,18 @@ public class SettingsFragment extends Fragment {
 
         // Close the current fragment's parent activity
         requireActivity().finish();
+    }
+
+    private void toggleMode(boolean isChecked){
+        /*  Checking if the switch is turned on, if on, then switch to night mode,
+         *  otherwise, change back to day mode
+         */
+        if (isChecked) {
+            // setting theme to night mode
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            // setting theme to light theme
+            AppCompatDelegate.setDefaultNightMode (AppCompatDelegate.MODE_NIGHT_NO);
+        }
     }
 }

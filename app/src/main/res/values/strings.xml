@@ -17,6 +17,8 @@
     <string name="account">Account</string>
     <string name="eco_tracker">New Entry</string>
     <string name="dashboard">Dashboard</string>
+    <string name="logout">Logout</string>
+    <string name="dark_mode">Dark Mode</string>
 
 
 </resources>

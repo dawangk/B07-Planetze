@@ -3,15 +3,19 @@ package com.example.b07projectfall2024.NavigationBar;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 
 import com.example.b07projectfall2024.MainActivity;
 import com.example.b07projectfall2024.R;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class SettingsFragment extends Fragment {
@@ -26,14 +30,34 @@ public class SettingsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
-        // Find the Logout button
+        // Find the Logout Button
         Button logoutButton = view.findViewById(R.id.btn_logout);
+        // Find the Dark Mode Switch
+        SwitchMaterial darkModeSwitch = view.findViewById(R.id.toggle_dark);
+
 
         // Set a click listener for the Logout button
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 logout();
+            }
+        });
+
+        //Set a click listener for the Dark Mode switch
+        darkModeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                /* checking if the switch is turned on, if on, then switch to night mode,
+                *  otherwise, change back to day mode
+                */
+                if (isChecked) {
+                    // setting theme to night mode
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                } else {
+                    // setting theme to light theme
+                    AppCompatDelegate.setDefaultNightMode (AppCompatDelegate.MODE_NIGHT_NO);
+                }
             }
         });
 

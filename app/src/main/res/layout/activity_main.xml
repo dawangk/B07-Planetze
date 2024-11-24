@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+
     <!-- Single FrameLayout for hosting fragments -->
     <FrameLayout
         android:id="@+id/fragment_container"

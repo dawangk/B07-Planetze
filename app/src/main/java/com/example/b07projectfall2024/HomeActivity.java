@@ -11,6 +11,7 @@ import com.example.b07projectfall2024.NavigationBar.EntryInputs.EntryNavigatorPa
 import com.example.b07projectfall2024.NavigationBar.DashboardFragment;
 import com.example.b07projectfall2024.NavigationBar.SettingsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class HomeActivity extends AppCompatActivity
         implements BottomNavigationView.OnNavigationItemSelectedListener {

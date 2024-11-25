@@ -37,8 +37,9 @@ public class ConsumptionEntry extends Fragment {
     private DatabaseReference db;
     private FirebaseAuth mAuth;
     private String CurrentSelectedDate;
-    private String SelectedItemType;
+    private String SelectedConsumptionType;
 
+    private HashMap<String, String> SpinnerOptions;
 
     @Nullable
     @Override
@@ -50,20 +51,34 @@ public class ConsumptionEntry extends Fragment {
 
         currentContext = getContext();
 
-        //item drop down
-        Spinner ItemTypeDropDown = view.findViewById(R.id.ConsumptionEntry_ItemType);
+        SpinnerOptions = new HashMap<>();
 
-        String[] ItemTypeItems = {"", "Clothes", "Electronics"};
+        //item drop down
+        Spinner ConsumptionTypeDropDown = view.findViewById(R.id.ConsumptionEntry_ItemType);
+        Spinner ElectronicDropDown = view.findViewById(R.id.ConsumptionEntry_ElectronicType);
+        Spinner OtherTypeDropDown = view.findViewById(R.id.ConsumptionEntry_OtherType);
+        Spinner UtilityDropDown = view.findViewById(R.id.ConsumptionEntry_BillType);
+
+        String[] ConsumptionTypeItems = {"", "Clothes", "Electronics", "Utility Bill", "Other"};
+        String[] ElectronicItems = {"Smartphone", "Laptop", "TV"};
+        String[] OtherPurchaseItems = {"Furniture", "Appliances"};
+        String[] UtilityBillItems = {"Electricity", "Water", "Gas"};
+
+        SpinnerGeneralInit(ElectronicDropDown, ElectronicItems, "ElectronicType");
+        SpinnerGeneralInit(OtherTypeDropDown, OtherPurchaseItems, "OtherPurchaseType");
+        SpinnerGeneralInit(UtilityDropDown, UtilityBillItems, "UtilityBillType");
 
         //Helps map each layout to its respective drop down item value
         HashMap<String, LinearLayout> DynamicFieldsMap = new HashMap<>();
 
         DynamicFieldsMap.put("Clothes", view.findViewById(R.id.ConsumptionEntry_ClothingFields));
         DynamicFieldsMap.put("Electronics", view.findViewById(R.id.ConsumptionEntry_ElectronicsFields));
+        DynamicFieldsMap.put("Utility Bill", view.findViewById(R.id.ConsumptionEntry_UtilityBill));
+        DynamicFieldsMap.put("Other", view.findViewById(R.id.ConsumptionEntry_OtherPurchase));
 
         Button Submit = view.findViewById(R.id.ConsumptionEntry_Submit);
 
-        ItemTypeDropDownInit(ItemTypeDropDown, ItemTypeItems,DynamicFieldsMap, Submit);
+        ConsumptionTypeDropDownInit(ConsumptionTypeDropDown, ConsumptionTypeItems,DynamicFieldsMap, Submit);
 
         TextView dateTextView = view.findViewById(R.id.ConsumptionEntry_Date);
         DateFieldInit(dateTextView);
@@ -81,7 +96,7 @@ public class ConsumptionEntry extends Fragment {
     /*
     Uploads the Transport entry under the entry/{Date}/consumption directory to firebase for the current user
     (where Date is the selected date) in the following format:
-    2 cases to consider: Transport type is either "Clothes" or "Electronics":
+    4 cases to consider: Transport type is either "Clothes", "Electronics", "Utility Bill", "Other":
     Case "Clothes":
         The information with the following format will be uploaded to firebase:
         {
@@ -93,29 +108,76 @@ public class ConsumptionEntry extends Fragment {
         The information with the following format will be uploaded to firebase:
         {
             BoughtItem: "Electronics",
-            NmbLargeElectronics: Integer
+            ElectronicType: String,
+            NmbPurchased: Integer
         }
+    Case "Utility Bill":
+        The information with the following format will be uploaded to firebase:
+        {
+            BoughtItem: "Utility Bill",
+            BillPrice: Integer,
+            UtilityType: String
+        }
+    Case "Other":
+        The information with the following format will be uploaded to firebase:
+        {
+            BoughtItem: "Other",
+            NmbPurchased: Integer,
+            ItemType: String
+        }
+
      */
     private void UploadConsumptionEntry(View view){
-        if(SelectedItemType.isEmpty()) return;
+        if(SelectedConsumptionType.isEmpty()) return;
         HashMap<String, Object> data = new HashMap<>();
 
-        switch (SelectedItemType){
+        switch (SelectedConsumptionType){
             case "Clothes":
-                int nmbClothes = Integer.parseInt(((EditText) view.findViewById(R.id.ConsumptionEntry_NmbClothing)).getText().toString());
+                EditText nmbClothesField =  view.findViewById(R.id.ConsumptionEntry_NmbClothing);
+                if(nmbClothesField.getText().toString().isEmpty()){
+                    MissingErrorField(nmbClothesField);
+                    return;
+                }
+                int nmbClothes = Integer.parseInt(nmbClothesField.getText().toString());
                 boolean ecoFriendly = ((Switch)view.findViewById(R.id.ConsumptionEntry_EcoFriendly)).isChecked();
                 data.put("NmbClothingBought", nmbClothes);
                 data.put("EcoFriendly", ecoFriendly);
                 break;
             case "Electronics":
-                int nmbElectronics = Integer.parseInt(((EditText) view.findViewById(R.id.ConsumptionEntry_NmbElectronics)).getText().toString());
-                data.put("NmbLargeElectronics", nmbElectronics);
+                EditText nmbElectronicsField =  view.findViewById(R.id.ConsumptionEntry_NmbElectronics);
+                if(nmbElectronicsField.getText().toString().isEmpty()){
+                    MissingErrorField(nmbElectronicsField);
+                    return;
+                }
+                int nmbElectronics = Integer.parseInt(nmbElectronicsField.getText().toString());
+                data.put("NmbPurchased", nmbElectronics);
+                data.put("ElectronicType", SpinnerOptions.get("ElectronicType"));
+                break;
+            case "Utility Bill":
+                EditText BillPriceField =  view.findViewById(R.id.ConsumptionEntry_BillPrice);
+                if(BillPriceField.getText().toString().isEmpty()){
+                    MissingErrorField(BillPriceField);
+                    return;
+                }
+                int BillPrice = Integer.parseInt(BillPriceField.getText().toString());
+                data.put("UtilityType", SpinnerOptions.get("UtilityBillType"));
+                data.put("BillPrice",BillPrice);
+                break;
+            case "Other":
+                EditText NmbPurchasedField =  view.findViewById(R.id.ConsumptionEntry_NmbOther);
+                if(NmbPurchasedField.getText().toString().isEmpty()){
+                    MissingErrorField(NmbPurchasedField);
+                    return;
+                }
+                int NmbPurchased = Integer.parseInt(NmbPurchasedField.getText().toString());
+                data.put("ItemType", SpinnerOptions.get("OtherPurchaseType"));
+                data.put("NmbPurchased", NmbPurchased);
                 break;
             default:
                 Toast.makeText(currentContext, "Selected Item Key Error", Toast.LENGTH_SHORT).show();
                 return;
         }
-        data.put("BoughtItem", SelectedItemType);
+        data.put("BoughtItem", SelectedConsumptionType);
 
         DatabaseReference ChildRef = db.child("users").child(mAuth.getUid()).child("entries").child(CurrentSelectedDate).child("consumption").push();
         ChildRef.setValue(data)
@@ -129,12 +191,8 @@ public class ConsumptionEntry extends Fragment {
 
     }
 
-    /*
-        Initializes ItemTypeDropDown
-        In its listener, along with setting the Transport type it also helps toggle fields visibility
-        depending on the selected transportation type
-     */
-    private void ItemTypeDropDownInit(Spinner DropDown, String[] DropDownItems, HashMap<String, LinearLayout> DynamicFieldsMap, Button Submit){
+    //Assigns the given DropDownItems to the Spinner object, DropDown
+    private void SpinnerItemInit(Spinner DropDown, String[] DropDownItems){
         ArrayAdapter<String> TransportTypeAdapter = new ArrayAdapter<>(
                 currentContext,
                 android.R.layout.simple_spinner_item,
@@ -143,26 +201,49 @@ public class ConsumptionEntry extends Fragment {
 
         TransportTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         DropDown.setAdapter(TransportTypeAdapter);
+    }
+
+    //Initializes general spinner
+    private void SpinnerGeneralInit(Spinner DistanceUnitDropDown, String[] DistanceUnitDropDownItems, String type){
+        SpinnerItemInit(DistanceUnitDropDown, DistanceUnitDropDownItems);
+
+        DistanceUnitDropDown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                SpinnerOptions.put(type, parent.getItemAtPosition(position).toString());
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+    }
+
+    /*
+        Initializes ItemTypeDropDown
+        In its listener, along with setting the Transport type it also helps toggle fields visibility
+        depending on the selected transportation type
+     */
+    private void ConsumptionTypeDropDownInit(Spinner DropDown, String[] DropDownItems, HashMap<String, LinearLayout> DynamicFieldsMap, Button Submit){
+        SpinnerItemInit(DropDown, DropDownItems);
 
         DropDown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                SelectedItemType = parent.getItemAtPosition(position).toString();
+                SelectedConsumptionType = parent.getItemAtPosition(position).toString();
 
                 for(LinearLayout i: DynamicFieldsMap.values()) i.setVisibility(View.GONE);
 
                 Submit.setVisibility(View.GONE);
 
-                if(SelectedItemType.isEmpty()) return;
+                if(SelectedConsumptionType.isEmpty()) return;
 
-                if(!DynamicFieldsMap.containsKey(SelectedItemType)){
+                if(!DynamicFieldsMap.containsKey(SelectedConsumptionType)){
                     Toast.makeText(currentContext, "Key Value Error", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 Submit.setVisibility(View.VISIBLE);
 
-                DynamicFieldsMap.get(SelectedItemType).setVisibility(View.VISIBLE);
-                Toast.makeText(currentContext, "Selected: " + SelectedItemType, Toast.LENGTH_SHORT).show();
+                DynamicFieldsMap.get(SelectedConsumptionType).setVisibility(View.VISIBLE);
+                Toast.makeText(currentContext, "Selected: " + SelectedConsumptionType, Toast.LENGTH_SHORT).show();
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
@@ -197,6 +278,15 @@ public class ConsumptionEntry extends Fragment {
             );
             datePickerDialog.show();
         });
+    }
+
+    private void MissingErrorField(EditText Field){
+        SetErrorField(Field, "Missing, Please fill");
+    }
+
+    private void SetErrorField(EditText Field, String ErrorMsg){
+        Field.setError(ErrorMsg);
+        Field.requestFocus();
     }
 
 }

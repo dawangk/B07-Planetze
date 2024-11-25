@@ -64,7 +64,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="number" />
+                android:inputType="number"
+                android:maxLength="6" />
 
             <Switch
                 android:id="@+id/ConsumptionEntry_EcoFriendly"
@@ -78,7 +79,7 @@
         <LinearLayout
             android:id="@+id/ConsumptionEntry_ElectronicsFields"
             android:layout_width="match_parent"
-            android:layout_height="87dp"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:visibility="gone">
 
@@ -94,7 +95,92 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="number" />
+                android:inputType="number"
+                android:maxLength="6" />
+
+            <TextView
+                android:id="@+id/textView22"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Type of Electronics"
+                android:textSize="24sp" />
+
+            <Spinner
+                android:id="@+id/ConsumptionEntry_ElectronicType"
+                android:layout_width="match_parent"
+                android:layout_height="48dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ConsumptionEntry_OtherPurchase"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/textView26"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Type of Purchase"
+                android:textSize="24sp" />
+
+            <Spinner
+                android:id="@+id/ConsumptionEntry_OtherType"
+                android:layout_width="match_parent"
+                android:layout_height="48dp" />
+
+            <TextView
+                android:id="@+id/textView27"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Number Purchased"
+                android:textSize="24sp" />
+
+            <EditText
+                android:id="@+id/ConsumptionEntry_NmbOther"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="number"
+                android:maxLength="6" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ConsumptionEntry_UtilityBill"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/textView28"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Type of Bill"
+                android:textSize="24sp" />
+
+            <Spinner
+                android:id="@+id/ConsumptionEntry_BillType"
+                android:layout_width="match_parent"
+                android:layout_height="48dp" />
+
+            <TextView
+                android:id="@+id/textView29"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Price of Bill"
+                android:textSize="24sp" />
+
+            <EditText
+                android:id="@+id/ConsumptionEntry_BillPrice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="number"
+                android:maxLength="6" />
         </LinearLayout>
 
         <Button

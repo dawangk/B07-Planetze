@@ -19,25 +19,21 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.b07projectfall2024.HomeActivity;
 import com.example.b07projectfall2024.R;
-import com.example.b07projectfall2024.RegisterPage.RegisterActivityView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 
 public class TransportEntryPage extends Fragment {
 
     private Context currentContext;
-    private String CarDistanceUnit;
-    private String CarType;
+
+    private HashMap<String, String> SpinnerOptions;
 
     private String TransportType;
 
@@ -54,23 +50,31 @@ public class TransportEntryPage extends Fragment {
         db = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
 
+        SpinnerOptions = new HashMap<>();
+
         currentContext = getContext();
 
         //default hidden layouts (will become visible depending on selected transportation type)
         LinearLayout CarContainer = view.findViewById(R.id.TransportEntry_CarOption);
         LinearLayout PublicContainer = view.findViewById(R.id.TransportEntry_PublicOption);
         LinearLayout PlaneContainer = view.findViewById(R.id.TransportEntry_FlightOption);
+        LinearLayout WalkedCycledContainer = view.findViewById(R.id.TransportEntry_WalkCycled);
 
         Button Submit = view.findViewById(R.id.TransportEntry_SubmitButton);
 
         //item drop downs
         Spinner TransportDropDown = view.findViewById(R.id.TransportEntry_TransportType);
-        Spinner DistanceUnitDropDown = view.findViewById(R.id.TrasportEntry_DistanceUnit);
+        Spinner CarDistanceUnitDropDown = view.findViewById(R.id.TrasportEntry_DistanceUnit);
         Spinner CarTypeDropDown = view.findViewById(R.id.TransportEntry_CarType);
+        Spinner PublicTransportTypeDropDown = view.findViewById(R.id.TransportEntry_PublicType);
+        Spinner FlightTypeDropDown = view.findViewById(R.id.TransportEntry_FlightType);
+        Spinner WalkCycledDistanceUnitDropDown = view.findViewById(R.id.TransportEntry_WalkedCycledDistanceUnit);
 
-        String[] TransportTypeDropDownItems = {"", "Public Transport", "Car", "Plane"};
+        String[] TransportTypeDropDownItems = {"", "Public Transport", "Car", "Plane", "Walked/Cycled"};
         String[] DistanceUnitDropDownItems = {"Kilometers", "Miles"};
         String[] CarTypeDropDownItems = {"Gasoline", "Diesel", "Hybrid", "Electric"};
+        String[] PublicTransportTypeDropDownItems = {"Bus", "Train", "Subway"};
+        String[] FlightTypeDropDownItems = {"Short-haul (<1,500 km)", "Long-haul (>1,500 km)"};
 
         //Helps map each layout to its respective drop down item value
         HashMap<String, LinearLayout> DynamicFieldsMap = new HashMap<String, LinearLayout>();
@@ -78,9 +82,15 @@ public class TransportEntryPage extends Fragment {
         DynamicFieldsMap.put("Public Transport", PublicContainer);
         DynamicFieldsMap.put("Car", CarContainer);
         DynamicFieldsMap.put("Plane", PlaneContainer);
+        DynamicFieldsMap.put("Walked/Cycled", WalkedCycledContainer);
 
-        DistanceUnitDropDownInit(DistanceUnitDropDown, DistanceUnitDropDownItems);
-        CarTypeDropDownInit(CarTypeDropDown, CarTypeDropDownItems);
+        SpinnerGeneralInit(CarDistanceUnitDropDown, DistanceUnitDropDownItems, "CarDistanceUnit");
+        SpinnerGeneralInit(WalkCycledDistanceUnitDropDown, DistanceUnitDropDownItems, "WalkedCycledDistanceUnit");
+        SpinnerGeneralInit(CarTypeDropDown, CarTypeDropDownItems, "CarType");
+        SpinnerGeneralInit(PublicTransportTypeDropDown, PublicTransportTypeDropDownItems, "PublicType");
+        SpinnerGeneralInit(FlightTypeDropDown, FlightTypeDropDownItems, "FlightType");
+
+
         TransportTypeInit(TransportDropDown, TransportTypeDropDownItems, DynamicFieldsMap, Submit);
 
         TextView dateTextView = view.findViewById(R.id.TransportEntry_Date);
@@ -99,11 +109,12 @@ public class TransportEntryPage extends Fragment {
     /*
     Uploads the Transport entry under the entry/{Date}/transportation directory to firebase for the current user
     (where Date is the selected date) in the following format:
-    3 cases to consider: Transport type is "Public Transport", "Car", or "Plane":
+    3 cases to consider: Transport type is "Public Transport", "Car", "Plane", or "WalkedCycled":
     Case "Public Transport":
         The information with the following format will be uploaded to firebase:
         {
             TransportationType: "Public",
+            PublicType: String,
             TimeOnPublic: Integer
         }
     Case "Car":
@@ -117,7 +128,13 @@ public class TransportEntryPage extends Fragment {
         The information with the following format will be uploaded to firebase:
         {
             TransportationType: "Plane",
-            FlightTime: Integer
+            NmbFlights: Integer
+        }
+    Case "WalkedCycled":
+        The information with the following format will be uploaded to firebase:
+        {
+            TransportationType: "WalkedCycled",
+            Distance: Integer
         }
      */
     private void UploadTranportEntry(View view){
@@ -127,24 +144,57 @@ public class TransportEntryPage extends Fragment {
 
         switch (TransportType){
             case "Public Transport":
-                int TimeOnPublic = Integer.parseInt(((EditText) view.findViewById(R.id.TransportEntry_PublicTime)).getText().toString());
+                EditText TimeonPublicField = view.findViewById(R.id.TransportEntry_PublicTime);
+                if(TimeonPublicField.getText().toString().isEmpty()){
+                    MissingErrorField(TimeonPublicField);
+                    return;
+                }
+                int TimeOnPublic = Integer.parseInt(TimeonPublicField.getText().toString());
                 data.put("TransportationType", "Public");
+                data.put("PublicType", SpinnerOptions.get("PublicType"));
                 data.put("TimeOnPublic", TimeOnPublic);
                 break;
             case "Car":
-                int DistanceDriven = Integer.parseInt(((EditText) view.findViewById(R.id.TransportEntry_DistanceDriven)).getText().toString());
+                EditText DistanceDrivenField =  view.findViewById(R.id.TransportEntry_DistanceDriven);
+                if(DistanceDrivenField.getText().toString().isEmpty()){
+                    MissingErrorField(DistanceDrivenField);
+                    return;
+                }
+                int DistanceDriven = Integer.parseInt(DistanceDrivenField.getText().toString());
+
                 data.put("TransportationType", "Car");
-                if(CarDistanceUnit.equals("Miles")){
+                if(SpinnerOptions.get("CarDistanceUnit").equals("Miles")){
                     data.put("Distance", (int)(DistanceDriven*1.60934));
                 }else{
                     data.put("Distance", DistanceDriven);
                 }
-                data.put("CarType", CarType);
+                data.put("CarType", SpinnerOptions.get("CarType"));
                 break;
             case "Plane":
-                int FlightTime = Integer.parseInt(((EditText) view.findViewById(R.id.TransportEntry_FlightTime)).getText().toString());
+                EditText NmbFlightsField =  view.findViewById(R.id.TransportEntry_NmbFlights);
+                if(NmbFlightsField.getText().toString().isEmpty()){
+                    MissingErrorField(NmbFlightsField);
+                    return;
+                }
+                int NmbFlights = Integer.parseInt(NmbFlightsField.getText().toString());
+
                 data.put("TransportationType", "Plane");
-                data.put("FlightTime", FlightTime);
+                data.put("NmbFlights", NmbFlights);
+                data.put("FlightType", SpinnerOptions.get("FlightType"));
+                break;
+            case "Walked/Cycled":
+                EditText DistanceWalkedCycledField =  view.findViewById(R.id.TransportEntry_DistanceWalkedCycled);
+                if(DistanceWalkedCycledField.getText().toString().isEmpty()){
+                    MissingErrorField(DistanceWalkedCycledField);
+                    return;
+                }
+                int DistanceWalkedCycled = Integer.parseInt(DistanceWalkedCycledField.getText().toString());
+                data.put("TransportationType", "WalkedCycled");
+                if(SpinnerOptions.get("WalkedCycledDistanceUnit").equals("Miles")){
+                    data.put("Distance", (int)(DistanceWalkedCycled*1.60934));
+                }else{
+                    data.put("Distance", DistanceWalkedCycled);
+                }
                 break;
             default:
                 Toast.makeText(currentContext, "Key error on upload", Toast.LENGTH_SHORT).show();
@@ -163,7 +213,7 @@ public class TransportEntryPage extends Fragment {
     }
 
     //Assigns the given DropDownItems to the Spinner object, DropDown
-    private void SpinnerInit(Spinner DropDown, String[] DropDownItems){
+    private void SpinnerItemInit(Spinner DropDown, String[] DropDownItems){
         ArrayAdapter<String> TransportTypeAdapter = new ArrayAdapter<>(
                 currentContext,
                 android.R.layout.simple_spinner_item,
@@ -174,28 +224,14 @@ public class TransportEntryPage extends Fragment {
         DropDown.setAdapter(TransportTypeAdapter);
     }
 
-    //Initializes DistanceUnitDropDown
-    private void DistanceUnitDropDownInit(Spinner DistanceUnitDropDown, String[] DistanceUnitDropDownItems){
-        SpinnerInit(DistanceUnitDropDown, DistanceUnitDropDownItems);
+    //Initializes general spinner
+    private void SpinnerGeneralInit(Spinner DistanceUnitDropDown, String[] DistanceUnitDropDownItems, String type){
+        SpinnerItemInit(DistanceUnitDropDown, DistanceUnitDropDownItems);
 
         DistanceUnitDropDown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                CarDistanceUnit = parent.getItemAtPosition(position).toString();
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
-        });
-    }
-
-    //Initializes CarTypeDropDown
-    private void CarTypeDropDownInit(Spinner CarTypeDropDown, String[] CarTypeDropDownItems){
-        SpinnerInit(CarTypeDropDown, CarTypeDropDownItems);
-
-        CarTypeDropDown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                CarType = parent.getItemAtPosition(position).toString();
+                SpinnerOptions.put(type, parent.getItemAtPosition(position).toString());
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
@@ -208,7 +244,7 @@ public class TransportEntryPage extends Fragment {
         depending on the selected transportation type
      */
     private void TransportTypeInit(Spinner TransportDropDown, String[] TransportTypeDropDownItems, HashMap<String, LinearLayout> DynamicFieldsMap, Button Submit){
-        SpinnerInit(TransportDropDown, TransportTypeDropDownItems);
+        SpinnerItemInit(TransportDropDown, TransportTypeDropDownItems);
 
         TransportDropDown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -263,6 +299,15 @@ public class TransportEntryPage extends Fragment {
             );
             datePickerDialog.show();
         });
+    }
+
+    private void MissingErrorField(EditText Field){
+        SetErrorField(Field, "Missing, Please fill");
+    }
+
+    private void SetErrorField(EditText Field, String ErrorMsg){
+        Field.setError(ErrorMsg);
+        Field.requestFocus();
     }
 
 }

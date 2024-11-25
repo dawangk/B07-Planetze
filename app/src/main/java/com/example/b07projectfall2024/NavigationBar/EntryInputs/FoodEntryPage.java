@@ -80,13 +80,15 @@ public class FoodEntryPage extends Fragment {
     private void UploadFoodEntry(View view){
         HashMap<String, Object> data = new HashMap<>();
 
-        data.put("MealType", SelectedMeal);
-        String ThrownFoodString = ((EditText) view.findViewById(R.id.FoodEntry_WastedFood)).getText().toString();
-        if(ThrownFoodString.isEmpty()){
-            data.put("ThrownFood", 0);
-        }else{
-            data.put("ThrownFood", Integer.parseInt(ThrownFoodString));
+        EditText NmbConsumedServingsField =  view.findViewById(R.id.FoodEntry_NmbConsumedServings);
+        if(NmbConsumedServingsField.getText().toString().isEmpty()){
+            MissingErrorField(NmbConsumedServingsField);
+            return;
         }
+
+        data.put("NmbConsumedServings", Integer.parseInt(NmbConsumedServingsField.getText().toString()));
+
+        data.put("MealType", SelectedMeal);
 
         DatabaseReference ChildRef = db.child("users").child(mAuth.getUid()).child("entries").child(CurrentSelectedDate).child("food").push();
         ChildRef.setValue(data)
@@ -149,6 +151,15 @@ public class FoodEntryPage extends Fragment {
             );
             datePickerDialog.show();
         });
+    }
+
+    private void MissingErrorField(EditText Field){
+        SetErrorField(Field, "Missing, Please fill");
+    }
+
+    private void SetErrorField(EditText Field, String ErrorMsg){
+        Field.setError(ErrorMsg);
+        Field.requestFocus();
     }
 
 }

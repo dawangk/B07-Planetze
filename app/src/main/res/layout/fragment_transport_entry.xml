@@ -67,7 +67,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:ems="10"
-                android:inputType="number" />
+                android:inputType="number"
+                android:maxLength="6" />
 
             <TextView
                 android:id="@+id/textView16"
@@ -97,9 +98,20 @@
         <LinearLayout
             android:id="@+id/TransportEntry_PublicOption"
             android:layout_width="match_parent"
-            android:layout_height="83dp"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:visibility="gone">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Type of Public Transport"
+                android:textSize="24sp" />
+
+            <Spinner
+                android:id="@+id/TransportEntry_PublicType"
+                android:layout_width="match_parent"
+                android:layout_height="48dp" />
 
             <TextView
                 android:id="@+id/textView10"
@@ -113,14 +125,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:ems="10"
-                android:inputType="number" />
+                android:inputType="number"
+                android:maxLength="6" />
 
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/TransportEntry_FlightOption"
             android:layout_width="match_parent"
-            android:layout_height="84dp"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:visibility="gone">
 
@@ -128,15 +141,64 @@
                 android:id="@+id/textView11"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Time on Flight (Hours)"
+                android:text="Number of Flights"
                 android:textSize="24dp" />
 
             <EditText
-                android:id="@+id/TransportEntry_FlightTime"
+                android:id="@+id/TransportEntry_NmbFlights"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:ems="10"
-                android:inputType="number" />
+                android:inputType="number"
+                android:maxLength="6" />
+
+            <TextView
+                android:id="@+id/textView23"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Flight Type"
+                android:textSize="24sp" />
+
+            <Spinner
+                android:id="@+id/TransportEntry_FlightType"
+                android:layout_width="match_parent"
+                android:layout_height="48dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/TransportEntry_WalkCycled"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/textView24"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Distance Cycles/Walked"
+                android:textSize="24sp" />
+
+            <EditText
+                android:id="@+id/TransportEntry_DistanceWalkedCycled"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="number"
+                android:maxLength="6" />
+
+            <TextView
+                android:id="@+id/textView25"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Distance Unit"
+                android:textSize="24sp" />
+
+            <Spinner
+                android:id="@+id/TransportEntry_WalkedCycledDistanceUnit"
+                android:layout_width="match_parent"
+                android:layout_height="48dp" />
+
         </LinearLayout>
 
         <Button

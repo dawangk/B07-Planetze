@@ -20,6 +20,7 @@ public class EntryNavigatorPage extends Fragment {
         this.home = home;
     }
 
+    public EntryNavigatorPage(){}
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

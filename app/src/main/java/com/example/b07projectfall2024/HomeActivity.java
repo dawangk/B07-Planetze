@@ -44,9 +44,9 @@ public class HomeActivity extends AppCompatActivity
         int itemId = item.getItemId();
         if (itemId == R.id.eco_tracker) { // For NewEntryFragment
             selectedFragment = newEntryFragment;
-        } else if (itemId == R.id.dashboard) { // For SecondFragment
+        } else if (itemId == R.id.dashboard) { // For DashboardFragment
             selectedFragment = dashboardFragment;
-        } else if (itemId == R.id.settings) { // For ThirdFragment
+        } else if (itemId == R.id.settings) { // For SettingsFragment
             selectedFragment = settingsFragment;
         }
 

@@ -30,18 +30,48 @@
             android:textColor="@color/black"
             android:layout_marginBottom="20dp"/>
 
-        <EditText
-            android:id="@+id/dateEditText"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Select Date"
-            android:focusable="false"
+            android:orientation="horizontal"
+            android:layout_marginStart="30dp">
+
+          <TextView
+            android:id="@+id/dateText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:gravity="center"
-            android:layout_marginStart="40dp"
-            android:layout_marginEnd="40dp"
             android:textColor="@color/black"
-            android:textColorHint="@color/black"
-            android:layout_marginBottom="10dp"/>
+            android:text="Date:"
+            android:textSize="20dp"
+            android:layout_marginBottom="10dp"
+              android:layout_marginRight="15dp"/>
+
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginRight="20dp"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:layout_marginBottom="10dp"/>
+
+            <Button
+                android:id="@+id/dateUpdate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:text="Update"
+                android:textStyle="bold"
+                android:fontFamily="@font/bold_font"
+                android:textColor="@color/white"
+                android:textSize="15dp"
+                android:background="@color/dark_gray"
+                android:padding="10dp"
+                android:layout_marginBottom="5dp"/>
+
+        </LinearLayout>
 
         <View
             android:id="@+id/colorBar"
@@ -50,7 +80,7 @@
             android:layout_marginStart="30dp"
             android:layout_marginEnd="30dp"
             android:background="#FF0000"
-            android:layout_gravity="center"/>
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -107,31 +137,7 @@
             />
 
         <TextView
-            android:id="@+id/car_emissions"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/reg_font"
-            android:textSize="17dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="30dp"
-            android:textColor="@color/black"
-            android:gravity="left"
-            />
-
-        <TextView
-            android:id="@+id/transit_emissions"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/reg_font"
-            android:textSize="17dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="30dp"
-            android:textColor="@color/black"
-            android:gravity="left"
-            />
-
-        <TextView
-            android:id="@+id/flight_emissions"
+            android:id="@+id/transport_emissions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/reg_font"

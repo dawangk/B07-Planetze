@@ -9,18 +9,13 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.b07projectfall2024.HomeActivity;
 import com.example.b07projectfall2024.R;
 
 public class EntryNavigatorPage extends Fragment {
 
-    private HomeActivity home;
-    public EntryNavigatorPage(HomeActivity home){
-        this.home = home;
-    }
-
-    public EntryNavigatorPage(){}
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -33,25 +28,32 @@ public class EntryNavigatorPage extends Fragment {
         buttonTransport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                home.loadFragment(new TransportEntryPage(), true);
+                loadFragment(new TransportEntryPage(), true);
             }
         });
 
         buttonFood.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                home.loadFragment(new FoodEntryPage(), true);
+                loadFragment(new FoodEntryPage(), true);
             }
         });
 
         buttonShopping.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                home.loadFragment(new ConsumptionEntry(), true);
+                loadFragment(new ConsumptionEntry(), true);
             }
         });
 
         return view;
+    }
+
+    private void loadFragment(Fragment fragment, boolean addToStack) {
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, fragment);
+        if (addToStack) transaction.addToBackStack(null);
+        transaction.commit();
     }
 
 }

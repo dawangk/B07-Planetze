@@ -11,6 +11,7 @@ import com.example.b07projectfall2024.NavigationBar.EntryInputs.EntryNavigatorPa
 import com.example.b07projectfall2024.NavigationBar.DashboardFragment;
 import com.example.b07projectfall2024.NavigationBar.SettingsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class HomeActivity extends AppCompatActivity
         implements BottomNavigationView.OnNavigationItemSelectedListener {
@@ -32,7 +33,7 @@ public class HomeActivity extends AppCompatActivity
     }
 
     // Fragments to be used in the BottomNavigationView
-    EntryNavigatorPage newEntryFragment = new EntryNavigatorPage(this);
+    EntryNavigatorPage newEntryFragment = new EntryNavigatorPage();
     DashboardFragment dashboardFragment = new DashboardFragment();
     SettingsFragment settingsFragment = new SettingsFragment();
 
@@ -59,7 +60,7 @@ public class HomeActivity extends AppCompatActivity
         return false;
     }
 
-    public void loadFragment(Fragment fragment, boolean addToStack) {
+    private void loadFragment(Fragment fragment, boolean addToStack) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, fragment);
         if (addToStack) transaction.addToBackStack(null);

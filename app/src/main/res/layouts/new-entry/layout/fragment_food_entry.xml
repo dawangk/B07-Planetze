@@ -49,15 +49,16 @@
             android:id="@+id/textView9"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Amount of food thrown away (%)"
+            android:text="Number of Servings"
             android:textSize="24sp" />
 
         <EditText
-            android:id="@+id/FoodEntry_WastedFood"
+            android:id="@+id/FoodEntry_NmbConsumedServings"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:ems="10"
-            android:inputType="numberDecimal" />
+            android:inputType="numberDecimal"
+            android:maxLength="6" />
 
         <Button
             android:id="@+id/FoodEntry_Submit"

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Questionnaire.QuestionnaireConsumptionActivity2"
+    android:background="#a9bcd0"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_gravity="center"
+        android:src="@drawable/app_logo_no_bg"
+        android:padding="30dp">
+    </ImageView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:text="How many electronic devices (phones, laptops, etc.) have you purchased in the past year?"
+        android:textColor="#1b1b1e"
+        android:fontFamily="@font/reg_font"
+        android:textSize="20dp"
+        android:padding="10dp"
+        android:textStyle="bold">
+    </TextView>
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/min"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="None"
+            android:textColor="#1b1b1e"
+            android:textSize="17dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-10dp"
+            android:layout_marginStart="15dp"/>
+
+        <RadioButton
+            android:id="@+id/less"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1"
+            android:textColor="#1b1b1e"
+            android:textSize="17dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-10dp"
+            android:layout_marginStart="15dp"/>
+
+        <RadioButton
+            android:id="@+id/mid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2"
+            android:textColor="#1b1b1e"
+            android:textSize="17dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-10dp"
+            android:layout_marginStart="15dp"/>
+
+        <RadioButton
+            android:id="@+id/more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3"
+            android:textColor="#1b1b1e"
+            android:textSize="17dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-10dp"
+            android:layout_marginStart="15dp"/>
+
+        <RadioButton
+            android:id="@+id/max"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="4 or more"
+            android:textColor="#1b1b1e"
+            android:textSize="17dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-10dp"
+            android:layout_marginStart="15dp"/>
+
+    </RadioGroup>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:text="How often do you recycle?"
+        android:textColor="#1b1b1e"
+        android:fontFamily="@font/reg_font"
+        android:textSize="20dp"
+        android:padding="10dp"
+        android:textStyle="bold">
+    </TextView>
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/never"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Never"
+            android:textColor="#1b1b1e"
+            android:textSize="17dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-10dp"
+            android:layout_marginStart="15dp"/>
+
+        <RadioButton
+            android:id="@+id/occasionally"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Occasionally"
+            android:textColor="#1b1b1e"
+            android:textSize="17dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-10dp"
+            android:layout_marginStart="15dp"/>
+
+        <RadioButton
+            android:id="@+id/frequently"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Frequently"
+            android:textColor="#1b1b1e"
+            android:textSize="17dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-10dp"
+            android:layout_marginStart="15dp"/>
+
+        <RadioButton
+            android:id="@+id/always"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Always"
+            android:textColor="#1b1b1e"
+            android:textSize="17dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginTop="-10dp"
+            android:layout_marginStart="15dp"/>
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Next"
+        android:textStyle="bold"
+        android:fontFamily="@font/bold_font"
+        android:textColor="#d8dbe2"
+        android:backgroundTint="#373f51"
+        android:layout_gravity="right"
+        android:layout_marginEnd="20dp"/>
+
+</LinearLayout>

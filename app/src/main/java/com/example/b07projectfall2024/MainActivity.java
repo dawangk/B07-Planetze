@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void loadFragment(Fragment fragment, boolean addToStack) {
+   private void loadFragment(Fragment fragment, boolean addToStack) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, fragment);
         if (addToStack) transaction.addToBackStack(null);

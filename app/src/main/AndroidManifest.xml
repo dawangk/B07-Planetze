@@ -10,41 +10,22 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.B07ProjectFall2024"
+        android:theme="@style/Theme.B07Planetze.Light"
         tools:targetApi="31">
-        <activity
-            android:name=".ItemAdapater"
-            android:exported="false" />
-        <activity
-            android:name=".Item"
-            android:exported="false" />
-        <activity
-            android:name=".Item2"
-            android:exported="false" />
-        <activity
-            android:name=".SpinnerFragment"
-            android:exported="false" />
-        <activity
-            android:name=".RecyclerViewFragment"
-            android:exported="false" />
         <activity
             android:name=".HomeActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity2"
+            android:name=".MainActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".LoginPage.LoginActivityView"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".LoginPage.LoginActivityView"
-            android:label="@string/app_name" >
         </activity>
         <activity
             android:name=".RegisterPage.RegisterActivityView"
@@ -54,6 +35,54 @@
             android:name=".ForgotPasswordPage.ForgotPasswordView"
             android:label="@string/app_name" >
         </activity>
+        <activity
+            android:name=".Questionnaire.QuestionnaireActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Questionnaire.QuestionnaireActivity2"
+            android:exported="false" />
+        <activity
+            android:name=".Questionnaire.QuestionnaireCarActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Questionnaire.QuestionnaireTransitActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Questionnaire.QuestionnaireFlightActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Questionnaire.QuestionnaireFoodActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Questionnaire.QuestionnaireFoodActivity2"
+            android:exported="false" />
+        <activity
+            android:name=".Questionnaire.QuestionnaireMeatActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Questionnaire.QuestionnaireMeatActivity2"
+            android:exported="false" />
+        <activity
+            android:name=".Questionnaire.QuestionnaireHousingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Questionnaire.QuestionnaireHousingActivity2"
+            android:exported="false" />
+        <activity
+            android:name=".Questionnaire.QuestionnaireHousingActivity3"
+            android:exported="false" />
+        <activity
+            android:name=".Questionnaire.QuestionnaireHousingActivity4"
+            android:exported="false" />
+        <activity
+            android:name=".Questionnaire.QuestionnaireConsumptionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Questionnaire.QuestionnaireConsumptionActivity2"
+            android:exported="false" />
+        <activity
+            android:name=".Questionnaire.DisplayResultsActivity"
+            android:exported="false" />
 
     </application>
 

@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.b07projectfall2024.HomeActivity;
 import com.example.b07projectfall2024.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -29,7 +30,6 @@ import java.util.HashMap;
 import java.util.Locale;
 
 public class FoodEntryPage extends Fragment {
-
     private Context currentContext;
 
     private DatabaseReference db;
@@ -50,7 +50,7 @@ public class FoodEntryPage extends Fragment {
         //item drop down
         Spinner MealType = view.findViewById(R.id.FoodEntry_MealType);
 
-        String[] MealTypeItems = {"", "Vegetarian", "Pork", "Beef", "Fish", "Chicken"};
+        String[] MealTypeItems = {"Vegetarian", "Pork", "Beef", "Fish", "Chicken"};
 
         SelectedMealSpinnerInit(MealType, MealTypeItems);
 
@@ -95,11 +95,16 @@ public class FoodEntryPage extends Fragment {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Toast.makeText(currentContext, "Successfully stored entry", Toast.LENGTH_SHORT).show();
+                        popFragment();
                     } else {
                         Toast.makeText(currentContext, "Error: "+task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
 
+    }
+
+    private void popFragment(){
+        getActivity().getSupportFragmentManager().popBackStack();
     }
 
     //Initializes the spinner, MealType

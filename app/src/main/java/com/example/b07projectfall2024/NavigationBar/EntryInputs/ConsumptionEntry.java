@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.b07projectfall2024.HomeActivity;
 import com.example.b07projectfall2024.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -184,11 +185,16 @@ public class ConsumptionEntry extends Fragment {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Toast.makeText(currentContext, "Successfully stored entry", Toast.LENGTH_SHORT).show();
+                        popFragment();
                     } else {
                         Toast.makeText(currentContext, "Error: "+task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
 
+    }
+
+    private void popFragment(){
+        getActivity().getSupportFragmentManager().popBackStack();
     }
 
     //Assigns the given DropDownItems to the Spinner object, DropDown

@@ -3,6 +3,7 @@ package com.example.b07projectfall2024.NavigationBar;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -42,13 +43,16 @@ public class DashboardFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        return inflater.inflate(R.layout.fragment_dashboard, container, false); }
+
+    @Override
+    public void onViewCreated(@NonNull View rootView, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(rootView, savedInstanceState);
+
         FirebaseDatabase db = FirebaseDatabase.getInstance();
         DatabaseReference ref = db.getReference();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
-
-        View rootView = inflater.inflate(R.layout.fragment_dashboard, container, false);
-
         currentContext = getContext();
 
         Button dateUpdate = rootView.findViewById(R.id.dateUpdate);
@@ -62,7 +66,7 @@ public class DashboardFragment extends Fragment {
         TextView consumption_emissions = rootView.findViewById(R.id.consumption_emissions);
 
         //FOR TODAY
-        DatabaseReference dayRef = ref.child("users").child(user.getUid()).child(CurrentSelectedDate);
+        DatabaseReference dayRef = ref.child("users").child(user.getUid()).child("entries").child(CurrentSelectedDate);
 
         //If entries for the day exist, display. Else, display zero.
         dayRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -91,8 +95,7 @@ public class DashboardFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                DatabaseReference dayRef2 = ref.child("users").child(user.getUid()).
-                        child(CurrentSelectedDate);
+                DatabaseReference dayRef2 = ref.child("users").child(user.getUid()).child("entries").child(CurrentSelectedDate);
 
                 //If entries for the day exist, display. Else, display zero.
                 dayRef2.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -118,8 +121,6 @@ public class DashboardFragment extends Fragment {
 
             }
         });
-
-        return rootView;
     }
 
     //Initializes DateField allowing users to select any date
@@ -220,15 +221,41 @@ public class DashboardFragment extends Fragment {
                 //Looping over all transportation entries
                 for (DataSnapshot childSnapshot : snapshot.getChildren()) {
 
-                    String transportType = childSnapshot.child("TransportationType").getValue(String.class);
+                    DatabaseReference transportTypeRef = childSnapshot.getRef().child("TransportationType");
+                    String[] transportType = {""};
+                    transportTypeRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.exists()) {
+                                transportType[0] = snapshot.getValue(String.class);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                        }
+                    });
 
                     //Different calculations depending on transportation type
-                    switch (transportType) {
+                    switch (transportType[0]) {
 
                         case "Car":
 
-                            String carType = childSnapshot.child("CarType").getValue(String.class);
-                            DatabaseReference rateRef = FirebaseDatabase.getInstance().getReference().child("Car Emission Rates").child(carType);
+                            DatabaseReference carTypeRef = childSnapshot.getRef().child("CarType");
+                            String[] carType = {""};
+                            carTypeRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (snapshot.exists()) {
+                                        carType[0] = snapshot.getValue(String.class);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                }
+                            });
+                            DatabaseReference rateRef = FirebaseDatabase.getInstance().getReference().child("Car Emission Rates").child(carType[0]);
                             double[] rate = {0};
 
                             rateRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -244,31 +271,86 @@ public class DashboardFragment extends Fragment {
                                 }
                             });
 
-                            double distanceDriven = childSnapshot.child("Distance").getValue(Double.class);
+                            DatabaseReference distanceDrivenRef = childSnapshot.getRef().child("Distance");
+                            double[] distanceDriven = {0.0};
+                            distanceDrivenRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (snapshot.exists()) {
+                                        distanceDriven[0] = snapshot.getValue(Double.class);
+                                    }
+                                }
 
-                            transportEmissions[0] += rate[0] * distanceDriven;
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+
+                            transportEmissions[0] += rate[0] * distanceDriven[0];
                             break;
 
                         case "Public":
 
-                            double timeOnPublic = childSnapshot.child("TimeOnPublic").getValue(Double.class);
-                            transportEmissions[0] += timeOnPublic * 150;
+                            DatabaseReference timeOnPublicRef = childSnapshot.getRef().child("TimeOnPublic");
+                            double[] timeOnPublic = {0.0};
+                            timeOnPublicRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (snapshot.exists()) {
+                                        timeOnPublic[0] = snapshot.getValue(Double.class);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+                            transportEmissions[0] += timeOnPublic[0] * 150;
                             break;
 
                         case "Flight":
 
-                            int numFlights = childSnapshot.child("NmbFlights").getValue(Integer.class);
-                            String flightType = childSnapshot.child("FlightType").getValue(String.class);
+                            DatabaseReference numFlightsRef = childSnapshot.getRef().child("NmbFlights");
+                            int[] numFlights = {0};
+                            numFlightsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (snapshot.exists()) {
+                                        numFlights[0] = snapshot.getValue(Integer.class);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                }
+                            });
+
+                            DatabaseReference flightTypeRef = childSnapshot.getRef().child("FlightType");
+                            String[] flightType = {""};
+                            flightTypeRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (snapshot.exists()) {
+                                        flightType[0] = snapshot.getValue(String.class);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                }
+                            });
                             double rate2;
 
-                            if (flightType.equals("Short-haul (<1,500 km)")) {
+                            if (flightType[0].equals("Short-haul (<1,500 km)")) {
                                 rate2 = 150;
                             }
                             else {
                                 rate2 = 550;
                             }
 
-                            transportEmissions[0] += rate2 * numFlights;
+                            transportEmissions[0] += rate2 * numFlights[0];
 
                         default:
                             break;
@@ -294,8 +376,21 @@ public class DashboardFragment extends Fragment {
                 //Looping over all transportation entries
                 for (DataSnapshot childSnapshot: snapshot.getChildren()) {
 
-                    String mealType = childSnapshot.child("MealType").getValue(String.class);
-                    DatabaseReference rateRef = FirebaseDatabase.getInstance().getReference().child("Food Emissions Rate").child(mealType);
+                    DatabaseReference mealTypeRef = childSnapshot.getRef().child("MealType");
+                    String[] mealType = {""};
+                    mealTypeRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.exists()) {
+                                mealType[0] = snapshot.getValue(String.class);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                        }
+                    });
+                    DatabaseReference rateRef = FirebaseDatabase.getInstance().getReference().child("Food Emissions Rate").child(mealType[0]);
                     double[] rate = {0};
                     rateRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -310,9 +405,22 @@ public class DashboardFragment extends Fragment {
                         }
                     });
 
-                    int numServings = childSnapshot.child("NmbConsumedServings").getValue(Integer.class);
+                    DatabaseReference numServingsRef = childSnapshot.getRef().child("NmbConsumedServings");
+                    int[] numServings = {0};
+                    numServingsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.exists()) {
+                                numServings[0] = snapshot.getValue(Integer.class);
+                            }
+                        }
 
-                    foodEmissions[0] += rate[0] * numServings;
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                        }
+                    });
+
+                    foodEmissions[0] += rate[0] * numServings[0];
                 }
             }
 
@@ -334,23 +442,75 @@ public class DashboardFragment extends Fragment {
                 //Looping over all transportation entries
                 for (DataSnapshot childSnapshot: snapshot.getChildren()) {
 
-                    String boughtItem = childSnapshot.child("BoughtItem").getValue(String.class);
+                    DatabaseReference boughtItemRef = childSnapshot.getRef().child("BoughtItem");
+                    String[] boughtItem = {""};
+                    boughtItemRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.exists()) {
+                                boughtItem[0] = snapshot.getValue(String.class);
+                            }
+                        }
 
-                    switch (boughtItem) {
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                        }
+                    });
+
+                    switch (boughtItem[0]) {
 
                         case "Clothes":
 
-                            int numClothes = childSnapshot.child("NmbClothingBought").getValue(Integer.class);
+                            DatabaseReference numClothesRef = childSnapshot.getRef().child("NmbClothingBought");
+                            int[] numClothes = {0};
+                            numClothesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (snapshot.exists()) {
+                                        numClothes[0] = snapshot.getValue(Integer.class);
+                                    }
+                                }
 
-                            consumptionEmissions[0] += 10 * numClothes;
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                }
+                            });
+
+                            consumptionEmissions[0] += 10 * numClothes[0];
                             break;
 
                         case "Electronics":
 
-                            int numPurchased = childSnapshot.child("NmbPurchased").getValue(Integer.class);
-                            String electronicType = childSnapshot.child("ElectronicType").getValue(String.class);
+                            DatabaseReference numPurchasedRef = childSnapshot.getRef().child("NmbPurchased");
+                            int[] numPurchased = {0};
+                            numPurchasedRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (snapshot.exists()) {
+                                        numPurchased[0] = snapshot.getValue(Integer.class);
+                                    }
+                                }
 
-                            DatabaseReference rateRef = FirebaseDatabase.getInstance().getReference().child("Electronic Emission Rates").child(electronicType);
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                }
+                            });
+                            DatabaseReference electronicTypeRef = childSnapshot.getRef().child("ElectronicType");
+                            String[] electronicType = {""};
+                            electronicTypeRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (snapshot.exists()) {
+                                        electronicType[0] = snapshot.getValue(String.class);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                }
+                            });
+
+                            DatabaseReference rateRef = FirebaseDatabase.getInstance().getReference().child("Electronic Emission Rates").child(electronicType[0]);
                             int[] rate = {0};
                             rateRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
@@ -365,15 +525,41 @@ public class DashboardFragment extends Fragment {
                                 }
                             });
 
-                            consumptionEmissions[0] += rate[0] * numPurchased;
+                            consumptionEmissions[0] += rate[0] * numPurchased[0];
                             break;
 
                         case "Utility Bill":
 
-                            int billPrice = childSnapshot.child("BillPrice").getValue(Integer.class);
-                            String UtilityType = childSnapshot.child("UtilityType").getValue(String.class);
+                            DatabaseReference billPriceRef = childSnapshot.getRef().child("BillPrice");
+                            int[] billPrice = {0};
+                            billPriceRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (snapshot.exists()) {
+                                        billPrice[0] = snapshot.getValue(Integer.class);
+                                    }
+                                }
 
-                            DatabaseReference rateRef2 = FirebaseDatabase.getInstance().getReference().child("Utility Emission Rates").child(UtilityType);
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                }
+                            });
+                            DatabaseReference UtilityTypeRef = childSnapshot.getRef().child("UtilityType");
+                            String[] UtilityType = {""};
+                            UtilityTypeRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (snapshot.exists()) {
+                                        UtilityType[0] = snapshot.getValue(String.class);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                }
+                            });
+
+                            DatabaseReference rateRef2 = FirebaseDatabase.getInstance().getReference().child("Utility Emission Rates").child(UtilityType[0]);
                             double[] rate2 = {0};
                             rateRef2.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
@@ -388,22 +574,48 @@ public class DashboardFragment extends Fragment {
                                 }
                             });
 
-                            consumptionEmissions[0] += rate2[0] * billPrice;
+                            consumptionEmissions[0] += rate2[0] * billPrice[0];
                             break;
 
                         case "Other":
 
-                            int numBought = childSnapshot.child("NmbPurchased").getValue(Integer.class);
-                            String itemType = childSnapshot.child("ItemType").getValue(String.class);
+                            DatabaseReference numBoughtRef = childSnapshot.getRef().child("NmbPurchased");
+                            int[] numBought = {0};
+                            numBoughtRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (snapshot.exists()) {
+                                        numBought[0] = snapshot.getValue(Integer.class);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                }
+                            });
+                            DatabaseReference itemTypeRef = childSnapshot.getRef().child("ItemType");
+                            String[] itemType = {""};
+                            itemTypeRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (snapshot.exists()) {
+                                        itemType[0] = snapshot.getValue(String.class);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                }
+                            });
 
                             int rate3 = 1;
-                            if (itemType.equals("Furniture")) {
+                            if (itemType[0].equals("Furniture")) {
                                 rate3 = 100;
-                            } else if (itemType.equals("Appliances")) {
+                            } else if (itemType[0].equals("Appliances")) {
                                 rate3 = 400;
                             }
 
-                            consumptionEmissions[0] += rate3 * numBought;
+                            consumptionEmissions[0] += rate3 * numBought[0];
                             break;
 
                         default:

@@ -42,6 +42,7 @@ public class DisplayResultsActivity extends AppCompatActivity {
         TextView diet_emissions_text = findViewById(R.id.diet_emissions);
         TextView housing_emissions_text = findViewById(R.id.housing_emissions);
         TextView consumption_emissions_text = findViewById(R.id.consumption_emissions);
+        TextView compare_global_text = findViewById(R.id.compare_global);
         Button next = findViewById(R.id.next);
 
         double kg_to_tons = 0.00110231;
@@ -56,6 +57,17 @@ public class DisplayResultsActivity extends AppCompatActivity {
         housing_emissions_text.setText("Housing Emissions: " + (housing_emissions * kg_to_tons) + " tons");
         consumption_emissions_text.setText("Consumption Emissions: " + (consumption_emissions * kg_to_tons) + " tons");
 
+        //Comparing the user's carbon emissions to global targets (2tons/CO2 per year)
+        double difference = 2 - (final_emissions * kg_to_tons);
+        boolean under = difference > 0;
+        String overUnder = "above";
+        if (under) {
+            overUnder = "below";
+        }
+        compare_global_text.setText("Your emissions are " + Math.abs(difference) + " tons " + overUnder + " global targets to reduce climate change!");
+
+
+        //Storing their emissions in the database and moving to main activity.
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -61,13 +61,13 @@
                 android:id="@+id/dateUpdate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="right"
+                android:gravity="center"
                 android:text="Update"
                 android:textStyle="bold"
                 android:fontFamily="@font/bold_font"
                 android:textColor="@color/white"
                 android:textSize="15dp"
-                android:background="@color/dark_gray"
+                android:backgroundTint="@color/dark_gray"
                 android:padding="10dp"
                 android:layout_marginBottom="5dp"/>
 

@@ -1,4 +1,4 @@
-package com.example.b07projectfall2024.WelcomPagepackage;
+package com.example.b07projectfall2024.WelcomPage;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.b07projectfall2024.LoginPage.LoginActivityView;
 import com.example.b07projectfall2024.RegisterPage.RegisterActivityView;
 
@@ -23,7 +22,7 @@ public class WelcomeActivity extends AppCompatActivity {
         boolean isFirstLaunch = prefs.getBoolean("isFirstLaunch", true);
 
         if (!isFirstLaunch) {
-            startMainActivity();
+            startLoginActivityView();
             return;
         }
 
@@ -52,6 +51,12 @@ public class WelcomeActivity extends AppCompatActivity {
 
     private void startMainActivity() {
         Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void startLoginActivityView() {
+        Intent intent = new Intent(WelcomeActivity.this, LoginActivityView.class);
         startActivity(intent);
         finish();
     }

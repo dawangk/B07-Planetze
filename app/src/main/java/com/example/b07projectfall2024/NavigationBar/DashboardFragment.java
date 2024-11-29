@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.b07projectfall2024.HabitTracking.HabitsFragment;
 import com.example.b07projectfall2024.NavigationBar.EntryDisplay.EntryFragment;
 import com.example.b07projectfall2024.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -68,6 +69,7 @@ public class DashboardFragment extends Fragment {
         //List of buttons on the dashboard page
         Button dateUpdate = rootView.findViewById(R.id.dateUpdate);
         Button dateViewDetails = rootView.findViewById(R.id.viewDateDetails);
+        Button viewHabits = rootView.findViewById(R.id.viewHabits);
 
         TextView dateTextView = rootView.findViewById(R.id.date);
         DateFieldInit(dateTextView);
@@ -131,6 +133,20 @@ public class DashboardFragment extends Fragment {
                 fragmentTransaction.commit();
             }
         });
+
+        viewHabits.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container,new HabitsFragment());
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+
+            }
+        });
+
+
     }
 
 

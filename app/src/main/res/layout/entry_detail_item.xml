@@ -1,0 +1,24 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <!-- Type of entry (e.g., Transportation, Food, Consumption) -->
+    <TextView
+        android:id="@+id/detailType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Detail Type"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <!-- Entry-specific details -->
+    <LinearLayout
+        android:id="@+id/detailSpecificContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="4dp" />
+</LinearLayout>

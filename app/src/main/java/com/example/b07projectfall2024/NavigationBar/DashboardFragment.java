@@ -5,6 +5,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.b07projectfall2024.NavigationBar.EntryDisplay.EntryFragment;
 import com.example.b07projectfall2024.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -20,13 +23,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.auth.User;
 
 import android.app.DatePickerDialog;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 import android.content.Context;
+import android.widget.Toast;
 
 
 public class DashboardFragment extends Fragment {
@@ -45,6 +48,10 @@ public class DashboardFragment extends Fragment {
     public DashboardFragment() {
         // Required empty public constructor
     }
+    TextView total_emissions;
+    TextView transport_emissions;
+    TextView diet_emissions;
+    TextView consumption_emissions;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,20 +65,22 @@ public class DashboardFragment extends Fragment {
 
         currentContext = getContext();
 
+        //List of buttons on the dashboard page
         Button dateUpdate = rootView.findViewById(R.id.dateUpdate);
+        Button dateViewDetails = rootView.findViewById(R.id.viewDateDetails);
 
         TextView dateTextView = rootView.findViewById(R.id.date);
         DateFieldInit(dateTextView);
 
-        TextView total_emissions = rootView.findViewById(R.id.total_emissions_text);
-        TextView transport_emissions = rootView.findViewById(R.id.transport_emissions);
-        TextView diet_emissions = rootView.findViewById(R.id.diet_emissions);
-        TextView consumption_emissions = rootView.findViewById(R.id.consumption_emissions);
+         total_emissions = rootView.findViewById(R.id.total_emissions_text);
+         transport_emissions = rootView.findViewById(R.id.transport_emissions);
+         diet_emissions = rootView.findViewById(R.id.diet_emissions);
+         consumption_emissions = rootView.findViewById(R.id.consumption_emissions);
 
-        totalEmissions = 0;
-        transportEmissions = 0;
-        dietEmissions = 0;
-        consumptionEmissions = 0;
+         totalEmissions = 0;
+         transportEmissions = 0;
+         dietEmissions = 0;
+         consumptionEmissions = 0;
 
 
         //FOR TODAY
@@ -108,45 +117,58 @@ public class DashboardFragment extends Fragment {
         dateUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                UpdateData();
+            }
+        });
 
-                DatabaseReference dayRef2 = ref.child("users").child(user.getUid()).child("entries").child(CurrentSelectedDate);
-
-                totalEmissions = 0;
-                transportEmissions = 0;
-                dietEmissions = 0;
-                consumptionEmissions = 0;
-
-                //If entries for the day exist, display. Else, display zero.
-                dayRef2.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.exists()) {
-                            DatabaseReference transportEntries2 = dayRef2.child("transportation");
-                            DatabaseReference foodEntries2 = dayRef2.child("food");
-                            DatabaseReference consumptionEntries2 = dayRef2.child("consumption");
-                            totalEmissions = 0;
-                            getTransportEmissions(transportEntries2, transport_emissions, total_emissions);
-                            getFoodEmissions(foodEntries2, diet_emissions, total_emissions);
-                            getConsumptionEmissions(consumptionEntries2, consumption_emissions, total_emissions);
-                        }
-
-                        else {
-                            total_emissions.setText("0");
-                            transport_emissions.setText("Transportation Emissions: 0kg");
-                            diet_emissions.setText("Diet Emissions: 0kg");
-                            consumption_emissions.setText("Consumptions Emissions: 0kg");
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                    }
-                });
-
+        dateViewDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container,new EntryFragment());
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
             }
         });
     }
 
+
+    private void UpdateData (){
+        DatabaseReference dayRef2 = ref.child("users").child(user.getUid()).child("entries").child(CurrentSelectedDate);
+
+        totalEmissions = 0;
+        transportEmissions = 0;
+        dietEmissions = 0;
+        consumptionEmissions = 0;
+
+        //If entries for the day exist, display. Else, display zero.
+        dayRef2.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    DatabaseReference transportEntries2 = dayRef2.child("transportation");
+                    DatabaseReference foodEntries2 = dayRef2.child("food");
+                    DatabaseReference consumptionEntries2 = dayRef2.child("consumption");
+                    totalEmissions = 0;
+                    getTransportEmissions(transportEntries2, transport_emissions, total_emissions);
+                    getFoodEmissions(foodEntries2, diet_emissions, total_emissions);
+                    getConsumptionEmissions(consumptionEntries2, consumption_emissions, total_emissions);
+                }
+
+                else {
+                    total_emissions.setText("0");
+                    transport_emissions.setText("Transportation Emissions: 0kg");
+                    diet_emissions.setText("Diet Emissions: 0kg");
+                    consumption_emissions.setText("Consumptions Emissions: 0kg");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+    }
     //Initializes DateField allowing users to select any date
     private void DateFieldInit(TextView dateTextView) {
         Calendar calendar = Calendar.getInstance();

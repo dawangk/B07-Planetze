@@ -115,6 +115,18 @@
 
     </TextView>
 
+    <TextView
+        android:id="@+id/compare_global"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="5dp"
+        android:textColor="#1b1b1e"
+        android:textSize="15dp"
+        android:fontFamily="@font/reg_font">
+
+    </TextView>
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#d8dbe2">
+
+    <TextView
+        android:id="@+id/welcomeTitle"
+        android:layout_width="306dp"
+        android:layout_height="91dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="52dp"
+        android:layout_marginTop="52dp"
+        android:layout_marginEnd="52dp"
+        android:fontFamily="monospace"
+        android:gravity="center"
+        android:text="Welcome to"
+        android:textColor="#009999"
+        android:textSize="48sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/welcomeText1"
+        android:layout_width="329dp"
+        android:layout_height="200dp"
+        android:layout_above="@+id/loginButton"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="251dp"
+        android:fontFamily="monospace"
+        android:gravity="center"
+        android:text="Track, reduce, and offset your carbon footprint with Planetze."
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textColor="#009999"
+        android:textSize="28sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/welcomeText2"
+        android:layout_width="366dp"
+        android:layout_height="198dp"
+        android:layout_above="@+id/loginButton"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="67dp"
+        android:fontFamily="monospace"
+        android:gravity="center"
+        android:text="Get personalized insights and make climate action part of your daily life."
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textColor="#009999"
+        android:textSize="28sp"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/loginButton"
+        android:layout_width="172dp"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="100dp"
+        android:backgroundTint="#009999"
+        android:text="Log in"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+    <Button
+        android:id="@+id/registerButton"
+        android:layout_width="172dp"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="31dp"
+        android:backgroundTint="#009999"
+        android:text="Register"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="386dp"
+        android:layout_height="106dp"
+        android:layout_below="@+id/welcomeTitle"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="12dp"
+        android:src="@drawable/app_logo_no_bg" />
+
+
+</RelativeLayout>

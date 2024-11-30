@@ -20,5 +20,14 @@
     <string name="logout">Logout</string>
     <string name="dark_mode">Dark Mode</string>
 
+    <string-array name="time_range_options">
+        <item>Last Week</item>
+        <item>Last Month</item>
+        <item>Last Year</item>
+    </string-array>
+
+    <string name="eco_gauge_title">Eco Gauge</string>
+
+
 
 </resources>

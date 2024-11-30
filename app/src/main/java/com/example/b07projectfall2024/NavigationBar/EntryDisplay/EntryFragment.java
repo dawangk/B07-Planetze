@@ -25,10 +25,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-public class EntryFragment extends Fragment {
+public class EntryFragment extends Fragment implements EntryAdapter.OnItemClickListener{
     private RecyclerView entryRecyclerView;
     private EntryAdapter entryAdapter;
-    String CurrentSelectedDate;
     FirebaseDatabase db = FirebaseDatabase.getInstance();
     DatabaseReference ref = db.getReference();
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -75,7 +74,7 @@ public class EntryFragment extends Fragment {
                     }
                 }
 
-                entryAdapter = new EntryAdapter(newData);
+                entryAdapter = new EntryAdapter(newData,EntryFragment.this);
                 entryRecyclerView.setAdapter(entryAdapter);
                 Log.d("EntryFragment","Data fetched successfully: " + data);
             }
@@ -131,5 +130,15 @@ public class EntryFragment extends Fragment {
                 }
             });
         }
+    }
+
+    @Override
+    public void onEditClick(int position) {
+
+    }
+
+    @Override
+    public void onDeleteClick(int position) {
+
     }
 }

@@ -3,6 +3,8 @@ package com.example.b07projectfall2024.NavigationBar.EntryDisplay;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -17,9 +19,10 @@ import java.util.Map;
 
 public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHolder> {
     private LinkedList< HashMap<String, Object>> entries; // Map of entry types and their details
-
-    public EntryAdapter(LinkedList< HashMap<String, Object>> entries) {
+    private OnItemClickListener listener;
+    public EntryAdapter(LinkedList< HashMap<String, Object>> entries, OnItemClickListener listener) {
         this.entries = entries;
+        this.listener = listener;
     }
 
     @NonNull
@@ -47,6 +50,19 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
             populateConsumptionDetails(holder.detailSpecificContainer, details);
         }
 
+        // Handle Edit button click
+        holder.btnEdit.setOnClickListener(v->{
+            if (listener != null) {
+                listener.onEditClick(position);
+            }
+        });
+
+        // Handle Delete button click
+        holder.btnDelete.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onDeleteClick(position);
+            }
+        });
     }
 
     private void populateTransportationDetails(LinearLayout container, HashMap<String, Object> entry) {
@@ -123,11 +139,20 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
     static class EntryViewHolder extends RecyclerView.ViewHolder {
         TextView detailType;
         LinearLayout detailSpecificContainer;
+        Button btnEdit, btnDelete;
 
         public EntryViewHolder(@NonNull View itemView) {
             super(itemView);
+            btnEdit = itemView.findViewById(R.id.btnEdit);
+            btnDelete = itemView.findViewById(R.id.btnDelete);
             detailType = itemView.findViewById(R.id.detailType);
             detailSpecificContainer = itemView.findViewById(R.id.detailSpecificContainer);
         }
+    }
+
+    // Interface for click handling
+    public interface OnItemClickListener {
+        void onEditClick(int position);
+        void onDeleteClick(int position);
     }
 }

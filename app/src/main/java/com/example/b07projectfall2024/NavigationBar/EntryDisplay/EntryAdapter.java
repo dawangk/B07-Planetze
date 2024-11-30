@@ -65,6 +65,10 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
                 TextView publicDetails = new TextView(container.getContext());
                 publicDetails.setText("Public Type: " + entry.get("PublicType") + ", Time: " + entry.get("TimeOnPublic") + " hours");
                 container.addView(publicDetails);
+            }else if (transportationType.equals("Plane")) {
+                TextView publicDetails = new TextView(container.getContext());
+                publicDetails.setText("Flight Type: " + entry.get("FlightType") + ", Number of Flights: " + entry.get("NumFlights") + " hours");
+                container.addView(publicDetails);
             }
         }
     }
@@ -96,6 +100,14 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
             } else if (boughtItem.equals("Electronics")) {
                 TextView electronicDetails = new TextView(container.getContext());
                 electronicDetails.setText("Type: " + entry.get("ElectronicType") + ", Number: " + entry.get("NmbPurchased"));
+                container.addView(electronicDetails);
+            } else if (boughtItem.equals("Utility Bill")) {
+                TextView electronicDetails = new TextView(container.getContext());
+                electronicDetails.setText("Utility Type: " + entry.get("BillPrice") + ", Bill Price: " + entry.get("BillPrice"));
+                container.addView(electronicDetails);
+            } else if (boughtItem.equals("Other")) {
+                TextView electronicDetails = new TextView(container.getContext());
+                electronicDetails.setText("Item Type: " + entry.get("ItemType") + ", Number: " + entry.get("NmbPurchased"));
                 container.addView(electronicDetails);
             }
         }

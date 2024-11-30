@@ -140,7 +140,8 @@ public class DashboardFragment extends Fragment {
             public void onClick(View v) {
                 FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_container,new EntryFragment());
+                EntryFragment entryFragment = EntryFragment.newInstance(CurrentSelectedDate);
+                fragmentTransaction.replace(R.id.fragment_container, entryFragment);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }

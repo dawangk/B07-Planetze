@@ -162,7 +162,7 @@ public class EntryFragment extends Fragment implements EntryAdapter.OnItemClickL
         cateRef.addListenerForSingleValueEvent(new ValueEventListener() {
            @Override
            public void onDataChange(@NonNull DataSnapshot snapshot) {
-               DatabaseReference entryRef = dayRef.child(category); //Locates the entry
+               DatabaseReference entryRef = cateRef.child(id); //Locates the entry
 
                entryRef.removeValue().addOnCompleteListener(task->{
                    if (task.isSuccessful()) {

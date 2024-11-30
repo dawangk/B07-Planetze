@@ -1,4 +1,4 @@
-package com.example.b07projectfall2024.WelcomPage;
+package com.example.b07projectfall2024;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -49,11 +49,11 @@ public class WelcomeActivity extends AppCompatActivity {
         });
     }
 
-    private void startMainActivity() {
-        Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
-    }
+//    private void startMainActivity() {
+//        Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
+//        startActivity(intent);
+//        finish();
+//    }
 
     private void startLoginActivityView() {
         Intent intent = new Intent(WelcomeActivity.this, LoginActivityView.class);

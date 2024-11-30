@@ -22,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 public class EntryFragment extends Fragment {
@@ -61,16 +62,30 @@ public class EntryFragment extends Fragment {
         fetchDataForDate(date, new DataFetchCallback() {
             @Override
             public void onSuccess(HashMap<String, HashMap<String, Object>> data) {
-                entryAdapter = new EntryAdapter(data);
+                LinkedList<HashMap<String, Object>> newData = new LinkedList<>();
+
+                for (HashMap.Entry<String, HashMap<String, Object>> entry : data.entrySet()) {
+                    String key = entry.getKey();
+                    HashMap<String, Object> value = entry.getValue();
+                    for(HashMap.Entry<String, Object> entry2: value.entrySet()){
+                        HashMap<String, Object> individualEntries = (HashMap<String, Object>)entry2.getValue();
+                        HashMap<String, Object> newValue = new HashMap<>(individualEntries);
+                        newValue.put("EntryCategory", key);
+                        newData.add(newValue);
+                    }
+                }
+
+                entryAdapter = new EntryAdapter(newData);
                 entryRecyclerView.setAdapter(entryAdapter);
                 Log.d("EntryFragment","Data fetched successfully: " + data);
             }
-
             @Override
             public void onError(Exception e) {
                 Log.e("EntryFragment","Error fetching data: " + e.getMessage());
             }
         });
+
+
         return view;
     }
     public interface DataFetchCallback {

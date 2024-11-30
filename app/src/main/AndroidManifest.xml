@@ -86,6 +86,9 @@
         <activity
             android:name=".Questionnaire.DisplayResultsActivity"
             android:exported="false" />
+        <activity
+            android:name=".NavigationBar.EntryDisplay.EcoGaugeActivity" />
+
 
     </application>
 

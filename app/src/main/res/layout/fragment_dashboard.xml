@@ -204,6 +204,15 @@
             android:textAllCaps="false"
             />
 
+        <Button
+            android:id="@+id/btn_eco_gauge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Go to Eco Gauge"
+            android:layout_marginTop="16dp"
+            android:layout_gravity="center_horizontal" />
+
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

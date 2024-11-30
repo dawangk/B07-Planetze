@@ -1,10 +1,12 @@
 package com.example.b07projectfall2024.NavigationBar.EntryDisplay;
 
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,6 +30,7 @@ import java.util.Map;
 public class EntryFragment extends Fragment implements EntryAdapter.OnItemClickListener{
     private RecyclerView entryRecyclerView;
     private EntryAdapter entryAdapter;
+    LinkedList<HashMap<String, Object>> dataList;
     FirebaseDatabase db = FirebaseDatabase.getInstance();
     DatabaseReference ref = db.getReference();
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -70,11 +73,13 @@ public class EntryFragment extends Fragment implements EntryAdapter.OnItemClickL
                         HashMap<String, Object> individualEntries = (HashMap<String, Object>)entry2.getValue();
                         HashMap<String, Object> newValue = new HashMap<>(individualEntries);
                         newValue.put("EntryCategory", key);
+                        newValue.put("ID",entry2.getKey());
                         newData.add(newValue);
                     }
                 }
 
                 entryAdapter = new EntryAdapter(newData,EntryFragment.this);
+                dataList = newData;
                 entryRecyclerView.setAdapter(entryAdapter);
                 Log.d("EntryFragment","Data fetched successfully: " + data);
             }
@@ -139,6 +144,44 @@ public class EntryFragment extends Fragment implements EntryAdapter.OnItemClickL
 
     @Override
     public void onDeleteClick(int position) {
+        // Logic for deleting an item
 
+        String date = null;
+        if (getArguments() != null) {
+            date = getArguments().getString(ARG_PARAM);
+        }
+
+        HashMap<String, Object> item = dataList.get(position);
+
+        DatabaseReference dayRef = ref.child("users").child(user.getUid()).child("entries").child(date);
+        String category = (String) item.get("EntryCategory");
+        String id = (String) item.get("ID");
+
+        DatabaseReference cateRef = dayRef.child(category);
+
+        cateRef.addListenerForSingleValueEvent(new ValueEventListener() {
+           @Override
+           public void onDataChange(@NonNull DataSnapshot snapshot) {
+               DatabaseReference entryRef = dayRef.child(category); //Locates the entry
+
+               entryRef.removeValue().addOnCompleteListener(task->{
+                   if (task.isSuccessful()) {
+                       Log.d("FirebaseDB", "Entry removed successfully.");
+                       Toast.makeText(getContext(), "Entry removed successfully", Toast.LENGTH_SHORT).show();
+                   } else {
+                       Log.e("FirebaseDB", "Failed to remove entry: ", task.getException());
+                   }
+               });
+
+
+           }
+           @Override
+           public void onCancelled(@NonNull DatabaseError error) {
+               Log.e("FirebaseDB", "Error retrieving data", error.toException());
+           }
+        });
+        dataList.remove(position); // Remove the item from the dataset
+        entryAdapter.notifyItemRemoved(position); // Notify the adapter
+        entryAdapter.notifyDataSetChanged();
     }
 }

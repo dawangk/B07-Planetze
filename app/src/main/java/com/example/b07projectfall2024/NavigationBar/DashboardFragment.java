@@ -1,5 +1,6 @@
 package com.example.b07projectfall2024.NavigationBar;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,6 +16,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.b07projectfall2024.HabitTracking.HabitsFragment;
+import com.example.b07projectfall2024.NavigationBar.EntryDisplay.EcoGaugeFragment;
 import com.example.b07projectfall2024.NavigationBar.EntryDisplay.EntryFragment;
 import com.example.b07projectfall2024.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,7 +32,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 import android.content.Context;
-import android.widget.Toast;
 
 
 public class DashboardFragment extends Fragment {
@@ -70,6 +71,8 @@ public class DashboardFragment extends Fragment {
         Button dateUpdate = rootView.findViewById(R.id.dateUpdate);
         Button dateViewDetails = rootView.findViewById(R.id.viewDateDetails);
         Button viewHabits = rootView.findViewById(R.id.viewHabits);
+        Button btnEcoGauge = rootView.findViewById(R.id.btn_eco_gauge); // New button for Eco Gauge
+
 
         TextView dateTextView = rootView.findViewById(R.id.date);
         DateFieldInit(dateTextView);
@@ -115,6 +118,15 @@ public class DashboardFragment extends Fragment {
             }
         });
 
+
+        btnEcoGauge.setOnClickListener(v -> {
+            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, new EcoGaugeFragment());
+            fragmentTransaction.addToBackStack(null); // Allows the user to navigate back
+            fragmentTransaction.commit();
+        });
+
         //When selected date is updated, do the same as above
         dateUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,7 +140,8 @@ public class DashboardFragment extends Fragment {
             public void onClick(View v) {
                 FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_container,new EntryFragment());
+                EntryFragment entryFragment = EntryFragment.newInstance(CurrentSelectedDate);
+                fragmentTransaction.replace(R.id.fragment_container, entryFragment);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }

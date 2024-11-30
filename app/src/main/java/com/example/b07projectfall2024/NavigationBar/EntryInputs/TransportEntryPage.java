@@ -122,6 +122,7 @@ public class TransportEntryPage extends Fragment {
         {
             TransportationType: "Car",
             Distance: Integer,
+            DistanceUnit: String,
             CarType: String
         }
     Case "Plane":
@@ -134,7 +135,8 @@ public class TransportEntryPage extends Fragment {
         The information with the following format will be uploaded to firebase:
         {
             TransportationType: "WalkedCycled",
-            Distance: Integer
+            Distance: Integer,
+            DistanceUnit: String
         }
      */
     private void UploadTranportEntry(View view){
@@ -164,9 +166,11 @@ public class TransportEntryPage extends Fragment {
 
                 data.put("TransportationType", "Car");
                 if(SpinnerOptions.get("CarDistanceUnit").equals("Miles")){
-                    data.put("Distance", (int)(DistanceDriven*1.60934));
+                    data.put("Distance", DistanceDriven);
+                    data.put("DistanceUnit", "Miles");
                 }else{
                     data.put("Distance", DistanceDriven);
+                    data.put("DistanceUnit", "KM");
                 }
                 data.put("CarType", SpinnerOptions.get("CarType"));
                 break;
@@ -191,9 +195,11 @@ public class TransportEntryPage extends Fragment {
                 int DistanceWalkedCycled = Integer.parseInt(DistanceWalkedCycledField.getText().toString());
                 data.put("TransportationType", "WalkedCycled");
                 if(SpinnerOptions.get("WalkedCycledDistanceUnit").equals("Miles")){
-                    data.put("Distance", (int)(DistanceWalkedCycled*1.60934));
+                    data.put("Distance", DistanceWalkedCycled);
+                    data.put("DistanceUnit", "Miles");
                 }else{
                     data.put("Distance", DistanceWalkedCycled);
+                    data.put("DistanceUnit", "KM");
                 }
                 break;
             default:

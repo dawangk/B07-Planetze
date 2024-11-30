@@ -22,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 public class EntryFragment extends Fragment {
@@ -33,9 +34,24 @@ public class EntryFragment extends Fragment {
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser user = mAuth.getCurrentUser();
 
+    private static final String ARG_PARAM = "param_key";
+
+    public static EntryFragment newInstance(String param) {
+        EntryFragment fragment = new EntryFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM, param); // Add argument to the bundle
+        fragment.setArguments(args);
+        return fragment;
+    }
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        // Retrieve arguments
+        String date = null;
+        if (getArguments() != null) {
+            date = getArguments().getString(ARG_PARAM);
+        }
+
         // Inflate the fragment layout
         View view = inflater.inflate(R.layout.fragment_entry, container, false);
 
@@ -43,71 +59,35 @@ public class EntryFragment extends Fragment {
         entryRecyclerView = view.findViewById(R.id.entryRecyclerView);
         entryRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Fetch data for the specific date and set up the adapter
-        //HashMap<String, HashMap<String, Object>> dataForDate = fetchDataForDate("2024-11-28"); // Replace with actual date
-
-        //entryAdapter = new EntryAdapter(dataForDate);
-        //entryRecyclerView.setAdapter(entryAdapter);
-
-        fetchDataForDate("2024-11-28", new DataFetchCallback() {
+        fetchDataForDate(date, new DataFetchCallback() {
             @Override
             public void onSuccess(HashMap<String, HashMap<String, Object>> data) {
-                entryAdapter = new EntryAdapter(data);
+                LinkedList<HashMap<String, Object>> newData = new LinkedList<>();
+
+                for (HashMap.Entry<String, HashMap<String, Object>> entry : data.entrySet()) {
+                    String key = entry.getKey();
+                    HashMap<String, Object> value = entry.getValue();
+                    for(HashMap.Entry<String, Object> entry2: value.entrySet()){
+                        HashMap<String, Object> individualEntries = (HashMap<String, Object>)entry2.getValue();
+                        HashMap<String, Object> newValue = new HashMap<>(individualEntries);
+                        newValue.put("EntryCategory", key);
+                        newData.add(newValue);
+                    }
+                }
+
+                entryAdapter = new EntryAdapter(newData);
                 entryRecyclerView.setAdapter(entryAdapter);
                 Log.d("EntryFragment","Data fetched successfully: " + data);
             }
-
             @Override
             public void onError(Exception e) {
                 Log.e("EntryFragment","Error fetching data: " + e.getMessage());
             }
         });
+
+
         return view;
     }
-/*
-    private HashMap<String, HashMap<String, Object>> fetchDataForDate(String date) {
-        // Simulate fetching data for the given date
-        HashMap<String, HashMap<String, Object>> entries = new HashMap<>();
-        DatabaseReference dayRef = ref.child("users").child(user.getUid()).child("entries").child(date);
-
-        String[] opt = {"transportation", "food", "consumption"};
-
-        for(String s: opt){
-            HashMap<String, Object> categoryEntries = new HashMap<>();
-            DatabaseReference curRef = dayRef.child(s);
-            curRef.addValueEventListener(new ValueEventListener() {
-                     @Override
-                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                         Log.d("FirebaseTest", "onDataChange() called");
-                         if(snapshot.exists()) {
-                             for (DataSnapshot child : snapshot.getChildren()) {
-                                 String uniq = child.getKey();
-                                 HashMap<String, Object> individualEntries = new HashMap<>();
-                                 HashMap<String, Object> userEntries = new HashMap<>();
-
-                                 for(Map.Entry<String, Object> entry:userEntries.entrySet()){
-                                     Map<String,Object>entryDetails = (Map<String,Object>) entry.getValue();
-                                     for(Map.Entry<String, Object> subentry:entryDetails.entrySet()){
-                                         individualEntries.put(subentry.getKey(), subentry.getValue());
-                                     }
-                                     individualEntries.put(entry.getKey(), individualEntries);
-                                 }
-                                 categoryEntries.put(uniq, individualEntries);
-                             }
-                         }
-                        Log.d("FirebaseTest", "onDataChange() exited");
-                     }
-
-                     @Override
-                     public void onCancelled(@NonNull DatabaseError error) {
-                     }
-                 }
-
-            );
-            entries.put(s,categoryEntries);
-        }
-        return entries;
-    }*/
     public interface DataFetchCallback {
         void onSuccess(HashMap<String, HashMap<String, Object>> data);
         void onError(Exception e);

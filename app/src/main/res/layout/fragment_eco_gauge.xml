@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@color/dark_gray">
+
+    <!-- Page title -->
+    <TextView
+        android:id="@+id/tv_page_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/eco_gauge_title"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:paddingBottom="16dp" />
+
+    <!-- Dropdown menu -->
+    <Spinner
+        android:id="@+id/spinner_time_range"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/light_gray"
+        android:padding="8dp"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Emissions data display -->
+    <TextView
+        android:id="@+id/tv_emissions_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select a time range to view emissions"
+        android:textSize="18sp"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:padding="16dp"
+        android:background="@color/turquoise"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Back to Dashboard Button -->
+    <Button
+        android:id="@+id/btn_back_to_dashboard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/turquoise"
+        android:text="Back to Dashboard"
+        android:textColor="@color/white"
+        android:padding="12dp" />
+
+    <TextView
+        android:id="@+id/tv_comparison_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Comparison with Averages"
+        android:textColor="@color/turquoise"
+        android:textSize="18sp"
+        android:padding="8dp"
+        android:gravity="center" />
+
+    <TextView
+        android:id="@+id/tv_global_avg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Global Average: "
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:padding="8dp" />
+
+    <TextView
+        android:id="@+id/tv_national_avg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="National Average: "
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:padding="8dp" />
+
+    <TextView
+        android:id="@+id/tv_user_emissions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Your Emissions: "
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:padding="8dp" />
+
+</LinearLayout>

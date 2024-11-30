@@ -1,14 +1,287 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HabitTracking.HabitsFragment">
+    tools:context=".MainActivity"
+    android:fillViewport="true">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:background="@color/light_gray"
+        android:orientation="vertical">
 
-</FrameLayout>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_gravity="center"
+            android:src="@drawable/app_logo_no_bg"
+            android:padding="20dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/bold_font"
+            android:textSize="20dp"
+            android:text="Habits Currently being Tracked:"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/black"
+            android:layout_marginBottom="20dp"/>
+
+        <TextView
+            android:id="@+id/habit1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/reg_font"
+            android:textSize="15dp"
+            android:layout_marginStart="8dp"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/habit2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/reg_font"
+            android:textSize="15dp"
+            android:layout_marginStart="8dp"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/habit3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/reg_font"
+            android:textSize="15dp"
+            android:layout_marginStart="8dp"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/habit4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/reg_font"
+            android:textSize="15dp"
+            android:layout_marginStart="8dp"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/habit5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/reg_font"
+            android:textSize="15dp"
+            android:layout_marginStart="8dp"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/habit6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/reg_font"
+            android:textSize="15dp"
+            android:layout_marginStart="8dp"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/habit7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/reg_font"
+            android:textSize="15dp"
+            android:layout_marginStart="8dp"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/habit8"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/reg_font"
+            android:textSize="15dp"
+            android:layout_marginStart="8dp"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/bold_font"
+            android:textSize="20dp"
+            android:text="Adopt a New Habit:"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/black"
+            android:layout_marginBottom="20dp"/>
+
+        <TextView
+            android:id="@+id/adopt1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/reg_font"
+            android:textSize="15dp"
+            android:layout_marginStart="8dp"
+            android:textColor="@color/black" />
+
+        <Button
+            android:id="@+id/adoptButton1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Adopt"
+            android:backgroundTint="@color/dark_gray"
+            android:textColor="@color/white"
+            android:fontFamily="@font/reg_font"
+            android:layout_gravity="right"
+            android:layout_marginEnd="15dp"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/adopt2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/reg_font"
+            android:textSize="15dp"
+            android:layout_marginStart="8dp"
+            android:textColor="@color/black" />
+
+        <Button
+            android:id="@+id/adoptButton2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Adopt"
+            android:backgroundTint="@color/dark_gray"
+            android:textColor="@color/white"
+            android:fontFamily="@font/reg_font"
+            android:layout_gravity="right"
+            android:layout_marginEnd="15dp"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/adopt3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/reg_font"
+            android:textSize="15dp"
+            android:layout_marginStart="8dp"
+            android:textColor="@color/black" />
+
+        <Button
+            android:id="@+id/adoptButton3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Adopt"
+            android:backgroundTint="@color/dark_gray"
+            android:textColor="@color/white"
+            android:fontFamily="@font/reg_font"
+            android:layout_gravity="right"
+            android:layout_marginEnd="15dp"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/adopt4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/reg_font"
+            android:textSize="15dp"
+            android:layout_marginStart="8dp"
+            android:textColor="@color/black" />
+
+        <Button
+            android:id="@+id/adoptButton4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Adopt"
+            android:backgroundTint="@color/dark_gray"
+            android:textColor="@color/white"
+            android:fontFamily="@font/reg_font"
+            android:layout_gravity="right"
+            android:layout_marginEnd="15dp"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/adopt5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/reg_font"
+            android:textSize="15dp"
+            android:layout_marginStart="8dp"
+            android:textColor="@color/black" />
+
+        <Button
+            android:id="@+id/adoptButton5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Adopt"
+            android:backgroundTint="@color/dark_gray"
+            android:textColor="@color/white"
+            android:fontFamily="@font/reg_font"
+            android:layout_gravity="right"
+            android:layout_marginEnd="15dp"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/adopt6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/reg_font"
+            android:textSize="15dp"
+            android:layout_marginStart="8dp"
+            android:textColor="@color/black" />
+
+        <Button
+            android:id="@+id/adoptButton6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Adopt"
+            android:backgroundTint="@color/dark_gray"
+            android:textColor="@color/white"
+            android:fontFamily="@font/reg_font"
+            android:layout_gravity="right"
+            android:layout_marginEnd="15dp"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/adopt7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/reg_font"
+            android:textSize="15dp"
+            android:layout_marginStart="8dp"
+            android:textColor="@color/black" />
+
+        <Button
+            android:id="@+id/adoptButton7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Adopt"
+            android:backgroundTint="@color/dark_gray"
+            android:textColor="@color/white"
+            android:fontFamily="@font/reg_font"
+            android:layout_gravity="right"
+            android:layout_marginEnd="15dp"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/adopt8"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/reg_font"
+            android:textSize="15dp"
+            android:layout_marginStart="8dp"
+            android:textColor="@color/black" />
+
+        <Button
+            android:id="@+id/adoptButton8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Adopt"
+            android:backgroundTint="@color/dark_gray"
+            android:textColor="@color/white"
+            android:fontFamily="@font/reg_font"
+            android:layout_gravity="right"
+            android:layout_marginEnd="15dp"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+</ScrollView>

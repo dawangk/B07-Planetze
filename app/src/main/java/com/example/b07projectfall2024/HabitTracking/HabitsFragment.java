@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.b07projectfall2024.R;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -22,6 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class HabitsFragment extends Fragment {
 
@@ -83,23 +85,12 @@ public class HabitsFragment extends Fragment {
         int[] habit_index = {0};
         int[] adoptee_index = {0};
         int[] button_index = {0};
-        DatabaseReference habitsRef = ref.child("Habits").push();
-
-        adoptButton1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Add the habit to the user's tracked habits in database
-                habitsRef.setValue(habits[0].getText().toString().split("")[0]);
-                
-                }
-
-        });
 
         //Displaying the habits and their descriptions in their appropriate section
         for (String habit_name: habit_names) {
 
             //Checking if habit is currently being tracked
-            DatabaseReference userHabitRef = ref.child("users").child(user.getUid()).child("habits").child(habit_name);
+            DatabaseReference userHabitRef = ref.child("users").child(user.getUid()).child("Habits").child(habit_name);
             DatabaseReference habitRef = ref.child("Habits").child(habit_name);
 
             //Getting habit info
@@ -160,6 +151,117 @@ public class HabitsFragment extends Fragment {
 
         }
 
+        //The "adopt" buttons add the habit to the user's information in the database
+        adoptButton1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Add the habit to the user's tracked habits in database
+                DatabaseReference userRef = ref.child("users").child(user.getUid());
+                DatabaseReference habitsRef = userRef.child("Habits");
+                HashMap<String, Object> m = new HashMap<String, Object>();
+                m.put(adoptees[0].getText().toString().split("\n")[0], 0);
+                habitsRef.updateChildren(m);
+                adopt_buttons[0].setText("Adopted!");
+                adopt_buttons[0].setEnabled(false);
+            }
+        });
 
+        adoptButton2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Add the habit to the user's tracked habits in database
+                DatabaseReference userRef = ref.child("users").child(user.getUid());
+                DatabaseReference habitsRef = userRef.child("Habits");
+                HashMap<String, Object> m = new HashMap<String, Object>();
+                m.put(adoptees[1].getText().toString().split("\n")[0], 0);
+                habitsRef.updateChildren(m);
+                adopt_buttons[1].setText("Adopted!");
+                adopt_buttons[1].setEnabled(false);
+            }
+        });
+
+        adoptButton3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Add the habit to the user's tracked habits in database
+                DatabaseReference userRef = ref.child("users").child(user.getUid());
+                DatabaseReference habitsRef = userRef.child("Habits");
+                HashMap<String, Object> m = new HashMap<String, Object>();
+                m.put(adoptees[2].getText().toString().split("\n")[0], 0);
+                habitsRef.updateChildren(m);
+                adopt_buttons[2].setText("Adopted!");
+                adopt_buttons[2].setEnabled(false);
+            }
+        });
+
+        adoptButton4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Add the habit to the user's tracked habits in database
+                DatabaseReference userRef = ref.child("users").child(user.getUid());
+                DatabaseReference habitsRef = userRef.child("Habits");
+                HashMap<String, Object> m = new HashMap<String, Object>();
+                m.put(adoptees[3].getText().toString().split("\n")[0], 0);
+                habitsRef.updateChildren(m);
+                adopt_buttons[3].setText("Adopted!");
+                adopt_buttons[3].setEnabled(false);
+            }
+        });
+
+        adoptButton5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Add the habit to the user's tracked habits in database
+                DatabaseReference userRef = ref.child("users").child(user.getUid());
+                DatabaseReference habitsRef = userRef.child("Habits");
+                HashMap<String, Object> m = new HashMap<String, Object>();
+                m.put(adoptees[4].getText().toString().split("\n")[0], 0);
+                habitsRef.updateChildren(m);
+                adopt_buttons[4].setText("Adopted!");
+                adopt_buttons[4].setEnabled(false);
+            }
+        });
+
+        adoptButton6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Add the habit to the user's tracked habits in database
+                DatabaseReference userRef = ref.child("users").child(user.getUid());
+                DatabaseReference habitsRef = userRef.child("Habits");
+                HashMap<String, Object> m = new HashMap<String, Object>();
+                m.put(adoptees[5].getText().toString().split("\n")[0], 0);
+                habitsRef.updateChildren(m);
+                adopt_buttons[5].setText("Adopted!");
+                adopt_buttons[5].setEnabled(false);
+            }
+        });
+
+        adoptButton7.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Add the habit to the user's tracked habits in database
+                DatabaseReference userRef = ref.child("users").child(user.getUid());
+                DatabaseReference habitsRef = userRef.child("Habits");
+                HashMap<String, Object> m = new HashMap<String, Object>();
+                m.put(adoptees[6].getText().toString().split("\n")[0], 0);
+                habitsRef.updateChildren(m);
+                adopt_buttons[6].setText("Adopted!");
+                adopt_buttons[6].setEnabled(false);
+            }
+        });
+
+        adoptButton8.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Add the habit to the user's tracked habits in database
+                DatabaseReference userRef = ref.child("users").child(user.getUid());
+                DatabaseReference habitsRef = userRef.child("Habits");
+                HashMap<String, Object> m = new HashMap<String, Object>();
+                m.put(adoptees[7].getText().toString().split("\n")[0], 0);
+                habitsRef.updateChildren(m);
+                adopt_buttons[7].setText("Adopted!");
+                adopt_buttons[7].setEnabled(false);
+            }
+        });
     }
 }

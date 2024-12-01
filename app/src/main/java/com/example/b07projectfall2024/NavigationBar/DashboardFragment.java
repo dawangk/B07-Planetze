@@ -71,7 +71,7 @@ public class DashboardFragment extends Fragment {
         Button dateUpdate = rootView.findViewById(R.id.dateUpdate);
         Button dateViewDetails = rootView.findViewById(R.id.viewDateDetails);
         Button viewHabits = rootView.findViewById(R.id.viewHabits);
-        Button btnEcoGauge = rootView.findViewById(R.id.btn_eco_gauge); // New button for Eco Gauge
+        Button btnEcoGauge = rootView.findViewById(R.id.btn_eco_gauge); // Button for Eco Gauge
 
 
         TextView dateTextView = rootView.findViewById(R.id.date);
@@ -198,6 +198,7 @@ public class DashboardFragment extends Fragment {
             }
         });
     }
+
     //Initializes DateField allowing users to select any date
     private void DateFieldInit(TextView dateTextView) {
         Calendar calendar = Calendar.getInstance();

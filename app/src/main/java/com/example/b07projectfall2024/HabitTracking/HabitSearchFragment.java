@@ -56,8 +56,6 @@ public class HabitSearchFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         DatabaseReference habitRef = ref.child("Habits");
-        DatabaseReference userHabitsRef = ref.child("users").child(user.getUid()).child("Habits");
-
         //Putting the names of each habit into recyclerView
         habitRef.addValueEventListener(new ValueEventListener() {
             @Override

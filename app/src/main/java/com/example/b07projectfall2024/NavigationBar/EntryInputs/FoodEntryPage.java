@@ -101,6 +101,15 @@ public class FoodEntryPage extends Fragment {
             DatabaseReference eatingFishHabit = db.getRef().child("users").child(mAuth.getUid()).child("Habits").child("Eating Fish");
             trackHabit(eatingFishHabit);
         }
+        //Keeping track of the anti-habit if user is tracking the habit
+        else if (SelectedMeal.equals("Chicken")) {
+            DatabaseReference eatingFishHabit = db.getRef().child("users").child(mAuth.getUid()).child("Habits").child("Eating Fish");
+            trackAntiHabit(eatingFishHabit, "Eating Fish");
+        } else {
+            DatabaseReference eatingVeggiesHabit = db.getRef().child("users").child(mAuth.getUid()).child("Habits").child("Eating Vegetarian");
+            trackAntiHabit(eatingVeggiesHabit, "Eating Vegetarian");
+        }
+
 
         DatabaseReference ChildRef = db.child("users").child(mAuth.getUid()).child("entries").child(CurrentSelectedDate).child("food").push();
         ChildRef.setValue(data)
@@ -199,6 +208,55 @@ public class FoodEntryPage extends Fragment {
                                 data.put(CurrentSelectedDate, 1);
                                 habitRef.updateChildren(data);
                             }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+    }
+
+    private void trackAntiHabit(DatabaseReference habitRef, String habit) {
+        habitRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                //If user is tracking the habit, make a new branch for the anti-habit
+                if (snapshot.exists()) {
+                    DatabaseReference antiHabitRef = db.child("Habits").child(habit).child("AntiHabit");
+                    antiHabitRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String antiHabit = snapshot.getValue(String.class);
+
+                            //Track this occurrence of the anti-habit in the database
+                            DatabaseReference userAntiHabitRef = db.child("users").child(mAuth.getUid()).child("AntiHabits").child(antiHabit);
+                            DatabaseReference dayRef = userAntiHabitRef.child(CurrentSelectedDate);
+                            dayRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    //If the anti-habit has been tracked today, we increment the number of occurrences for the day by 1
+                                    if (snapshot.exists()) {
+                                        dayRef.setValue(snapshot.getValue(Integer.class) + 1);
+                                    }
+                                    //Else, we create a new log for today with a value of 1 occurrences.
+                                    else {
+                                        HashMap<String, Object> data = new HashMap<String, Object>();
+                                        data.put(CurrentSelectedDate, 1);
+                                        userAntiHabitRef.updateChildren(data);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                }
+                            });
                         }
 
                         @Override

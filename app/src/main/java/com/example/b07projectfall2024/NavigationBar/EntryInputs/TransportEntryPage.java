@@ -191,6 +191,16 @@ public class TransportEntryPage extends Fragment {
                     data.put("DistanceUnit", "KM");
                 }
                 data.put("CarType", SpinnerOptions.get("CarType"));
+
+                //Keeping track of the anti-habit of Walking, Biking and Transit if user is tracking any one of them
+
+                transitHabit = db.child("users").child(mAuth.getUid()).child("Habits").child("Walking");
+                DatabaseReference transitHabit2 = db.child("users").child(mAuth.getUid()).child("Habits").child("Biking");
+                DatabaseReference transitHabit3 = db.child("users").child(mAuth.getUid()).child("Habits").child("Taking the Transit");
+                if (!trackAntiHabit(transitHabit, "Walking") && !trackAntiHabit(transitHabit2, "Biking")) {
+                    trackAntiHabit(transitHabit3, "Taking the Transit");
+                }
+
                 break;
             case "Plane":
                 EditText NmbFlightsField =  view.findViewById(R.id.TransportEntry_NmbFlights);
@@ -396,6 +406,61 @@ public class TransportEntryPage extends Fragment {
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
+    }
+
+    private boolean trackAntiHabit(DatabaseReference habitRef, String habit) {
+        boolean[] status = {false};
+        habitRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                //If user is tracking the habit, make a new branch for the anti-habit
+                if (snapshot.exists()) {
+                    DatabaseReference antiHabitRef = db.child("Habits").child(habit).child("AntiHabit");
+                    antiHabitRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String antiHabit = snapshot.getValue(String.class);
+
+                            //Track this occurrence of the anti-habit in the database
+                            DatabaseReference userAntiHabitRef = db.child("users").child(mAuth.getUid()).child("AntiHabits").child(antiHabit);
+                            DatabaseReference dayRef = userAntiHabitRef.child(CurrentSelectedDate);
+                            dayRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    //If the anti-habit has been tracked today, we increment the number of occurrences for the day by 1
+                                    if (snapshot.exists()) {
+                                        dayRef.setValue(snapshot.getValue(Integer.class) + 1);
+                                        status[0] = true;
+                                    }
+                                    //Else, we create a new log for today with a value of 1 occurrences.
+                                    else {
+                                        HashMap<String, Object> data = new HashMap<String, Object>();
+                                        data.put(CurrentSelectedDate, 1);
+                                        userAntiHabitRef.updateChildren(data);
+                                        status[0] = true;
+                                    }
+
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+
+        return status[0];
     }
 
 }

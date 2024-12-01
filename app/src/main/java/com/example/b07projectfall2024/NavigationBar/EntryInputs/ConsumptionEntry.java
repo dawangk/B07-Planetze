@@ -136,21 +136,21 @@ public class ConsumptionEntry extends Fragment {
         if(SelectedConsumptionType.isEmpty()) return;
         HashMap<String, Object> data = new HashMap<>();
 
-        switch (SelectedConsumptionType){
+        switch (SelectedConsumptionType) {
             case "Clothes":
-                EditText nmbClothesField =  view.findViewById(R.id.ConsumptionEntry_NmbClothing);
-                if(nmbClothesField.getText().toString().isEmpty()){
+                EditText nmbClothesField = view.findViewById(R.id.ConsumptionEntry_NmbClothing);
+                if (nmbClothesField.getText().toString().isEmpty()) {
                     MissingErrorField(nmbClothesField);
                     return;
                 }
                 int nmbClothes = Integer.parseInt(nmbClothesField.getText().toString());
-                boolean ecoFriendly = ((Switch)view.findViewById(R.id.ConsumptionEntry_EcoFriendly)).isChecked();
+                boolean ecoFriendly = ((Switch) view.findViewById(R.id.ConsumptionEntry_EcoFriendly)).isChecked();
                 data.put("NmbClothingBought", nmbClothes);
                 data.put("EcoFriendly", ecoFriendly);
                 break;
             case "Electronics":
-                EditText nmbElectronicsField =  view.findViewById(R.id.ConsumptionEntry_NmbElectronics);
-                if(nmbElectronicsField.getText().toString().isEmpty()){
+                EditText nmbElectronicsField = view.findViewById(R.id.ConsumptionEntry_NmbElectronics);
+                if (nmbElectronicsField.getText().toString().isEmpty()) {
                     MissingErrorField(nmbElectronicsField);
                     return;
                 }
@@ -159,14 +159,14 @@ public class ConsumptionEntry extends Fragment {
                 data.put("ElectronicType", SpinnerOptions.get("ElectronicType"));
                 break;
             case "Utility Bill":
-                EditText BillPriceField =  view.findViewById(R.id.ConsumptionEntry_BillPrice);
-                if(BillPriceField.getText().toString().isEmpty()){
+                EditText BillPriceField = view.findViewById(R.id.ConsumptionEntry_BillPrice);
+                if (BillPriceField.getText().toString().isEmpty()) {
                     MissingErrorField(BillPriceField);
                     return;
                 }
                 int BillPrice = Integer.parseInt(BillPriceField.getText().toString());
                 data.put("UtilityType", SpinnerOptions.get("UtilityBillType"));
-                data.put("BillPrice",BillPrice);
+                data.put("BillPrice", BillPrice);
 
                 //Keeping track of the habit if user is tracking it.
                 String utilType = SpinnerOptions.get("UtilityBillType");
@@ -182,6 +182,18 @@ public class ConsumptionEntry extends Fragment {
                     DatabaseReference MinimalWaterBillRef = habitsRef.child("Minimal Water Bill");
                     trackHabit(MinimalWaterBillRef);
                 }
+                //Keeping track of the anti-habits if user is tracking the habits
+                else if (utilType.equals("Gas") && BillPrice >= 150) {
+                    DatabaseReference MinimalGasBillRef = habitsRef.child("Minimal Gas Bill");
+                    trackAntiHabit(MinimalGasBillRef, "Minimal Gas Bill");
+                } else if (utilType.equals("Electricity") && BillPrice >= 150) {
+                    DatabaseReference MinimalElectricityBillRef = habitsRef.child("Minimal Electricity Bill");
+                    trackAntiHabit(MinimalElectricityBillRef, "Minimal Electricity Bill");
+                } else if (utilType.equals("Water") && BillPrice >= 150) {
+                    DatabaseReference MinimalWaterBillRef = habitsRef.child("Minimal Water Bill");
+                    trackAntiHabit(MinimalWaterBillRef, "Minimal Water Bill");
+                }
+
                 break;
             case "Other":
                 EditText NmbPurchasedField =  view.findViewById(R.id.ConsumptionEntry_NmbOther);
@@ -334,6 +346,55 @@ public class ConsumptionEntry extends Fragment {
                                 data.put(CurrentSelectedDate, 1);
                                 habitRef.updateChildren(data);
                             }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+    }
+
+    private void trackAntiHabit(DatabaseReference habitRef, String habit) {
+        habitRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                //If user is tracking the habit, make a new branch for the anti-habit
+                if (snapshot.exists()) {
+                    DatabaseReference antiHabitRef = db.child("Habits").child(habit).child("AntiHabit");
+                    antiHabitRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String antiHabit = snapshot.getValue(String.class);
+
+                            //Track this occurrence of the anti-habit in the database
+                            DatabaseReference userAntiHabitRef = db.child("users").child(mAuth.getUid()).child("AntiHabits").child(antiHabit);
+                            DatabaseReference dayRef = userAntiHabitRef.child(CurrentSelectedDate);
+                            dayRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    //If the anti-habit has been tracked today, we increment the number of occurrences for the day by 1
+                                    if (snapshot.exists()) {
+                                        dayRef.setValue(snapshot.getValue(Integer.class) + 1);
+                                    }
+                                    //Else, we create a new log for today with a value of 1 occurrences.
+                                    else {
+                                        HashMap<String, Object> data = new HashMap<String, Object>();
+                                        data.put(CurrentSelectedDate, 1);
+                                        userAntiHabitRef.updateChildren(data);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                }
+                            });
                         }
 
                         @Override

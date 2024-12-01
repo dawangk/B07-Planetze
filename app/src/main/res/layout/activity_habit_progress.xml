@@ -25,6 +25,50 @@
         android:fontFamily="@font/bold_font"/>
 
     <LinearLayout
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="@font/reg_font"
+            android:textSize="18dp"
+            android:layout_marginStart="6dp"
+            android:textStyle="bold"
+            android:text="On the day: "/>
+
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginRight="20dp"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:layout_marginBottom="10dp"/>
+
+        <Button
+            android:id="@+id/dateUpdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Update"
+            android:textStyle="bold"
+            android:fontFamily="@font/bold_font"
+            android:textColor="@color/white"
+            android:textSize="15dp"
+            android:backgroundTint="@color/dark_gray"
+            android:padding="8dp"
+            android:layout_marginBottom="5dp"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -38,15 +82,16 @@
             android:textColor="@color/black"
             android:fontFamily="@font/reg_font"
             android:textSize="18dp"
-            android:text="You've done this habit "/>
+            android:text="You've completed this habit "/>
 
         <TextView
+            android:id="@+id/numHabitToday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:fontFamily="@font/bold_font"
             android:textSize="25dp"
-            android:text="5"/>
+            android:text="0"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -73,13 +118,14 @@
             android:text="that's "/>
 
         <TextView
+            android:id="@+id/numHabitYday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:fontFamily="@font/reg_font"
             android:textStyle="bold"
             android:textSize="23dp"
-            android:text="5"/>
+            android:text="0"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -104,15 +150,16 @@
             android:textColor="@color/black"
             android:fontFamily="@font/reg_font"
             android:textSize="18dp"
-            android:text="You've done this habit "/>
+            android:text="You completed this habit "/>
 
         <TextView
+            android:id="@+id/numHabitWeek"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:fontFamily="@font/bold_font"
             android:textSize="25dp"
-            android:text="5"/>
+            android:text="0"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -120,7 +167,7 @@
             android:textColor="@color/black"
             android:fontFamily="@font/reg_font"
             android:textSize="18dp"
-            android:text=" times this week,"/>
+            android:text=" in the past week,"/>
 
     </LinearLayout>
 
@@ -139,13 +186,14 @@
             android:text="with an average of "/>
 
         <TextView
+            android:id="@+id/avgHabitWeek"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:fontFamily="@font/reg_font"
             android:textStyle="bold"
             android:textSize="23dp"
-            android:text="5"/>
+            android:text="0"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -172,13 +220,14 @@
             android:text="That's "/>
 
         <TextView
+            android:id="@+id/numHabitLastWeek"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:fontFamily="@font/reg_font"
             android:textStyle="bold"
             android:textSize="23dp"
-            android:text="5"/>
+            android:text="0"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -186,50 +235,7 @@
             android:textColor="@color/black"
             android:fontFamily="@font/reg_font"
             android:textSize="18dp"
-            android:text=" more/less than last week!"/>
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_marginTop="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:fontFamily="@font/reg_font"
-            android:textSize="18dp"
-            android:layout_marginStart="6dp"
-            android:textStyle="bold"
-            android:text="Compare to a specific day: "/>
-
-        <TextView
-            android:id="@+id/date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_marginRight="20dp"
-            android:textColor="@color/black"
-            android:textSize="20dp"
-            android:layout_marginBottom="10dp"/>
-
-        <Button
-            android:id="@+id/dateUpdate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Update"
-            android:textStyle="bold"
-            android:fontFamily="@font/bold_font"
-            android:textColor="@color/white"
-            android:textSize="15dp"
-            android:backgroundTint="@color/dark_gray"
-            android:padding="8dp"
-            android:layout_marginBottom="5dp"/>
+            android:text=" more/less than the previous week!"/>
 
     </LinearLayout>
 

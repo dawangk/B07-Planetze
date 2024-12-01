@@ -5,6 +5,7 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 
 import android.graphics.Color;
+import android.net.ParseException;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,9 +33,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -113,24 +117,52 @@ public class EcoGaugeFragment extends Fragment {
         }
     }
 
-    private ArrayList<Entry> lineGraphPoints;
-
     private HashMap<String, TotalEntryEmission> entryEmissions;
 
     private void updateLineGraph(){
-        lineGraphPoints = new ArrayList<Entry>();
+        ArrayList<Entry> lineGraphPoints = new ArrayList<Entry>();
 
-        // Convert the dates to numeric X values (timestamps)
-        List<String> dateLabels = new ArrayList<>();
-
-        for (String date : entryEmissions.keySet()) {dateLabels.add(date);}
+        List<String> dateLabels = new ArrayList<>(entryEmissions.keySet());
 
         Collections.sort(dateLabels);
 
+        List<String> dates = new ArrayList<>();
+
+        // Define the SimpleDateFormat for the date string format
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        String curDate = dateLabels.get(0);
+
+        dates.add(curDate);
+
+        while(!curDate.equals(dateLabels.get(dateLabels.size()-1))){
+            try {
+                // Convert string to Date
+                Date startDate = sdf.parse(curDate);
+
+                // Create a Calendar instance and set the time to the start date
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(startDate);
+
+                // Increment day
+                calendar.add(Calendar.DAY_OF_MONTH, 1);
+
+
+                Date newDate = calendar.getTime();
+                // Format the new date
+                curDate = sdf.format(newDate);
+                dates.add(curDate);
+            } catch (java.text.ParseException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
         int index = 0;
-        for (String date : dateLabels) {
-            // Convert date to timestamp or index for the X-axis
-            lineGraphPoints.add(new Entry(index++, (float) (entryEmissions.get(date).consumptionEmission+entryEmissions.get(date).transportEmission+entryEmissions.get(date).foodEmission)));
+        for (String date : dates) {
+            if(entryEmissions.containsKey(date)) {
+                lineGraphPoints.add(new Entry(index, (float) (entryEmissions.get(date).consumptionEmission+entryEmissions.get(date).transportEmission+entryEmissions.get(date).foodEmission)));
+            }
+            index++;
         }
 
         // Create a LineDataSet with the points
@@ -160,16 +192,14 @@ public class EcoGaugeFragment extends Fragment {
         xAxis.setTextSize(18f);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setGranularity(1f); // Set granularity to 1 step
-
-        int totalIndicies = dateLabels.size();
+        if(dates.size()>=2)xAxis.setLabelCount(2, true);
 
         xAxis.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
-                if(value!=totalIndicies-1 && value!=0) return "";
-                int index = (int) value;  // Convert float to index
-                if (index >= 0 && index < dateLabels.size()) {
-                    return dateLabels.get(index).substring(5); // Return the date label
+                int idx = (int)value;
+                if(0<=value && value< dates.size()){
+                    return dates.get(idx).substring(5);
                 }
                 return "";
             }

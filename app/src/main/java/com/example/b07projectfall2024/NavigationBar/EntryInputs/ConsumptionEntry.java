@@ -23,6 +23,8 @@ import androidx.fragment.app.Fragment;
 import com.example.b07projectfall2024.HomeActivity;
 import com.example.b07projectfall2024.R;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -30,6 +32,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
+import com.example.b07projectfall2024.NavigationBar.EntryInputs.FoodEntryPage;
+import com.google.firebase.database.ValueEventListener;
 
 public class ConsumptionEntry extends Fragment {
 
@@ -163,6 +167,21 @@ public class ConsumptionEntry extends Fragment {
                 int BillPrice = Integer.parseInt(BillPriceField.getText().toString());
                 data.put("UtilityType", SpinnerOptions.get("UtilityBillType"));
                 data.put("BillPrice",BillPrice);
+
+                //Keeping track of the habit if user is tracking it.
+                String utilType = SpinnerOptions.get("UtilityBillType");
+                DatabaseReference habitsRef = db.child("users").child(mAuth.getUid()).child("Habits");
+
+                if (utilType.equals("Gas") && BillPrice < 100) {
+                    DatabaseReference MinimalGasBillRef = habitsRef.child("MinimalGasBill");
+                    trackHabit(MinimalGasBillRef);
+                } else if (utilType.equals("Electricity") && BillPrice < 100) {
+                    DatabaseReference MinimalElectricityBillRef = habitsRef.child("MinimalElectricityBill");
+                    trackHabit(MinimalElectricityBillRef);
+                } else if (utilType.equals("Water") && BillPrice < 100) {
+                    DatabaseReference MinimalWaterBillRef = habitsRef.child("MinimalWaterBill");
+                    trackHabit(MinimalWaterBillRef);
+                }
                 break;
             case "Other":
                 EditText NmbPurchasedField =  view.findViewById(R.id.ConsumptionEntry_NmbOther);
@@ -295,4 +314,38 @@ public class ConsumptionEntry extends Fragment {
         Field.requestFocus();
     }
 
+    private void trackHabit(DatabaseReference habitRef) {
+        habitRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                //If habit is being tracked, we check if it's been logged today
+                if (snapshot.exists()) {
+                    DatabaseReference dayRef = habitRef.child(CurrentSelectedDate);
+                    dayRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            //If so, we increment the number of occurrences for the day by 1.
+                            if (snapshot.exists()) {
+                                dayRef.setValue(snapshot.getValue(Integer.class) + 1);
+                            }
+                            //Else, we create a new log for today with a value of 1 occurrences.
+                            else {
+                                HashMap<String, Object> data = new HashMap<String, Object>();
+                                data.put(CurrentSelectedDate, 1);
+                                habitRef.updateChildren(data);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+    }
 }

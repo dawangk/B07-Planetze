@@ -133,7 +133,7 @@
             android:textColor="@color/black"
             android:fontFamily="@font/reg_font"
             android:textSize="18dp"
-            android:text=" more/less than yesterday!"/>
+            android:text=" than yesterday!"/>
 
     </LinearLayout>
 

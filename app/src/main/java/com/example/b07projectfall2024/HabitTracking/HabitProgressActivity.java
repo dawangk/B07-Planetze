@@ -106,19 +106,19 @@ public class HabitProgressActivity extends AppCompatActivity {
         });
     }
 
-    private void displayHabit(String currentSelectedDate, String habit, TextView numHabitToday, TextView numHabitYday) {
-        DatabaseReference habitRef = db.getReference().child("users").child(user.getUid()).child("Habits").child(habit);
+    private void displayHabit(String CurrentSelectedDate, String habit, TextView numHabitToday, TextView numHabitYday) {
+        DatabaseReference habitRef = ref.child("users").child(user.getUid()).child("Habits").child(habit);
         DatabaseReference habitToday = habitRef.child(CurrentSelectedDate);
         habitToday.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 //If a habit entry exists for the day, display the number of occurrences
+                int[] numToday = {0};
                 if (snapshot.exists()) {
-                    numHabitToday.setText(snapshot.getValue(Integer.class).toString());
+                    numToday[0] = snapshot.getValue(Integer.class);
                 }
-                else {
-                    numHabitToday.setText("0");
-                }
+
+                numHabitToday.setText(Integer.toString(numToday[0]));
 
                 String dayBefore = getDayBefore(CurrentSelectedDate);
                 DatabaseReference habitYday = habitRef.child(dayBefore);
@@ -126,12 +126,18 @@ public class HabitProgressActivity extends AppCompatActivity {
                 habitYday.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        int[] numYday = {0};
                         if (snapshot.exists()) {
-                            numHabitYday.setText(snapshot.getValue(Integer.class).toString());
+                            numYday[0] = snapshot.getValue(Integer.class);
                         }
-                        else {
-                            numHabitYday.setText("0");
+
+                        int diff = numToday[0] - numYday[0];
+                        String keyword = "more";
+                        if (diff < 0) {
+                            keyword = "less";
                         }
+
+                        numHabitYday.setText(diff + " " + keyword);
                     }
 
                     @Override

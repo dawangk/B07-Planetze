@@ -95,10 +95,10 @@ public class FoodEntryPage extends Fragment {
 
         //Keeping track of the habit if user is tracking it.
         if (SelectedMeal.equals("Vegetarian")) {
-            DatabaseReference eatingVeggiesHabit = db.getRef().child("users").child(mAuth.getUid()).child("Habits").child("EatingVeggies");
+            DatabaseReference eatingVeggiesHabit = db.getRef().child("users").child(mAuth.getUid()).child("Habits").child("Eating Vegetarian");
             trackHabit(eatingVeggiesHabit);
         } else if (SelectedMeal.equals("Fish")) {
-            DatabaseReference eatingFishHabit = db.getRef().child("users").child(mAuth.getUid()).child("Habits").child("EatingFish");
+            DatabaseReference eatingFishHabit = db.getRef().child("users").child(mAuth.getUid()).child("Habits").child("Eating Fish");
             trackHabit(eatingFishHabit);
         }
 

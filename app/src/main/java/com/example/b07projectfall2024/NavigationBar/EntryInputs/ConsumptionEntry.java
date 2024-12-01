@@ -173,13 +173,13 @@ public class ConsumptionEntry extends Fragment {
                 DatabaseReference habitsRef = db.child("users").child(mAuth.getUid()).child("Habits");
 
                 if (utilType.equals("Gas") && BillPrice < 100) {
-                    DatabaseReference MinimalGasBillRef = habitsRef.child("MinimalGasBill");
+                    DatabaseReference MinimalGasBillRef = habitsRef.child("Minimal Gas Bill");
                     trackHabit(MinimalGasBillRef);
                 } else if (utilType.equals("Electricity") && BillPrice < 100) {
-                    DatabaseReference MinimalElectricityBillRef = habitsRef.child("MinimalElectricityBill");
+                    DatabaseReference MinimalElectricityBillRef = habitsRef.child("Minimal Electricity Bill");
                     trackHabit(MinimalElectricityBillRef);
                 } else if (utilType.equals("Water") && BillPrice < 100) {
-                    DatabaseReference MinimalWaterBillRef = habitsRef.child("MinimalWaterBill");
+                    DatabaseReference MinimalWaterBillRef = habitsRef.child("Minimal Water Bill");
                     trackHabit(MinimalWaterBillRef);
                 }
                 break;

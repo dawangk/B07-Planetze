@@ -170,7 +170,7 @@ public class TransportEntryPage extends Fragment {
                 data.put("TimeOnPublic", TimeOnPublic);
 
                 //Keeping track of the habit if user is tracking it.
-                transitHabit = db.child("users").child(mAuth.getUid()).child("Habits").child("Transit");
+                transitHabit = db.child("users").child(mAuth.getUid()).child("Habits").child("Taking the Transit");
                 trackHabit(transitHabit);
 
                 break;

@@ -91,8 +91,8 @@ public class HabitsFragment extends Fragment {
 
         TextView[] habits = {habit1, habit2, habit3, habit4, habit5, habit6, habit7, habit8};
         TextView[] adoptees = {adopt1, adopt2, adopt3, adopt4, adopt5, adopt6, adopt7, adopt8};
-        String[] habit_names = {"Walking", "Transit", "Biking", "EatingFish", "EatingVeggies",
-                "MinimalGasBill", "MinimalWaterBill", "MinimalElectricityBill"};
+        String[] habit_names = {"Walking", "Taking the Transit", "Biking", "Eating Fish", "Eating Vegetarian",
+                "Minimal Gas Bill", "Minimal Water Bill", "Minimal Electricity Bill"};
         Button[] adopt_buttons = {adoptButton1, adoptButton2, adoptButton3, adoptButton4,
                 adoptButton5, adoptButton6, adoptButton7, adoptButton8};
         Button[] track_buttons = {trackButton1, trackButton2, trackButton3, trackButton4,

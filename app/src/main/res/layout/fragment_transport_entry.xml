@@ -176,7 +176,7 @@
                 android:id="@+id/textView24"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Distance Cycles/Walked"
+                android:text="Distance"
                 android:textSize="24sp" />
 
             <EditText

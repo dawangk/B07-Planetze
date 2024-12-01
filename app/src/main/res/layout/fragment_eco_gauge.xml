@@ -1,63 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/light_gray">
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="center_horizontal">
 
-    <LinearLayout
+    <!-- Spinner for Time Range Selection -->
+    <Spinner
+        android:id="@+id/spinner_time_range"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_marginBottom="16dp"
+        android:spinnerMode="dropdown" />
 
-        <!-- Page title -->
-        <TextView
-            android:id="@+id/tv_page_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/eco_gauge_title"
-            android:textColor="@color/white"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:paddingBottom="16dp" />
+    <!-- TextView for Total Emissions -->
+    <TextView
+        android:id="@+id/total_emissions_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Total Emissions: 0.0 kg CO2e"
+        android:textSize="18sp"
+        android:textColor="@android:color/black"
+        android:layout_marginBottom="16dp" />
 
-        <!-- Dropdown menu -->
-        <Spinner
-            android:id="@+id/spinner_time_range"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/light_gray"
-            android:padding="8dp"
-            android:layout_marginBottom="16dp"
-            android:contentDescription="Select a time range to view your emissions" />
-
-        <!-- Emissions data display -->
-        <TextView
-            android:id="@+id/tv_emissions_data"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Select a time range to view emissions"
-            android:textSize="18sp"
-            android:textColor="@color/white"
-            android:gravity="center"
-            android:padding="16dp"
-            android:background="@color/turquoise"
-            android:layout_marginBottom="16dp"
-            android:contentDescription="Displays your emissions data based on the selected time range" />
-
-        <!-- Back to Dashboard Button -->
-        <Button
-            android:id="@+id/btn_back_to_dashboard"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/turquoise"
-            android:text="Back to Dashboard"
-            android:textColor="@color/white"
-            android:padding="12dp"
-            android:contentDescription="Navigate back to the dashboard" />
-
-
-    </LinearLayout>
-</ScrollView>
+</LinearLayout>

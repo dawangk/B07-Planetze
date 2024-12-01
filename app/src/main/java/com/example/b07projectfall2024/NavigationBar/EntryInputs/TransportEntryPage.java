@@ -155,6 +155,7 @@ public class TransportEntryPage extends Fragment {
         if(TransportType.isEmpty()) return;
 
         HashMap<String, Object> data = new HashMap<>();
+        DatabaseReference transitHabit;
 
         switch (TransportType){
             case "Public Transport":
@@ -169,7 +170,7 @@ public class TransportEntryPage extends Fragment {
                 data.put("TimeOnPublic", TimeOnPublic);
 
                 //Keeping track of the habit if user is tracking it.
-                DatabaseReference transitHabit = db.child("users").child(mAuth.getUid()).child("Habits").child("Transit");
+                transitHabit = db.child("users").child(mAuth.getUid()).child("Habits").child("Transit");
                 trackHabit(transitHabit);
 
                 break;
@@ -218,6 +219,10 @@ public class TransportEntryPage extends Fragment {
                     data.put("Distance", DistanceWalkedCycled);
                     data.put("DistanceUnit", "KM");
                 }
+
+                //Keeping track of the habit if user is tracking it.
+                transitHabit = db.child("users").child(mAuth.getUid()).child("Habits").child("Walking");
+                trackHabit(transitHabit);
                 break;
             case "Cycled":
                 EditText DistanceWalkedCycledField1 =  view.findViewById(R.id.TransportEntry_DistanceWalkedCycled);
@@ -234,6 +239,10 @@ public class TransportEntryPage extends Fragment {
                     data.put("Distance", DistanceWalkedCycled1);
                     data.put("DistanceUnit", "KM");
                 }
+
+                //Keeping track of the habit if user is tracking it.
+                transitHabit = db.child("users").child(mAuth.getUid()).child("Habits").child("Biking");
+                trackHabit(transitHabit);
                 break;
             default:
                 Toast.makeText(currentContext, "Key error on upload", Toast.LENGTH_SHORT).show();

@@ -11,9 +11,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.b07projectfall2024.NavigationBar.EntryInputs.ConsumptionEntry;
+import com.example.b07projectfall2024.NavigationBar.EntryInputs.FoodEntryPage;
+import com.example.b07projectfall2024.NavigationBar.EntryInputs.TransportEntryPage;
 import com.example.b07projectfall2024.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -139,7 +143,43 @@ public class EntryFragment extends Fragment implements EntryAdapter.OnItemClickL
 
     @Override
     public void onEditClick(int position) {
+        String date = null;
+        if (getArguments() != null) {
+            date = getArguments().getString(ARG_PARAM);
+        }
 
+        HashMap<String, Object> item = dataList.get(position);
+
+        DatabaseReference dayRef = ref.child("users").child(user.getUid()).child("entries").child(date);
+        String category = (String) item.get("EntryCategory");
+
+        // Get the FragmentManager
+        FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+
+        // Find the existing fragment you want to navigate to (e.g., EditFragment)
+        Fragment editFragment = null;
+
+        if(category.equals("transportation")){
+            editFragment =  new TransportEntryPage(date);
+        }else if(category.equals("food")){
+            editFragment = new FoodEntryPage(date);
+        }else if(category.equals("consumption")){
+            editFragment = new ConsumptionEntry(date);
+        }
+
+        // Pass the item data to the fragment using a Bundle
+        Bundle bundle = new Bundle();
+        bundle.putInt("position", position); // Pass the item's position
+        //bundle.putString("itemValue", item); // Pass the item's value
+        editFragment.setArguments(bundle);
+
+        // Replace the current fragment with the EditFragment
+        fragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, editFragment, "EDIT_FRAGMENT")
+                .addToBackStack(null) // Add to the back stack so the user can navigate back
+                .commit();
+
+        onDeleteClick(position);
     }
 
     @Override

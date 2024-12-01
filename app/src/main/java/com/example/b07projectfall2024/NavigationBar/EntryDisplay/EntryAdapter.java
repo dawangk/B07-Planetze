@@ -86,7 +86,7 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
             TextView publicDetails = new TextView(container.getContext());
             publicDetails.setText("Flight Type: " + entry.get("FlightType") + ", Number of Flights: " + entry.get("NmbFlights") + " hours");
             container.addView(publicDetails);
-        }else if (transportationType.equals("WalkedCycled")) {
+        }else if (transportationType.equals("Walked")||transportationType.equals("Cycled")) {
             TextView publicDetails = new TextView(container.getContext());
             publicDetails.setText("Distance: " + entry.get("Distance"));
             container.addView(publicDetails);

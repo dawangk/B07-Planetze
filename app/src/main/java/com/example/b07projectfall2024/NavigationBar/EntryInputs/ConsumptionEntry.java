@@ -3,6 +3,7 @@ package com.example.b07projectfall2024.NavigationBar.EntryInputs;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.b07projectfall2024.HomeActivity;
 import com.example.b07projectfall2024.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -31,17 +31,16 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 
-public class ConsumptionEntry extends Fragment {
+public class ConsumptionEntry extends Entry{
 
-    private Context currentContext;
+    protected String SelectedConsumptionType;
 
-    private DatabaseReference db;
-    private FirebaseAuth mAuth;
-    private String CurrentSelectedDate;
-    private String SelectedConsumptionType;
-
-    private HashMap<String, String> SpinnerOptions;
-
+    public ConsumptionEntry(){
+        super();
+    }
+    public ConsumptionEntry(String date){
+        super(date);
+    }
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -128,7 +127,7 @@ public class ConsumptionEntry extends Fragment {
         }
 
      */
-    private void UploadConsumptionEntry(View view){
+     void UploadConsumptionEntry(View view){
         if(SelectedConsumptionType.isEmpty()) return;
         HashMap<String, Object> data = new HashMap<>();
 
@@ -190,37 +189,6 @@ public class ConsumptionEntry extends Fragment {
                         Toast.makeText(currentContext, "Error: "+task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
-
-    }
-
-    private void popFragment(){
-        getActivity().getSupportFragmentManager().popBackStack();
-    }
-
-    //Assigns the given DropDownItems to the Spinner object, DropDown
-    private void SpinnerItemInit(Spinner DropDown, String[] DropDownItems){
-        ArrayAdapter<String> TransportTypeAdapter = new ArrayAdapter<>(
-                currentContext,
-                android.R.layout.simple_spinner_item,
-                DropDownItems
-        );
-
-        TransportTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        DropDown.setAdapter(TransportTypeAdapter);
-    }
-
-    //Initializes general spinner
-    private void SpinnerGeneralInit(Spinner DistanceUnitDropDown, String[] DistanceUnitDropDownItems, String type){
-        SpinnerItemInit(DistanceUnitDropDown, DistanceUnitDropDownItems);
-
-        DistanceUnitDropDown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                SpinnerOptions.put(type, parent.getItemAtPosition(position).toString());
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
-        });
     }
 
     /*
@@ -228,7 +196,7 @@ public class ConsumptionEntry extends Fragment {
         In its listener, along with setting the Transport type it also helps toggle fields visibility
         depending on the selected transportation type
      */
-    private void ConsumptionTypeDropDownInit(Spinner DropDown, String[] DropDownItems, HashMap<String, LinearLayout> DynamicFieldsMap, Button Submit){
+    protected void ConsumptionTypeDropDownInit(Spinner DropDown, String[] DropDownItems, HashMap<String, LinearLayout> DynamicFieldsMap, Button Submit){
         SpinnerItemInit(DropDown, DropDownItems);
 
         DropDown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -255,44 +223,4 @@ public class ConsumptionEntry extends Fragment {
             public void onNothingSelected(AdapterView<?> parent) {}
         });
     }
-
-    //Initializes DateField allowing users to select any date
-    private void DateFieldInit(TextView dateTextView){
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-        String todayDate = dateFormat.format(calendar.getTime());
-
-        dateTextView.setText(todayDate);
-        CurrentSelectedDate = todayDate;
-
-        dateTextView.setOnClickListener(v -> {
-            int year = calendar.get(Calendar.YEAR);
-            int month = calendar.get(Calendar.MONTH);
-            int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-            DatePickerDialog datePickerDialog = new DatePickerDialog(
-                    currentContext,
-                    (view1, selectedYear, selectedMonth, selectedDay) -> {
-                        calendar.set(selectedYear, selectedMonth, selectedDay);
-                        String selectedDate = dateFormat.format(calendar.getTime());
-                        dateTextView.setText(selectedDate);
-                        CurrentSelectedDate = selectedDate;
-                    },
-                    year,
-                    month,
-                    day
-            );
-            datePickerDialog.show();
-        });
-    }
-
-    private void MissingErrorField(EditText Field){
-        SetErrorField(Field, "Missing, Please fill");
-    }
-
-    private void SetErrorField(EditText Field, String ErrorMsg){
-        Field.setError(ErrorMsg);
-        Field.requestFocus();
-    }
-
 }

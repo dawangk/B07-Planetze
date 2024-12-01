@@ -8,6 +8,12 @@
     android:gravity="center_horizontal">
 
     <!-- Spinner for Time Range Selection -->
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select Time Length:" />
+
     <Spinner
         android:id="@+id/spinner_time_range"
         android:layout_width="match_parent"
@@ -16,6 +22,7 @@
         android:spinnerMode="dropdown" />
 
     <!-- TextView for Total Emissions -->
+
     <TextView
         android:id="@+id/total_emissions_text"
         android:layout_width="wrap_content"
@@ -25,4 +32,14 @@
         android:textColor="@android:color/black"
         android:layout_marginBottom="16dp" />
 
+    <TextView
+        android:id="@+id/textView31"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Overtime Emissions:" />
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/chart"
+        android:layout_width="match_parent"
+        android:layout_height="300dp" />
 </LinearLayout>

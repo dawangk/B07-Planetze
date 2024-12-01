@@ -1,5 +1,6 @@
 [versions]
 agp = "8.4.1"
+graphview = "4.2.2"
 junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
@@ -13,10 +14,12 @@ firebaseAuth = "23.1.0"
 firebaseFirestore = "25.1.1"
 mockito = "5.5.0"
 dexmaker = "2.28.1"
+mpandroidchart = "3.1.0"
 navigationFragment = "2.8.4"
 navigationUi = "2.8.4"
 
 [libraries]
+graphview = { module = "com.jjoe64:graphview", version.ref = "graphview" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -30,6 +33,7 @@ firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore
 mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
 mockito-android = { group = "org.mockito", name = "mockito-android", version.ref = "mockito" }
 dexmaker-mockito = { group = "com.linkedin.dexmaker", name = "dexmaker-mockito", version.ref = "dexmaker" }
+mpandroidchart = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "mpandroidchart" }
 navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "navigationFragment" }
 navigation-ui = { group = "androidx.navigation", name = "navigation-ui", version.ref = "navigationUi" }
 

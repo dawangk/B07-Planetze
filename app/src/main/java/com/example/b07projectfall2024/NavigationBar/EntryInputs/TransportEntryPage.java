@@ -74,7 +74,7 @@ public class TransportEntryPage extends Fragment {
         Spinner FlightTypeDropDown = view.findViewById(R.id.TransportEntry_FlightType);
         Spinner WalkCycledDistanceUnitDropDown = view.findViewById(R.id.TransportEntry_WalkedCycledDistanceUnit);
 
-        String[] TransportTypeDropDownItems = {"", "Public Transport", "Car", "Plane", "Walked/Cycled"};
+        String[] TransportTypeDropDownItems = {"", "Public Transport", "Car", "Plane", "Walked", "Cycled"};
         String[] DistanceUnitDropDownItems = {"Kilometers", "Miles"};
         String[] CarTypeDropDownItems = {"Gasoline", "Diesel", "Hybrid", "Electric"};
         String[] PublicTransportTypeDropDownItems = {"Bus", "Train", "Subway"};
@@ -86,7 +86,8 @@ public class TransportEntryPage extends Fragment {
         DynamicFieldsMap.put("Public Transport", PublicContainer);
         DynamicFieldsMap.put("Car", CarContainer);
         DynamicFieldsMap.put("Plane", PlaneContainer);
-        DynamicFieldsMap.put("Walked/Cycled", WalkedCycledContainer);
+        DynamicFieldsMap.put("Walked", WalkedCycledContainer);
+        DynamicFieldsMap.put("Cycled", WalkedCycledContainer);
 
         SpinnerGeneralInit(CarDistanceUnitDropDown, DistanceUnitDropDownItems, "CarDistanceUnit");
         SpinnerGeneralInit(WalkCycledDistanceUnitDropDown, DistanceUnitDropDownItems, "WalkedCycledDistanceUnit");
@@ -135,10 +136,17 @@ public class TransportEntryPage extends Fragment {
             TransportationType: "Plane",
             NmbFlights: Integer
         }
-    Case "WalkedCycled":
+    Case "Walked":
         The information with the following format will be uploaded to firebase:
         {
-            TransportationType: "WalkedCycled",
+            TransportationType: "Walked",
+            Distance: Integer,
+            DistanceUnit: String
+        }
+    Case "Cycled":
+        The information with the following format will be uploaded to firebase:
+        {
+            TransportationType: "Cycled",
             Distance: Integer,
             DistanceUnit: String
         }
@@ -195,19 +203,35 @@ public class TransportEntryPage extends Fragment {
                 data.put("NmbFlights", NmbFlights);
                 data.put("FlightType", SpinnerOptions.get("FlightType"));
                 break;
-            case "Walked/Cycled":
+            case "Walked":
                 EditText DistanceWalkedCycledField =  view.findViewById(R.id.TransportEntry_DistanceWalkedCycled);
                 if(DistanceWalkedCycledField.getText().toString().isEmpty()){
                     MissingErrorField(DistanceWalkedCycledField);
                     return;
                 }
                 int DistanceWalkedCycled = Integer.parseInt(DistanceWalkedCycledField.getText().toString());
-                data.put("TransportationType", "WalkedCycled");
+                data.put("TransportationType", "Walked");
                 if(SpinnerOptions.get("WalkedCycledDistanceUnit").equals("Miles")){
                     data.put("Distance", DistanceWalkedCycled);
                     data.put("DistanceUnit", "Miles");
                 }else{
                     data.put("Distance", DistanceWalkedCycled);
+                    data.put("DistanceUnit", "KM");
+                }
+                break;
+            case "Cycled":
+                EditText DistanceWalkedCycledField1 =  view.findViewById(R.id.TransportEntry_DistanceWalkedCycled);
+                if(DistanceWalkedCycledField1.getText().toString().isEmpty()){
+                    MissingErrorField(DistanceWalkedCycledField1);
+                    return;
+                }
+                int DistanceWalkedCycled1 = Integer.parseInt(DistanceWalkedCycledField1.getText().toString());
+                data.put("TransportationType", "Cycled");
+                if(SpinnerOptions.get("WalkedCycledDistanceUnit").equals("Miles")){
+                    data.put("Distance", DistanceWalkedCycled1);
+                    data.put("DistanceUnit", "Miles");
+                }else{
+                    data.put("Distance", DistanceWalkedCycled1);
                     data.put("DistanceUnit", "KM");
                 }
                 break;

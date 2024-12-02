@@ -63,6 +63,10 @@ public class EcoGaugeFragment extends Fragment {
 
     private LineChart chart;
 
+    private Spinner countrySpinner;
+    private TextView countryEmissionsText;
+    private final DatabaseReference countriesRef = ref.child("Countries");
+
     public EcoGaugeFragment() {
         // Required empty public constructor
 
@@ -78,17 +82,26 @@ public class EcoGaugeFragment extends Fragment {
     public void onViewCreated(@NonNull View rootView, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(rootView, savedInstanceState);
 
+
+
         // Bind UI components
         totalEmissionsView = rootView.findViewById(R.id.total_emissions_text);
-
         chart = (LineChart) rootView.findViewById(R.id.chart);
+        countrySpinner = rootView.findViewById(R.id.spinner_country);
+        countryEmissionsText = rootView.findViewById(R.id.country_emissions_text);
+
+
+        //cycle render once to fix formatting
+        entryEmissions = new HashMap<>();
+        entryEmissions.put("2024-12-01", new TotalEntryEmission(0,0,0));
+        updateLineGraph();
 
         // Spinner for time range
         Spinner timeRangeSpinner = rootView.findViewById(R.id.spinner_time_range);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+        ArrayAdapter<CharSequence> timeRangeAdapter = ArrayAdapter.createFromResource(
                 requireContext(), R.array.time_ranges, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        timeRangeSpinner.setAdapter(adapter);
+        timeRangeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        timeRangeSpinner.setAdapter(timeRangeAdapter);
 
         // Handle time range selection
         timeRangeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -101,6 +114,32 @@ public class EcoGaugeFragment extends Fragment {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 // No action required
+            }
+        });
+
+        // Set up the country spinner
+        ArrayAdapter<CharSequence> countryAdapter = ArrayAdapter.createFromResource(
+                requireContext(), R.array.countries, android.R.layout.simple_spinner_item);
+        countryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        countrySpinner.setAdapter(countryAdapter);
+
+        // Handle country selection
+        countrySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position > 0) { // Skip the placeholder
+                    String selectedCountry = parent.getItemAtPosition(position).toString();
+                    fetchCountryEmissions(selectedCountry);
+                }
+
+                else {
+                    countryEmissionsText.setText("Select a country to see its average emissions.");
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // No action needed
             }
         });
     }
@@ -120,6 +159,7 @@ public class EcoGaugeFragment extends Fragment {
     private HashMap<String, TotalEntryEmission> entryEmissions;
 
     private void updateLineGraph(){
+        if(entryEmissions.isEmpty()) return;
         ArrayList<Entry> lineGraphPoints = new ArrayList<Entry>();
 
         List<String> dateLabels = new ArrayList<>(entryEmissions.keySet());
@@ -779,4 +819,50 @@ public class EcoGaugeFragment extends Fragment {
             }
         });
     }
+
+    private void fetchCountryEmissions(String country) {
+        if (country == null || country.isEmpty()) {
+            countryEmissionsText.setText("Please select a valid country.");
+            return;
+        }
+
+        countriesRef.child(country.trim()).child("total_emissions")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists() && snapshot.getValue() != null) {
+                            // Fetch yearly emissions
+                            double yearlyEmissions = snapshot.getValue(Double.class);
+
+                            // Calculate monthly and weekly averages
+                            double monthlyEmissions = yearlyEmissions / 12.0;
+                            double weeklyEmissions = yearlyEmissions / 52.0;
+                            requireActivity().runOnUiThread(() -> {
+                                String emissionsText = String.format(Locale.getDefault(),
+                                        "Average emissions for %s :\n\n" +
+                                                "Yearly : %.1f kg CO2e\n" +
+                                                "Monthly : %.1f kg CO2e\n" +
+                                                "Weekly : %.1f kg CO2e",
+                                        country, yearlyEmissions, monthlyEmissions, weeklyEmissions);
+
+                                countryEmissionsText.setText(emissionsText);
+                            });
+                        }
+
+                        else {
+                            requireActivity().runOnUiThread(() -> {
+                                countryEmissionsText.setText(String.format("No data available for %s.", country));
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        requireActivity().runOnUiThread(() -> {
+                            countryEmissionsText.setText("Failed to fetch data. Please try again.");
+                        });
+                    }
+                });
+    }
+
 }

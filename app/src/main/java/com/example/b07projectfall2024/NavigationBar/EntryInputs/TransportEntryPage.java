@@ -23,13 +23,17 @@ import androidx.fragment.app.Fragment;
 import com.example.b07projectfall2024.HomeActivity;
 import com.example.b07projectfall2024.R;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
+import com.example.b07projectfall2024.NavigationBar.EntryInputs.FoodEntryPage;
 
 public class TransportEntryPage extends Entry {
 
@@ -151,6 +155,7 @@ public class TransportEntryPage extends Entry {
         if(TransportType.isEmpty()) return;
 
         HashMap<String, Object> data = new HashMap<>();
+        DatabaseReference transitHabit;
 
         switch (TransportType){
             case "Public Transport":
@@ -163,6 +168,11 @@ public class TransportEntryPage extends Entry {
                 data.put("TransportationType", "Public");
                 data.put("PublicType", SpinnerOptions.get("PublicType"));
                 data.put("TimeOnPublic", TimeOnPublic);
+
+                //Keeping track of the habit if user is tracking it.
+                transitHabit = db.child("users").child(mAuth.getUid()).child("Habits").child("Taking the Transit");
+                trackHabit(transitHabit);
+
                 break;
             case "Car":
                 EditText DistanceDrivenField =  view.findViewById(R.id.TransportEntry_DistanceDriven);
@@ -181,6 +191,16 @@ public class TransportEntryPage extends Entry {
                     data.put("DistanceUnit", "KM");
                 }
                 data.put("CarType", SpinnerOptions.get("CarType"));
+
+                //Keeping track of the anti-habit of Walking, Biking and Transit if user is tracking any one of them
+
+                transitHabit = db.child("users").child(mAuth.getUid()).child("Habits").child("Walking");
+                DatabaseReference transitHabit2 = db.child("users").child(mAuth.getUid()).child("Habits").child("Biking");
+                DatabaseReference transitHabit3 = db.child("users").child(mAuth.getUid()).child("Habits").child("Taking the Transit");
+                trackAntiHabit(transitHabit, "Walking");
+                trackAntiHabit(transitHabit2, "Biking");
+                trackAntiHabit(transitHabit3, "Taking the Transit");
+
                 break;
             case "Plane":
                 EditText NmbFlightsField =  view.findViewById(R.id.TransportEntry_NmbFlights);
@@ -209,6 +229,10 @@ public class TransportEntryPage extends Entry {
                     data.put("Distance", DistanceWalkedCycled);
                     data.put("DistanceUnit", "KM");
                 }
+
+                //Keeping track of the habit if user is tracking it.
+                transitHabit = db.child("users").child(mAuth.getUid()).child("Habits").child("Walking");
+                trackHabit(transitHabit);
                 break;
             case "Cycled":
                 EditText DistanceWalkedCycledField1 =  view.findViewById(R.id.TransportEntry_DistanceWalkedCycled);
@@ -225,6 +249,10 @@ public class TransportEntryPage extends Entry {
                     data.put("Distance", DistanceWalkedCycled1);
                     data.put("DistanceUnit", "KM");
                 }
+
+                //Keeping track of the habit if user is tracking it.
+                transitHabit = db.child("users").child(mAuth.getUid()).child("Habits").child("Biking");
+                trackHabit(transitHabit);
                 break;
             default:
                 Toast.makeText(currentContext, "Key error on upload", Toast.LENGTH_SHORT).show();
@@ -275,4 +303,5 @@ public class TransportEntryPage extends Entry {
             public void onNothingSelected(AdapterView<?> parent) {}
         });
     }
+
 }

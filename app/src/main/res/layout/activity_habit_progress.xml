@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".HabitTracking.HabitProgressActivity"
+    android:background="#a9bcd0"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_gravity="center"
+        android:src="@drawable/app_logo_no_bg"
+        android:padding="20dp"/>
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Your progress towards"
+        android:layout_gravity="center"
+        android:textColor="@color/black"
+        android:textSize="20dp"
+        android:fontFamily="@font/bold_font"/>
+
+    <LinearLayout
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="@font/reg_font"
+            android:textSize="18dp"
+            android:layout_marginStart="6dp"
+            android:textStyle="bold"
+            android:text="On the day: "/>
+
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginRight="20dp"
+            android:textColor="@color/black"
+            android:textSize="20dp" />
+
+        <Button
+            android:id="@+id/dateUpdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Update"
+            android:textStyle="bold"
+            android:fontFamily="@font/bold_font"
+            android:textColor="@color/white"
+            android:textSize="15dp"
+            android:backgroundTint="@color/dark_gray"
+            android:padding="8dp"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="@font/reg_font"
+            android:textSize="18dp"
+            android:text="You "/>
+
+        <TextView
+            android:id="@+id/habitTextDisplay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="@font/reg_font"
+            android:textSize="18dp" />
+
+        <TextView
+            android:id="@+id/numHabitToday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="@font/reg_font"
+            android:textStyle="bold"
+            android:textSize="25dp"
+            android:text="0"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="@font/reg_font"
+            android:textSize="18dp"
+            android:text=" times,"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="@font/reg_font"
+            android:textSize="18dp"
+            android:text="that's "/>
+
+        <TextView
+            android:id="@+id/numHabitYday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="@font/reg_font"
+            android:textStyle="bold"
+            android:textSize="21dp"
+            android:text="0"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="@font/reg_font"
+            android:textSize="18dp"
+            android:text=" than the previous day!"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/habitProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/turquoise"
+        android:fontFamily="@font/reg_font"
+        android:textSize="18dp"
+        android:layout_gravity="center"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="@font/reg_font"
+            android:textSize="18dp"
+            android:text="In comparison, you "/>
+
+        <TextView
+            android:id="@+id/antiHabitTextDisplay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="@font/reg_font"
+            android:textSize="18dp" />
+
+        <TextView
+            android:id="@+id/numAntiHabitToday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="@font/reg_font"
+            android:textSize="25dp"
+            android:textStyle="bold"
+            android:text="0"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="@font/reg_font"
+            android:textSize="18dp"
+            android:text=" times,"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="@font/reg_font"
+            android:textSize="18dp"
+            android:text="That's "/>
+
+        <TextView
+            android:id="@+id/numAntiHabitYday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="@font/reg_font"
+            android:textStyle="bold"
+            android:textSize="21dp"
+            android:text="0"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="@font/reg_font"
+            android:textSize="18dp"
+            android:text=" than the previous day."/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/antiHabitProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/turquoise"
+        android:fontFamily="@font/reg_font"
+        android:textSize="18dp"
+        android:layout_gravity="center"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/reg_font"
+        android:text="Since you begun tracking this habit:"
+        android:textSize="18dp"
+        android:layout_marginStart="10dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="@font/reg_font"
+            android:textSize="18dp"
+            android:text="You "/>
+
+        <TextView
+            android:id="@+id/habitTextDisplay2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="@font/reg_font"
+            android:textSize="18dp" />
+
+        <TextView
+            android:id="@+id/numHabit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="@font/reg_font"
+            android:textStyle="bold"
+            android:textSize="25dp"
+            android:text="0"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="@font/reg_font"
+            android:textSize="18dp"
+            android:text=" times,"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="@font/reg_font"
+            android:textSize="18dp"
+            android:text="and "/>
+
+        <TextView
+            android:id="@+id/antiHabitTextDisplay2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="@font/reg_font"
+            android:textSize="18dp" />
+
+        <TextView
+            android:id="@+id/numAntiHabit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="@font/reg_font"
+            android:textStyle="bold"
+            android:textSize="25dp"
+            android:text="0"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="@font/reg_font"
+            android:textSize="18dp"
+            android:text=" times,"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Back"
+            android:textAllCaps="false"
+            android:fontFamily="@font/bold_font"
+            android:textColor="@color/white"
+            android:textSize="18dp"
+            android:backgroundTint="@color/dark_gray"
+            android:padding="8dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"/>
+
+        <Button
+            android:id="@+id/stopTracking"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Stop Tracking"
+            android:textAllCaps="false"
+            android:fontFamily="@font/bold_font"
+            android:textColor="@color/white"
+            android:textSize="18dp"
+            android:backgroundTint="@color/dark_gray"
+            android:padding="8dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"/>
+
+    </LinearLayout>
+
+</LinearLayout>

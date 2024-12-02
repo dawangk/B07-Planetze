@@ -22,8 +22,11 @@ import androidx.fragment.app.Fragment;
 import com.example.b07projectfall2024.HomeActivity;
 import com.example.b07projectfall2024.R;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -94,6 +97,24 @@ public class FoodEntryPage extends Entry {
 
         data.put("MealType", SelectedMeal);
 
+        //Keeping track of the habit if user is tracking it.
+        if (SelectedMeal.equals("Vegetarian")) {
+            DatabaseReference eatingVeggiesHabit = db.getRef().child("users").child(mAuth.getUid()).child("Habits").child("Eating Vegetarian");
+            trackHabit(eatingVeggiesHabit);
+        } else if (SelectedMeal.equals("Fish")) {
+            DatabaseReference eatingFishHabit = db.getRef().child("users").child(mAuth.getUid()).child("Habits").child("Eating Fish");
+            trackHabit(eatingFishHabit);
+        }
+        //Keeping track of the anti-habit if user is tracking the habit
+        else if (SelectedMeal.equals("Chicken")) {
+            DatabaseReference eatingFishHabit = db.getRef().child("users").child(mAuth.getUid()).child("Habits").child("Eating Fish");
+            trackAntiHabit(eatingFishHabit, "Eating Fish");
+        } else {
+            DatabaseReference eatingVeggiesHabit = db.getRef().child("users").child(mAuth.getUid()).child("Habits").child("Eating Vegetarian");
+            trackAntiHabit(eatingVeggiesHabit, "Eating Vegetarian");
+        }
+
+
         DatabaseReference ChildRef = db.child("users").child(mAuth.getUid()).child("entries").child(CurrentSelectedDate).child("food").push();
         ChildRef.setValue(data)
                 .addOnCompleteListener(task -> {
@@ -128,5 +149,4 @@ public class FoodEntryPage extends Entry {
             public void onNothingSelected(AdapterView<?> parent) {}
         });
     }
-
 }

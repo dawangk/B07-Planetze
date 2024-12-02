@@ -3,6 +3,7 @@ package com.example.b07projectfall2024.NavigationBar.EntryInputs;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,14 +33,17 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 
-public class FoodEntryPage extends Fragment {
-    private Context currentContext;
+public class FoodEntryPage extends Entry {
 
-    private DatabaseReference db;
-    private FirebaseAuth mAuth;
-    private String CurrentSelectedDate;
     private String SelectedMeal;
 
+
+    public FoodEntryPage(){
+        super();
+    }
+    public FoodEntryPage(String date){
+        super(date);
+    }
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -124,9 +128,6 @@ public class FoodEntryPage extends Fragment {
 
     }
 
-    private void popFragment(){
-        getActivity().getSupportFragmentManager().popBackStack();
-    }
 
     //Initializes the spinner, MealType
     private void SelectedMealSpinnerInit(Spinner DropDown, String[] DropDownItems){
@@ -147,45 +148,6 @@ public class FoodEntryPage extends Fragment {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
         });
-    }
-
-    //Initializes DateField allowing users to select any date
-    private void DateFieldInit(TextView dateTextView){
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-        String todayDate = dateFormat.format(calendar.getTime());
-
-        dateTextView.setText(todayDate);
-        CurrentSelectedDate = todayDate;
-
-        dateTextView.setOnClickListener(v -> {
-            int year = calendar.get(Calendar.YEAR);
-            int month = calendar.get(Calendar.MONTH);
-            int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-            DatePickerDialog datePickerDialog = new DatePickerDialog(
-                    currentContext,
-                    (view1, selectedYear, selectedMonth, selectedDay) -> {
-                        calendar.set(selectedYear, selectedMonth, selectedDay);
-                        String selectedDate = dateFormat.format(calendar.getTime());
-                        dateTextView.setText(selectedDate);
-                        CurrentSelectedDate = selectedDate;
-                    },
-                    year,
-                    month,
-                    day
-            );
-            datePickerDialog.show();
-        });
-    }
-
-    private void MissingErrorField(EditText Field){
-        SetErrorField(Field, "Missing, Please fill");
-    }
-
-    private void SetErrorField(EditText Field, String ErrorMsg){
-        Field.setError(ErrorMsg);
-        Field.requestFocus();
     }
 
     private void trackHabit(DatabaseReference habitRef) {
@@ -271,5 +233,4 @@ public class FoodEntryPage extends Fragment {
             }
         });
     }
-
 }

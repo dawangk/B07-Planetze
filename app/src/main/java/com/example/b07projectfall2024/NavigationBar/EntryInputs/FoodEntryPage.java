@@ -44,7 +44,7 @@ public class FoodEntryPage extends Entry {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_food_entry, container, false);
+        view = inflater.inflate(R.layout.fragment_food_entry, container, false);
 
         db = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();

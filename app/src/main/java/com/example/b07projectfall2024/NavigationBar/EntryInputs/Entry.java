@@ -37,7 +37,7 @@ public abstract class Entry extends Fragment{
     protected FirebaseAuth mAuth;
     protected String CurrentSelectedDate;
 
-
+    View view;
     protected HashMap<String, String> SpinnerOptions;
 
     public Entry(){
@@ -90,8 +90,8 @@ public abstract class Entry extends Fragment{
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         String todayDate = dateFormat.format(calendar.getTime());
 
-
-        if(CurrentSelectedDate.isEmpty()) {
+        TextView dateView = view.findViewById(R.id.DateBox);
+        if(CurrentSelectedDate.isEmpty()) { //If true, then its new entry, otherwise, edited entry
             CurrentSelectedDate = todayDate;
 
             dateTextView.setOnClickListener(v -> {
@@ -115,6 +115,7 @@ public abstract class Entry extends Fragment{
             });
         }else{
             Log.d("Edit", "Static date edit" + CurrentSelectedDate);
+            dateView.setText("Date: ");
         }
         dateTextView.setText(CurrentSelectedDate);
 

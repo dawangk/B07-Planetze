@@ -18,10 +18,14 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
+/*
+ * Adapter for individual user entries
+ * */
 public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHolder> {
     private LinkedList< HashMap<String, Object>> entries; // Map of entry types and their details
     private OnItemClickListener listener;
-    public EntryAdapter(LinkedList< HashMap<String, Object>> entries, OnItemClickListener listener) {
+    public EntryAdapter(LinkedList< HashMap<String, Object>> entries,
+                        OnItemClickListener listener) {
         this.entries = entries;
         this.listener = listener;
     }
@@ -67,7 +71,11 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
         });
     }
 
-    private void populateTransportationDetails(LinearLayout container, HashMap<String, Object> entry) {
+    /*
+    * Populates each transportation entry with its respective entries
+    * */
+    private void populateTransportationDetails(LinearLayout container,
+                                               HashMap<String, Object> entry) {
         String transportationType = (String) entry.get("TransportationType");
 
         TextView textView = new TextView(container.getContext());
@@ -78,15 +86,18 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
         // Add specific details for transportation types
         if (transportationType.equals("Car")) {
             TextView carDetails = new TextView(container.getContext());
-            carDetails.setText("Car Type: " + entry.get("CarType") + ", Distance: " + entry.get("Distance") + " km");
+            carDetails.setText("Car Type: " + entry.get("CarType") +
+                    ", Distance: " + entry.get("Distance") + " km");
             container.addView(carDetails);
         } else if (transportationType.equals("Public")) {
             TextView publicDetails = new TextView(container.getContext());
-            publicDetails.setText("Public Type: " + entry.get("PublicType") + ", Time: " + entry.get("TimeOnPublic") + " hours");
+            publicDetails.setText("Public Type: " + entry.get("PublicType") +
+                    ", Time: " + entry.get("TimeOnPublic") + " hours");
             container.addView(publicDetails);
         }else if (transportationType.equals("Plane")) {
             TextView publicDetails = new TextView(container.getContext());
-            publicDetails.setText("Flight Type: " + entry.get("FlightType") + ", Number of Flights: " + entry.get("NmbFlights") + " hours");
+            publicDetails.setText("Flight Type: " + entry.get("FlightType") +
+                    ", Number of Flights: " + entry.get("NmbFlights") + " hours");
             container.addView(publicDetails);
         }else if (transportationType.equals("Walked")||transportationType.equals("Cycled")) {
             TextView publicDetails = new TextView(container.getContext());
@@ -96,14 +107,22 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
 
     }
 
-    private void populateFoodDetails(LinearLayout container, HashMap<String, Object> entry) {
+    /*
+     * Populates each food entry with its respective entries
+     * */
+    private void populateFoodDetails(LinearLayout container,
+                                     HashMap<String, Object> entry) {
 
         TextView textView = new TextView(container.getContext());
-        textView.setText("Meal Type: " + entry.get("MealType") + ", Servings: " + entry.get("NmbConsumedServings"));
+        textView.setText("Meal Type: " + entry.get("MealType") +
+                ", Servings: " + entry.get("NmbConsumedServings"));
         container.addView(textView);
 
     }
 
+    /*
+     * Populates each shopping/consumption entry with its respective entries
+     * */
     private void populateConsumptionDetails(LinearLayout container, HashMap<String, Object> entry) {
         String boughtItem = (String) entry.get("BoughtItem");
 
@@ -115,19 +134,23 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
         // Add specific details for bought items
         if (boughtItem.equals("Clothes")) {
             TextView clothingDetails = new TextView(container.getContext());
-            clothingDetails.setText("Number: " + entry.get("NmbClothingBought") + ", Eco-Friendly: " + entry.get("EcoFriendly"));
+            clothingDetails.setText("Number: " + entry.get("NmbClothingBought") +
+                    ", Eco-Friendly: " + entry.get("EcoFriendly"));
             container.addView(clothingDetails);
         } else if (boughtItem.equals("Electronics")) {
             TextView electronicDetails = new TextView(container.getContext());
-            electronicDetails.setText("Type: " + entry.get("ElectronicType") + ", Number: " + entry.get("NmbPurchased"));
+            electronicDetails.setText("Type: " + entry.get("ElectronicType") +
+                    ", Number: " + entry.get("NmbPurchased"));
             container.addView(electronicDetails);
         } else if (boughtItem.equals("Utility Bill")) {
             TextView electronicDetails = new TextView(container.getContext());
-            electronicDetails.setText("Utility Type: " + entry.get("BillPrice") + ", Bill Price: " + entry.get("BillPrice"));
+            electronicDetails.setText("Utility Type: " + entry.get("BillPrice") +
+                    ", Bill Price: " + entry.get("BillPrice"));
             container.addView(electronicDetails);
         } else if (boughtItem.equals("Other")) {
             TextView electronicDetails = new TextView(container.getContext());
-            electronicDetails.setText("Item Type: " + entry.get("ItemType") + ", Number: " + entry.get("NmbPurchased"));
+            electronicDetails.setText("Item Type: " + entry.get("ItemType") +
+                    ", Number: " + entry.get("NmbPurchased"));
             container.addView(electronicDetails);
         }
 

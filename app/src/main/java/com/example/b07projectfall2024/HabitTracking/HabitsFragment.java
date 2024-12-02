@@ -175,6 +175,7 @@ public class HabitsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 adoptHabit(adoptees[0], adopt_buttons[0]);
+                loadFragment(new HabitsFragment());
             }
         });
 
@@ -182,6 +183,7 @@ public class HabitsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 adoptHabit(adoptees[1], adopt_buttons[1]);
+                loadFragment(new HabitsFragment());
             }
         });
 
@@ -189,6 +191,7 @@ public class HabitsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 adoptHabit(adoptees[2], adopt_buttons[2]);
+                loadFragment(new HabitsFragment());
             }
         });
 
@@ -196,6 +199,7 @@ public class HabitsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 adoptHabit(adoptees[3], adopt_buttons[3]);
+                loadFragment(new HabitsFragment());
             }
         });
 
@@ -203,6 +207,7 @@ public class HabitsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 adoptHabit(adoptees[4], adopt_buttons[4]);
+                loadFragment(new HabitsFragment());
             }
         });
 
@@ -210,6 +215,7 @@ public class HabitsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 adoptHabit(adoptees[5], adopt_buttons[5]);
+                loadFragment(new HabitsFragment());
             }
         });
 
@@ -217,6 +223,7 @@ public class HabitsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 adoptHabit(adoptees[6], adopt_buttons[6]);
+                loadFragment(new HabitsFragment());
             }
         });
 
@@ -224,6 +231,7 @@ public class HabitsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 adoptHabit(adoptees[7], adopt_buttons[7]);
+                loadFragment(new HabitsFragment());
             }
         });
 
@@ -319,5 +327,4 @@ public class HabitsFragment extends Fragment {
         intent.putExtra("habit", habit);
         startActivity(intent);
     }
-
 }

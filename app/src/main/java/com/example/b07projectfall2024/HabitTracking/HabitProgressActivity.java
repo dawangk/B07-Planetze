@@ -71,6 +71,7 @@ public class HabitProgressActivity extends AppCompatActivity {
 
         Button dateUpdate = findViewById(R.id.dateUpdate);
         Button stopTracking = findViewById(R.id.stopTracking);
+        Button back = findViewById(R.id.back);
 
         title.setText("Your progress towards " + habit + ":");
 
@@ -129,6 +130,18 @@ public class HabitProgressActivity extends AppCompatActivity {
                 UserARef.removeValue();
 
                 //Navigating back to HabitsFragment
+                if (savedInstanceState == null) {
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, new HabitsFragment())
+                            .commit();
+                }
+            }
+        });
+
+        //Back button redirects back to HabitsFragment
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 if (savedInstanceState == null) {
                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.fragment_container, new HabitsFragment())

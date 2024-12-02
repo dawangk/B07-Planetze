@@ -40,8 +40,24 @@ public class EntryFragment extends Fragment implements EntryAdapter.OnItemClickL
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser user = mAuth.getCurrentUser();
 
+    boolean shouldDeleteOnReturn = false;
     private static final String ARG_PARAM = "param_key";
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            shouldDeleteOnReturn = savedInstanceState.getBoolean("shouldDeleteOnReturn", false);
+            if (savedInstanceState.containsKey("position")) {
+                Bundle args = getArguments();
+                if (args == null) {
+                    args = new Bundle();
+                }
+                args.putInt("position", savedInstanceState.getInt("position"));
+                setArguments(args); // Restore position to arguments
+            }
+        }
+    }
     public static EntryFragment newInstance(String param) {
         EntryFragment fragment = new EntryFragment();
         Bundle args = new Bundle();
@@ -65,34 +81,7 @@ public class EntryFragment extends Fragment implements EntryAdapter.OnItemClickL
         entryRecyclerView = view.findViewById(R.id.entryRecyclerView);
         entryRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        fetchDataForDate(date, new DataFetchCallback() {
-            @Override
-            public void onSuccess(HashMap<String, HashMap<String, Object>> data) {
-                LinkedList<HashMap<String, Object>> newData = new LinkedList<>();
-
-                for (HashMap.Entry<String, HashMap<String, Object>> entry : data.entrySet()) {
-                    String key = entry.getKey();
-                    HashMap<String, Object> value = entry.getValue();
-                    for(HashMap.Entry<String, Object> entry2: value.entrySet()){
-                        HashMap<String, Object> individualEntries = (HashMap<String, Object>)entry2.getValue();
-                        HashMap<String, Object> newValue = new HashMap<>(individualEntries);
-                        newValue.put("EntryCategory", key);
-                        newValue.put("ID",entry2.getKey());
-                        newData.add(newValue);
-                    }
-                }
-
-                entryAdapter = new EntryAdapter(newData,EntryFragment.this);
-                dataList = newData;
-                entryRecyclerView.setAdapter(entryAdapter);
-                Log.d("EntryFragment","Data fetched successfully: " + data);
-            }
-            @Override
-            public void onError(Exception e) {
-                Log.e("EntryFragment","Error fetching data: " + e.getMessage());
-            }
-        });
-
+        updateData(date);
 
         return view;
     }
@@ -126,6 +115,7 @@ public class EntryFragment extends Fragment implements EntryAdapter.OnItemClickL
                     }
                     // Add to the main entries map
                     entries.put(category, categoryEntries);
+                    Log.d("EntryFragment", "Entries for " + category + ": " + categoryEntries);
 
                     // Check if all categories are loaded
                     if (entries.size() == categories.length) {
@@ -156,7 +146,7 @@ public class EntryFragment extends Fragment implements EntryAdapter.OnItemClickL
         // Get the FragmentManager
         FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
 
-        // Find the existing fragment you want to navigate to (e.g., EditFragment)
+        // Find the existing fragment you want to navigate to (e.g., TransportEntryPage)
         Fragment editFragment = null;
 
         if(category.equals("transportation")){
@@ -167,61 +157,125 @@ public class EntryFragment extends Fragment implements EntryAdapter.OnItemClickL
             editFragment = new ConsumptionEntry(date);
         }
 
-        // Pass the item data to the fragment using a Bundle
+        // Pass the position to the new fragment
         Bundle bundle = new Bundle();
-        bundle.putInt("position", position); // Pass the item's position
-        //bundle.putString("itemValue", item); // Pass the item's value
+        bundle.putInt("position", position);
         editFragment.setArguments(bundle);
 
-        // Replace the current fragment with the EditFragment
+        // Also save the position in the current fragment
+        Bundle args = getArguments();
+        if (args == null) {
+            args = new Bundle();
+        }
+        args.putInt("position", position);
+        setArguments(args);
+
+        // Replace the current fragment with the edit entries fragment
         fragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, editFragment, "EDIT_FRAGMENT")
                 .addToBackStack(null) // Add to the back stack so the user can navigate back
                 .commit();
 
-        onDeleteClick(position);
+        shouldDeleteOnReturn = true;
+        updateData(date);
     }
 
     @Override
-    public void onDeleteClick(int position) {
-        // Logic for deleting an item
-
-        String date = null;
-        if (getArguments() != null) {
-            date = getArguments().getString(ARG_PARAM);
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("shouldDeleteOnReturn", shouldDeleteOnReturn);
+        if (getArguments() != null && getArguments().containsKey("position")) {
+            outState.putInt("position", getArguments().getInt("position"));
         }
+    }
+
+    // Handle deletion when returning to this fragment
+    @Override
+    public void onResume() {
+        String date = getArguments() != null ? getArguments().getString(ARG_PARAM) : null;
+        super.onResume();
+        if (shouldDeleteOnReturn) {
+            Bundle args = getArguments();
+            if (args != null && args.containsKey("position")) {
+                int position = args.getInt("position");
+                onDeleteClick(position, true);
+            }
+            shouldDeleteOnReturn = false;
+            updateData(date);
+            replaceFragmentWithNewInstance(date);
+        }
+    }
+
+
+    @Override
+    public void onDeleteClick(int position, boolean edit) {
+        String date = getArguments() != null ? getArguments().getString(ARG_PARAM) : null;
 
         HashMap<String, Object> item = dataList.get(position);
-
-        DatabaseReference dayRef = ref.child("users").child(user.getUid()).child("entries").child(date);
         String category = (String) item.get("EntryCategory");
         String id = (String) item.get("ID");
+        DatabaseReference entryRef = ref.child("users").child(user.getUid()).child("entries").child(date).child(category).child(id);
 
-        DatabaseReference cateRef = dayRef.child(category);
-
-        cateRef.addListenerForSingleValueEvent(new ValueEventListener() {
-           @Override
-           public void onDataChange(@NonNull DataSnapshot snapshot) {
-               DatabaseReference entryRef = cateRef.child(id); //Locates the entry
-
-               entryRef.removeValue().addOnCompleteListener(task->{
-                   if (task.isSuccessful()) {
-                       Log.d("FirebaseDB", "Entry removed successfully.");
-                       Toast.makeText(getContext(), "Entry removed successfully", Toast.LENGTH_SHORT).show();
-                   } else {
-                       Log.e("FirebaseDB", "Failed to remove entry: ", task.getException());
-                   }
-               });
-
-
-           }
-           @Override
-           public void onCancelled(@NonNull DatabaseError error) {
-               Log.e("FirebaseDB", "Error retrieving data", error.toException());
-           }
+        entryRef.removeValue().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                if (edit) {
+                    Toast.makeText(getContext(), "Entry edited successfully", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), "Entry removed successfully", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Log.e("FirebaseDB", "Failed to remove entry: ", task.getException());
+            }
+            updateData(date);
         });
-        dataList.remove(position); // Remove the item from the dataset
-        entryAdapter.notifyItemRemoved(position); // Notify the adapter
-        entryAdapter.notifyDataSetChanged();
+    }
+
+
+    private void updateData(String date) {
+        fetchDataForDate(date, new DataFetchCallback() {
+            @Override
+            public void onSuccess(HashMap<String, HashMap<String, Object>> data) {
+                LinkedList<HashMap<String, Object>> newData = new LinkedList<>();
+                for (HashMap.Entry<String, HashMap<String, Object>> entry : data.entrySet()) {
+                    String key = entry.getKey();
+                    HashMap<String, Object> value = entry.getValue();
+                    for (HashMap.Entry<String, Object> entry2 : value.entrySet()) {
+                        HashMap<String, Object> individualEntries = (HashMap<String, Object>) entry2.getValue();
+                        HashMap<String, Object> newValue = new HashMap<>(individualEntries);
+                        newValue.put("EntryCategory", key);
+                        newValue.put("ID", entry2.getKey());
+                        newData.add(newValue);
+                    }
+                }
+                dataList = newData;
+                if (entryAdapter == null) {
+                    entryAdapter = new EntryAdapter(newData, EntryFragment.this);
+                    entryRecyclerView.setAdapter(entryAdapter);
+                } else {
+                    entryAdapter.updateData(newData);
+                    entryAdapter.notifyDataSetChanged();
+                }
+                Log.d("EntryFragment", "Data fetched successfully: " + newData);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Log.e("EntryFragment", "Error fetching data: " + e.getMessage());
+            }
+        });
+    }
+
+    public void replaceFragmentWithNewInstance(String date) {
+        // Create a new instance of EntryFragment
+        EntryFragment newFragment = EntryFragment.newInstance(date);
+
+        // Get the FragmentManager
+        FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+
+        // Start a transaction to replace the current fragment
+        fragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, newFragment)  // The container where the fragment should be replaced
+                .addToBackStack(null)  // Optional: Adds the transaction to the back stack
+                .commit();
     }
 }

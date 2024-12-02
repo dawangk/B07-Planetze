@@ -58,22 +58,84 @@ public class HabitProgressActivity extends AppCompatActivity {
         TextView title = findViewById(R.id.title);
         TextView numHabitToday = findViewById(R.id.numHabitToday);
         TextView numHabitYday = findViewById(R.id.numHabitYday);
+        TextView numAntiHabitToday = findViewById(R.id.numAntiHabitToday);
+        TextView numAntiHabitYday = findViewById(R.id.numAntiHabitYday);
+        TextView habitTextDisplay = findViewById(R.id.habitTextDisplay);
+        TextView antHabitTextDisplay = findViewById(R.id.antiHabitTextDisplay);
+        TextView habitProgress = findViewById(R.id.habitProgress);
+        TextView antiHabitProgress = findViewById(R.id.antiHabitProgress);
+        TextView habitTextDisplay2= findViewById(R.id.habitTextDisplay2);
+        TextView antiHabitTextDisplay2 = findViewById(R.id.antiHabitTextDisplay2);
+        TextView numHabitTotal = findViewById(R.id.numHabit);
+        TextView numAntiHabitTotal = findViewById(R.id.numAntiHabit);
 
         Button dateUpdate = findViewById(R.id.dateUpdate);
+        Button stopTracking = findViewById(R.id.stopTracking);
 
         title.setText("Your progress towards " + habit + ":");
 
-        //Displaying current day's habit progress
-        displayHabit(CurrentSelectedDate, habit, numHabitToday, numHabitYday);
+        //Getting name of the corresponding AntiHabit and updating the current day's habit progress
+        DatabaseReference antiHabitRef = ref.child("Habits").child(habit).child("AntiHabit");
+        String[] antiHabit = {""};
+        antiHabitRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                antiHabit[0] = snapshot.getValue(String.class);
+
+                //Displaying current day's habit progress
+                displayHabit(CurrentSelectedDate, habit, numHabitToday, numHabitYday, "Habits", habitProgress);
+                displayHabit(CurrentSelectedDate, antiHabit[0], numAntiHabitToday, numAntiHabitYday, "AntiHabits", antiHabitProgress);
+                setTextDisplay(habit, antiHabit[0], habitTextDisplay, antHabitTextDisplay);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
 
         //If date is changed, display new date's habit progress
         dateUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                displayHabit(CurrentSelectedDate, habit, numHabitToday, numHabitYday);
+                displayHabit(CurrentSelectedDate, habit, numHabitToday, numHabitYday, "Habits", habitProgress);
+                displayHabit(CurrentSelectedDate, antiHabit[0], numAntiHabitToday, numAntiHabitYday, "AntiHabits", antiHabitProgress);
             }
         });
 
+        //Displaying the total count of both the habit and anti. since the tracking period begun
+        antiHabitRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String antiHabit = snapshot.getValue(String.class);
+
+                displayAll(habit, numHabitTotal, "Habits");
+                displayAll(antiHabit, numAntiHabitTotal, "AntiHabits");
+                setTextDisplay(habit, antiHabit, habitTextDisplay2, antiHabitTextDisplay2);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        //If user chooses to stop tracking the habit, we delete all habit data from the database
+        stopTracking.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatabaseReference UserHRef = ref.child("users").child(user.getUid()).child("Habits").child(habit);
+                DatabaseReference UserARef = ref.child("users").child(user.getUid()).child("AntiHabits").child(antiHabit[0]);
+                UserHRef.removeValue();
+                UserARef.removeValue();
+
+                //Navigating back to HabitsFragment
+                if (savedInstanceState == null) {
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, new HabitsFragment())
+                            .commit();
+                }
+            }
+        });
     }
 
     //Initializes DateField allowing users to select any date
@@ -106,8 +168,9 @@ public class HabitProgressActivity extends AppCompatActivity {
         });
     }
 
-    private void displayHabit(String CurrentSelectedDate, String habit, TextView numHabitToday, TextView numHabitYday) {
-        DatabaseReference habitRef = ref.child("users").child(user.getUid()).child("Habits").child(habit);
+    private void displayHabit(String CurrentSelectedDate, String habit, TextView numHabitToday,
+                              TextView numHabitYday, String type, TextView habitProgress) {
+        DatabaseReference habitRef = ref.child("users").child(user.getUid()).child(type).child(habit);
         DatabaseReference habitToday = habitRef.child(CurrentSelectedDate);
         habitToday.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -116,9 +179,10 @@ public class HabitProgressActivity extends AppCompatActivity {
                 int[] numToday = {0};
                 if (snapshot.exists()) {
                     numToday[0] = snapshot.getValue(Integer.class);
+                    numHabitToday.setText(Integer.toString(numToday[0]));
+                } else {
+                    numHabitToday.setText("0");
                 }
-
-                numHabitToday.setText(Integer.toString(numToday[0]));
 
                 String dayBefore = getDayBefore(CurrentSelectedDate);
                 DatabaseReference habitYday = habitRef.child(dayBefore);
@@ -129,23 +193,60 @@ public class HabitProgressActivity extends AppCompatActivity {
                         int[] numYday = {0};
                         if (snapshot.exists()) {
                             numYday[0] = snapshot.getValue(Integer.class);
+
+                            int diff = numToday[0] - numYday[0];
+                            String keyword = "more";
+                            if (diff < 0) {
+                                keyword = "less";
+                            }
+                            numHabitYday.setText(Math.abs(diff) + " " + keyword);
+
+                            displayProgress(diff, habitProgress, type.equals("Habits"));
                         }
 
-                        int diff = numToday[0] - numYday[0];
-                        String keyword = "more";
-                        if (diff < 0) {
-                            keyword = "less";
+                        else {
+                            numHabitYday.setText(numToday[0] + " more");
+
+                            displayProgress(numToday[0], habitProgress, type.equals("Habits"));
+                            }
+
                         }
 
-                        numHabitYday.setText(diff + " " + keyword);
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                    }
+                });
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+    }
+
+    private void setTextDisplay(String habit, String antiHabit, TextView habitTextDisplay, TextView antiHabitTextDisplay) {
+
+        //Setting the TextDisplay of habit
+        DatabaseReference habitRef = ref.child("Habits").child(habit).child("TextDisplay");
+        habitRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String habitText = snapshot.getValue(String.class);
+                habitTextDisplay.setText(habitText + " ");
+
+                //Setting the TextDisplay of antiHabit
+                DatabaseReference antiHabitRef = ref.child("AntiHabits").child(antiHabit).child("TextDisplay");
+                antiHabitRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        String antiHabitText = snapshot.getValue(String.class);
+                        antiHabitTextDisplay.setText(antiHabitText + " ");
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
                     }
                 });
-
-
             }
 
             @Override
@@ -154,7 +255,39 @@ public class HabitProgressActivity extends AppCompatActivity {
         });
     }
 
-    //Returns a format respresenting the day before date
+    private void displayProgress(int diff, TextView progress, boolean good) {
+
+        if (diff > 0 && good) {
+            progress.setText("This progress is great!");
+        } else if (diff > 0 || good) {
+            progress.setText("Oh no! You did better on the previous day.");
+        } else {
+            progress.setText("This progress is great!");
+        }
+    }
+
+    //Displays the total number of times habit has been completed since tracking began, to numHabit
+    private void displayAll(String habit, TextView numHabit, String type) {
+        DatabaseReference habitRef = ref.child("users").child(user.getUid()).child(type).child(habit);
+        habitRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int total = 0;
+                for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+                    total += childSnapshot.getValue(Integer.class);
+                    numHabit.setText(Integer.toString(total));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+    //Returns a string representing the day before date
     private String getDayBefore(String date) {
         // Parse the date components
         int year = Integer.parseInt(date.substring(0, 4));

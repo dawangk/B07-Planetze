@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     tools:context=".HabitTracking.HabitProgressActivity"
     android:background="#a9bcd0"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:gravity="center">
 
     <ImageView
         android:layout_width="match_parent"
@@ -48,8 +49,7 @@
             android:gravity="center"
             android:layout_marginRight="20dp"
             android:textColor="@color/black"
-            android:textSize="20dp"
-            android:layout_marginBottom="10dp"/>
+            android:textSize="20dp" />
 
         <Button
             android:id="@+id/dateUpdate"
@@ -62,8 +62,7 @@
             android:textColor="@color/white"
             android:textSize="15dp"
             android:backgroundTint="@color/dark_gray"
-            android:padding="8dp"
-            android:layout_marginBottom="5dp"/>
+            android:padding="8dp"/>
 
     </LinearLayout>
 
@@ -78,18 +77,26 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:textColor="@color/black"
             android:fontFamily="@font/reg_font"
             android:textSize="18dp"
-            android:text="You've completed this habit "/>
+            android:text="You "/>
+
+        <TextView
+            android:id="@+id/habitTextDisplay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="@font/reg_font"
+            android:textSize="18dp" />
 
         <TextView
             android:id="@+id/numHabitToday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
-            android:fontFamily="@font/bold_font"
+            android:fontFamily="@font/reg_font"
+            android:textStyle="bold"
             android:textSize="25dp"
             android:text="0"/>
 
@@ -99,7 +106,7 @@
             android:textColor="@color/black"
             android:fontFamily="@font/reg_font"
             android:textSize="18dp"
-            android:text=" times today,"/>
+            android:text=" times,"/>
 
     </LinearLayout>
 
@@ -124,7 +131,7 @@
             android:textColor="@color/black"
             android:fontFamily="@font/reg_font"
             android:textStyle="bold"
-            android:textSize="23dp"
+            android:textSize="21dp"
             android:text="0"/>
 
         <TextView
@@ -133,9 +140,18 @@
             android:textColor="@color/black"
             android:fontFamily="@font/reg_font"
             android:textSize="18dp"
-            android:text=" than yesterday!"/>
+            android:text=" than the previous day!"/>
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/habitProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/turquoise"
+        android:fontFamily="@font/reg_font"
+        android:textSize="18dp"
+        android:layout_gravity="center"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -150,49 +166,24 @@
             android:textColor="@color/black"
             android:fontFamily="@font/reg_font"
             android:textSize="18dp"
-            android:text="You completed this habit "/>
+            android:text="In comparison, you "/>
 
         <TextView
-            android:id="@+id/numHabitWeek"
+            android:id="@+id/antiHabitTextDisplay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
-            android:fontFamily="@font/bold_font"
+            android:fontFamily="@font/reg_font"
+            android:textSize="18dp" />
+
+        <TextView
+            android:id="@+id/numAntiHabitToday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="@font/reg_font"
             android:textSize="25dp"
-            android:text="0"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:fontFamily="@font/reg_font"
-            android:textSize="18dp"
-            android:text=" in the past week,"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:fontFamily="@font/reg_font"
-            android:textSize="18dp"
-            android:text="with an average of "/>
-
-        <TextView
-            android:id="@+id/avgHabitWeek"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:fontFamily="@font/reg_font"
             android:textStyle="bold"
-            android:textSize="23dp"
             android:text="0"/>
 
         <TextView
@@ -201,7 +192,7 @@
             android:textColor="@color/black"
             android:fontFamily="@font/reg_font"
             android:textSize="18dp"
-            android:text=" times per day!"/>
+            android:text=" times,"/>
 
     </LinearLayout>
 
@@ -220,13 +211,13 @@
             android:text="That's "/>
 
         <TextView
-            android:id="@+id/numHabitLastWeek"
+            android:id="@+id/numAntiHabitYday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:fontFamily="@font/reg_font"
             android:textStyle="bold"
-            android:textSize="23dp"
+            android:textSize="21dp"
             android:text="0"/>
 
         <TextView
@@ -235,20 +226,128 @@
             android:textColor="@color/black"
             android:fontFamily="@font/reg_font"
             android:textSize="18dp"
-            android:text=" more/less than the previous week!"/>
+            android:text=" than the previous day."/>
 
     </LinearLayout>
 
     <TextView
-        android:id="@+id/selectedDayProgress"
+        android:id="@+id/antiHabitProgress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textColor="@color/black"
+        android:textColor="@color/turquoise"
         android:fontFamily="@font/reg_font"
         android:textSize="18dp"
         android:layout_gravity="center"/>
 
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/reg_font"
+        android:text="Since you begun tracking this habit:"
+        android:textSize="18dp"
+        android:layout_marginStart="10dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="@font/reg_font"
+            android:textSize="18dp"
+            android:text="You "/>
+
+        <TextView
+            android:id="@+id/habitTextDisplay2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="@font/reg_font"
+            android:textSize="18dp" />
+
+        <TextView
+            android:id="@+id/numHabit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="@font/reg_font"
+            android:textStyle="bold"
+            android:textSize="25dp"
+            android:text="0"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="@font/reg_font"
+            android:textSize="18dp"
+            android:text=" times,"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="@font/reg_font"
+            android:textSize="18dp"
+            android:text="and "/>
+
+        <TextView
+            android:id="@+id/antiHabitTextDisplay2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="@font/reg_font"
+            android:textSize="18dp" />
+
+        <TextView
+            android:id="@+id/numAntiHabit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="@font/reg_font"
+            android:textStyle="bold"
+            android:textSize="25dp"
+            android:text="0"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="@font/reg_font"
+            android:textSize="18dp"
+            android:text=" times,"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/stopTracking"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Stop Tracking this Habit"
+        android:textAllCaps="false"
+        android:fontFamily="@font/bold_font"
+        android:textColor="@color/white"
+        android:textSize="18dp"
+        android:backgroundTint="@color/dark_gray"
+        android:padding="8dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"/>
 
 </LinearLayout>

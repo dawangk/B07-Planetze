@@ -47,6 +47,7 @@ public class RegisterActivityModel {
                         m.put("name", name);
                         m.put("new_user", "yes");
                         m.put("Habits", "none");
+                        m.put("AntiHabits", "none");
                         db.child("users").child(user.getUid()).setValue(m).addOnSuccessListener(
                                 documentReference -> {
                                     presenter.PageRedirect(LoginActivityView.class);

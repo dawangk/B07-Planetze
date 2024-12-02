@@ -50,15 +50,15 @@ public class DisplayResultsActivity extends AppCompatActivity {
         total_emissions_text.setText((final_emissions * kg_to_tons) + " tons");
 
         //Displaying the breakdown of the user's carbon emissions
-        car_emissions_text.setText("Car Emissions: " + (car_emissions * kg_to_tons) + " tons");
-        transit_emissions_text.setText("Transit Emissions: " + (transit_emissions * kg_to_tons) + " tons");
-        flight_emissions_text.setText("Flight Emissions: " + (flight_emissions * kg_to_tons) + "tons");
-        diet_emissions_text.setText("Diet Emissions: " + (diet_emissions * kg_to_tons) + " tons");
-        housing_emissions_text.setText("Housing Emissions: " + (housing_emissions * kg_to_tons) + " tons");
-        consumption_emissions_text.setText("Consumption Emissions: " + (consumption_emissions * kg_to_tons) + " tons");
+        car_emissions_text.setText("Car Emissions: " + (double)Math.round((car_emissions * kg_to_tons) * 1000) / 1000 + " tons");
+        transit_emissions_text.setText("Transit Emissions: " + (double)Math.round((transit_emissions * kg_to_tons) * 1000) / 1000 + " tons");
+        flight_emissions_text.setText("Flight Emissions: " + (double)Math.round((flight_emissions * kg_to_tons) * 1000) / 1000 + "tons");
+        diet_emissions_text.setText("Diet Emissions: " + (double)Math.round((diet_emissions * kg_to_tons) * 1000) / 1000 + " tons");
+        housing_emissions_text.setText("Housing Emissions: " + (double)Math.round((housing_emissions * kg_to_tons) * 1000) / 1000 + " tons");
+        consumption_emissions_text.setText("Consumption Emissions: " + (double)Math.round((consumption_emissions * kg_to_tons) * 1000) / 1000 + " tons");
 
         //Comparing the user's carbon emissions to global targets (2tons/CO2 per year)
-        double difference = 2 - (final_emissions * kg_to_tons);
+        double difference = (double)Math.round((2 - (final_emissions * kg_to_tons)) * 1000) / 1000;
         boolean under = difference > 0;
         String overUnder = "above";
         if (under) {

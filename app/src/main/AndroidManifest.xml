@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -13,6 +15,9 @@
         android:theme="@style/Theme.B07Planetze.Light"
         tools:targetApi="31">
         <activity
+            android:name=".HabitTracking.HabitProgressActivity"
+            android:exported="false" />
+        <activity
             android:name=".HomeActivity"
             android:exported="false" />
         <activity
@@ -20,24 +25,22 @@
             android:exported="false" />
         <activity
             android:name=".LoginPage.LoginActivityView"
-            android:exported="true">
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".WelcomeActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".RegisterPage.RegisterActivityView"
-            android:label="@string/app_name" >
-        </activity>
+            android:label="@string/app_name"></activity>
         <activity
             android:name=".ForgotPasswordPage.ForgotPasswordView"
-            android:label="@string/app_name" >
-        </activity>
+            android:label="@string/app_name"></activity>
         <activity
             android:name=".Questionnaire.QuestionnaireActivity"
             android:exported="false" />
@@ -86,10 +89,7 @@
         <activity
             android:name=".Questionnaire.DisplayResultsActivity"
             android:exported="false" />
-        <activity
-            android:name=".NavigationBar.EntryDisplay.EcoGaugeActivity" />
-
-
+        <activity android:name=".NavigationBar.EntryDisplay.EcoGaugeActivity" />
     </application>
 
 </manifest>

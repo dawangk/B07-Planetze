@@ -23,13 +23,17 @@ import androidx.fragment.app.Fragment;
 import com.example.b07projectfall2024.HomeActivity;
 import com.example.b07projectfall2024.R;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
+import com.example.b07projectfall2024.NavigationBar.EntryInputs.FoodEntryPage;
 
 public class TransportEntryPage extends Entry {
 
@@ -151,6 +155,7 @@ public class TransportEntryPage extends Entry {
         if(TransportType.isEmpty()) return;
 
         HashMap<String, Object> data = new HashMap<>();
+        DatabaseReference transitHabit;
 
         switch (TransportType){
             case "Public Transport":
@@ -163,6 +168,11 @@ public class TransportEntryPage extends Entry {
                 data.put("TransportationType", "Public");
                 data.put("PublicType", SpinnerOptions.get("PublicType"));
                 data.put("TimeOnPublic", TimeOnPublic);
+
+                //Keeping track of the habit if user is tracking it.
+                transitHabit = db.child("users").child(mAuth.getUid()).child("Habits").child("Taking the Transit");
+                trackHabit(transitHabit);
+
                 break;
             case "Car":
                 EditText DistanceDrivenField =  view.findViewById(R.id.TransportEntry_DistanceDriven);
@@ -181,6 +191,16 @@ public class TransportEntryPage extends Entry {
                     data.put("DistanceUnit", "KM");
                 }
                 data.put("CarType", SpinnerOptions.get("CarType"));
+
+                //Keeping track of the anti-habit of Walking, Biking and Transit if user is tracking any one of them
+
+                transitHabit = db.child("users").child(mAuth.getUid()).child("Habits").child("Walking");
+                DatabaseReference transitHabit2 = db.child("users").child(mAuth.getUid()).child("Habits").child("Biking");
+                DatabaseReference transitHabit3 = db.child("users").child(mAuth.getUid()).child("Habits").child("Taking the Transit");
+                if (!trackAntiHabit(transitHabit, "Walking") && !trackAntiHabit(transitHabit2, "Biking")) {
+                    trackAntiHabit(transitHabit3, "Taking the Transit");
+                }
+
                 break;
             case "Plane":
                 EditText NmbFlightsField =  view.findViewById(R.id.TransportEntry_NmbFlights);
@@ -209,6 +229,10 @@ public class TransportEntryPage extends Entry {
                     data.put("Distance", DistanceWalkedCycled);
                     data.put("DistanceUnit", "KM");
                 }
+
+                //Keeping track of the habit if user is tracking it.
+                transitHabit = db.child("users").child(mAuth.getUid()).child("Habits").child("Walking");
+                trackHabit(transitHabit);
                 break;
             case "Cycled":
                 EditText DistanceWalkedCycledField1 =  view.findViewById(R.id.TransportEntry_DistanceWalkedCycled);
@@ -225,6 +249,10 @@ public class TransportEntryPage extends Entry {
                     data.put("Distance", DistanceWalkedCycled1);
                     data.put("DistanceUnit", "KM");
                 }
+
+                //Keeping track of the habit if user is tracking it.
+                transitHabit = db.child("users").child(mAuth.getUid()).child("Habits").child("Biking");
+                trackHabit(transitHabit);
                 break;
             default:
                 Toast.makeText(currentContext, "Key error on upload", Toast.LENGTH_SHORT).show();
@@ -275,4 +303,95 @@ public class TransportEntryPage extends Entry {
             public void onNothingSelected(AdapterView<?> parent) {}
         });
     }
+
+    private void trackHabit(DatabaseReference habitRef) {
+        habitRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                //If habit is being tracked, we check if it's been logged today
+                if (snapshot.exists()) {
+                    DatabaseReference dayRef = habitRef.child(CurrentSelectedDate);
+                    dayRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            //If so, we increment the number of occurrences for the day by 1.
+                            if (snapshot.exists()) {
+                                dayRef.setValue(snapshot.getValue(Integer.class) + 1);
+                            }
+                            //Else, we create a new log for today with a value of 1 occurrences.
+                            else {
+                                HashMap<String, Object> data = new HashMap<String, Object>();
+                                data.put(CurrentSelectedDate, 1);
+                                habitRef.updateChildren(data);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+    }
+
+    private boolean trackAntiHabit(DatabaseReference habitRef, String habit) {
+        boolean[] status = {false};
+        habitRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                //If user is tracking the habit, make a new branch for the anti-habit
+                if (snapshot.exists()) {
+                    DatabaseReference antiHabitRef = db.child("Habits").child(habit).child("AntiHabit");
+                    antiHabitRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String antiHabit = snapshot.getValue(String.class);
+
+                            //Track this occurrence of the anti-habit in the database
+                            DatabaseReference userAntiHabitRef = db.child("users").child(mAuth.getUid()).child("AntiHabits").child(antiHabit);
+                            DatabaseReference dayRef = userAntiHabitRef.child(CurrentSelectedDate);
+                            dayRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    //If the anti-habit has been tracked today, we increment the number of occurrences for the day by 1
+                                    if (snapshot.exists()) {
+                                        dayRef.setValue(snapshot.getValue(Integer.class) + 1);
+                                        status[0] = true;
+                                    }
+                                    //Else, we create a new log for today with a value of 1 occurrences.
+                                    else {
+                                        HashMap<String, Object> data = new HashMap<String, Object>();
+                                        data.put(CurrentSelectedDate, 1);
+                                        userAntiHabitRef.updateChildren(data);
+                                        status[0] = true;
+                                    }
+
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+
+        return status[0];
+    }
+
 }

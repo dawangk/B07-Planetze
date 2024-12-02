@@ -71,7 +71,7 @@ public class DashboardFragment extends Fragment {
         Button dateUpdate = rootView.findViewById(R.id.dateUpdate);
         Button dateViewDetails = rootView.findViewById(R.id.viewDateDetails);
         Button viewHabits = rootView.findViewById(R.id.viewHabits);
-        Button btnEcoGauge = rootView.findViewById(R.id.btn_eco_gauge); // New button for Eco Gauge
+        Button btnEcoGauge = rootView.findViewById(R.id.btn_eco_gauge); // Button for Eco Gauge
 
 
         TextView dateTextView = rootView.findViewById(R.id.date);
@@ -198,6 +198,7 @@ public class DashboardFragment extends Fragment {
             }
         });
     }
+
     //Initializes DateField allowing users to select any date
     private void DateFieldInit(TextView dateTextView) {
         Calendar calendar = Calendar.getInstance();
@@ -277,8 +278,8 @@ public class DashboardFragment extends Fragment {
                                                                         if (snapshot.exists()) {
                                                                             distanceDriven[0] = snapshot.getValue(Double.class);
 
-                                                                            transportEmissions += rate[0] * distanceDriven[0];
-                                                                            totalEmissions += rate[0] * distanceDriven[0];
+                                                                            transportEmissions = (double)Math.round((transportEmissions + (rate[0] * distanceDriven[0])) * 1000) / 1000;
+                                                                            totalEmissions = (double)Math.round((totalEmissions + (rate[0] * distanceDriven[0])) * 1000) / 1000;
                                                                             transport_emissions.setText("Transportation Emissions: " +  transportEmissions + "kg");
                                                                             total_emissions.setText(totalEmissions + "");
                                                                         }
@@ -286,7 +287,6 @@ public class DashboardFragment extends Fragment {
 
                                                                     @Override
                                                                     public void onCancelled(@NonNull DatabaseError error) {
-
                                                                     }
                                                                 });
                                                             }
@@ -315,9 +315,9 @@ public class DashboardFragment extends Fragment {
                                                 if (snapshot.exists()) {
                                                     timeOnPublic[0] = snapshot.getValue(Double.class);
 
-                                                    transportEmissions += timeOnPublic[0] * 150;
+                                                    transportEmissions = (double)Math.round((transportEmissions + (timeOnPublic[0] * 150)) * 1000) / 1000;
                                                     transport_emissions.setText("Transportation Emissions: " +  transportEmissions + "kg");
-                                                    totalEmissions += timeOnPublic[0] * 150;
+                                                    totalEmissions = (double)Math.round((totalEmissions + (timeOnPublic[0] * 150)) * 1000) / 1000;
                                                     total_emissions.setText(totalEmissions + "");
                                                 }
                                             }
@@ -356,9 +356,9 @@ public class DashboardFragment extends Fragment {
                                                                     rate2 = 550;
                                                                 }
 
-                                                                transportEmissions += rate2 * numFlights[0];
+                                                                transportEmissions = (double)Math.round((transportEmissions + (rate2 * numFlights[0])) * 1000) / 1000;
                                                                 transport_emissions.setText("Transportation Emissions: " +  transportEmissions + "kg");
-                                                                totalEmissions += rate2 * numFlights[0];
+                                                                totalEmissions = (double)Math.round((totalEmissions + (rate2 * numFlights[0])) * 1000) / 1000;
                                                                 total_emissions.setText(totalEmissions + "");
                                                             }
                                                         }
@@ -430,9 +430,9 @@ public class DashboardFragment extends Fragment {
                                                     if (snapshot.exists()) {
                                                         numServings[0] = snapshot.getValue(Integer.class);
 
-                                                        dietEmissions += rate[0] * numServings[0];
+                                                        dietEmissions = (double)Math.round((dietEmissions + (rate[0] * numServings[0])) * 1000) / 1000;
                                                         diet_emissions.setText("Diet Emissions: " + dietEmissions + "kg");
-                                                        totalEmissions += rate[0] * numServings[0];
+                                                        totalEmissions = (double)Math.round((totalEmissions + (rate[0] * numServings[0])) * 1000) / 1000;
                                                         total_emissions.setText(totalEmissions + "");
                                                     }
                                                 }
@@ -496,9 +496,9 @@ public class DashboardFragment extends Fragment {
                                                 if (snapshot.exists()) {
                                                     numClothes[0] = snapshot.getValue(Integer.class);
 
-                                                    consumptionEmissions += 10 * numClothes[0];
+                                                    consumptionEmissions = (double)Math.round((consumptionEmissions + (10 * numClothes[0])) * 1000) / 1000;
                                                     consumption_emissions.setText("Consumption Emissions: " + consumptionEmissions + "kg");
-                                                    totalEmissions += 10 * numClothes[0];
+                                                    totalEmissions = (double)Math.round((totalEmissions + (10 * numClothes[0])) * 1000) / 1000;
                                                     total_emissions.setText(totalEmissions + "");
                                                 }
                                             }
@@ -535,9 +535,9 @@ public class DashboardFragment extends Fragment {
                                                                         if (snapshot.exists()) {
                                                                             rate[0] = snapshot.getValue(Integer.class);
 
-                                                                            consumptionEmissions += rate[0] * numPurchased[0];
+                                                                            consumptionEmissions = (double)Math.round((consumptionEmissions + (rate[0] * numPurchased[0])) * 1000) / 1000;
                                                                             consumption_emissions.setText("Consumption Emissions: " + consumptionEmissions + "kg");
-                                                                            totalEmissions += rate[0] * numPurchased[0];
+                                                                            totalEmissions = (double)Math.round((totalEmissions + (rate[0] * numPurchased[0])) * 1000) / 1000;
                                                                             total_emissions.setText(totalEmissions + "");
                                                                         }
                                                                     }
@@ -588,9 +588,9 @@ public class DashboardFragment extends Fragment {
                                                                         if (snapshot.exists()) {
                                                                             rate2[0] = snapshot.getValue(Double.class);
 
-                                                                            consumptionEmissions += rate2[0] * billPrice[0];
+                                                                            consumptionEmissions = (double)Math.round((consumptionEmissions + (rate2[0] * billPrice[0])) * 1000) / 1000;
                                                                             consumption_emissions.setText("Consumption Emissions: " + consumptionEmissions + "kg");
-                                                                            totalEmissions += rate2[0] * billPrice[0];
+                                                                            totalEmissions = (double)Math.round((totalEmissions + (rate2[0] * billPrice[0])) * 1000) / 1000;
                                                                             total_emissions.setText(totalEmissions + "");
                                                                         }
                                                                     }
@@ -640,9 +640,9 @@ public class DashboardFragment extends Fragment {
                                                                     rate3 = 400;
                                                                 }
 
-                                                                consumptionEmissions += rate3 * numBought[0];
+                                                                consumptionEmissions = (double)Math.round((consumptionEmissions + (rate3 * numBought[0])) * 1000) / 1000;
                                                                 consumption_emissions.setText("Consumption Emissions: " + consumptionEmissions + "kg");
-                                                                totalEmissions += rate3 * numBought[0];
+                                                                totalEmissions = (double)Math.round((totalEmissions + (rate3 * numBought[0])) * 1000) / 1000;
                                                                 total_emissions.setText(totalEmissions + "");
                                                             }
                                                         }

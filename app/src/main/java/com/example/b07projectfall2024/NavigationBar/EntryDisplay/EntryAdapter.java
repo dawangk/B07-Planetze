@@ -1,5 +1,6 @@
 package com.example.b07projectfall2024.NavigationBar.EntryDisplay;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +29,8 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
     @NonNull
     @Override
     public EntryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.entry_detail_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.entry_detail_item,
+                parent, false);
         return new EntryViewHolder(view);
     }
 
@@ -60,7 +62,7 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
         // Handle Delete button click
         holder.btnDelete.setOnClickListener(v -> {
             if (listener != null) {
-                listener.onDeleteClick(position);
+                listener.onDeleteClick(position, false);
             }
         });
     }
@@ -136,6 +138,13 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
         return entries.size();
     }
 
+    // Update the dataset and notify RecyclerView
+    public void updateData(LinkedList<HashMap<String, Object>> newData) {
+        Log.d("EntryAdapter", "Updating data: " + newData.toString());
+        this.entries = newData;
+        notifyDataSetChanged();
+    }
+
     static class EntryViewHolder extends RecyclerView.ViewHolder {
         TextView detailType;
         LinearLayout detailSpecificContainer;
@@ -153,6 +162,6 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
     // Interface for click handling
     public interface OnItemClickListener {
         void onEditClick(int position);
-        void onDeleteClick(int position);
+        void onDeleteClick(int position, boolean edit);
     }
 }

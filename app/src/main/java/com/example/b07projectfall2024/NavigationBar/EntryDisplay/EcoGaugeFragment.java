@@ -82,12 +82,19 @@ public class EcoGaugeFragment extends Fragment {
     public void onViewCreated(@NonNull View rootView, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(rootView, savedInstanceState);
 
+
+
         // Bind UI components
         totalEmissionsView = rootView.findViewById(R.id.total_emissions_text);
         chart = (LineChart) rootView.findViewById(R.id.chart);
         countrySpinner = rootView.findViewById(R.id.spinner_country);
         countryEmissionsText = rootView.findViewById(R.id.country_emissions_text);
 
+
+        //cycle render once to fix formatting
+        entryEmissions = new HashMap<>();
+        entryEmissions.put("2024-12-01", new TotalEntryEmission(0,0,0));
+        updateLineGraph();
 
         // Spinner for time range
         Spinner timeRangeSpinner = rootView.findViewById(R.id.spinner_time_range);
@@ -152,6 +159,7 @@ public class EcoGaugeFragment extends Fragment {
     private HashMap<String, TotalEntryEmission> entryEmissions;
 
     private void updateLineGraph(){
+        if(entryEmissions.isEmpty()) return;
         ArrayList<Entry> lineGraphPoints = new ArrayList<Entry>();
 
         List<String> dateLabels = new ArrayList<>(entryEmissions.keySet());

@@ -23,6 +23,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.auth.User;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -127,7 +128,19 @@ public class HabitProgressActivity extends AppCompatActivity {
                 DatabaseReference UserHRef = ref.child("users").child(user.getUid()).child("Habits").child(habit);
                 DatabaseReference UserARef = ref.child("users").child(user.getUid()).child("AntiHabits").child(antiHabit[0]);
                 UserHRef.removeValue();
-                UserARef.removeValue();
+                //Only remove anti-habit if a tracking instance exists
+                UserARef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()) {
+                            UserARef.removeValue();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                    }
+                });
 
                 //Navigating back to HabitsFragment
                 if (savedInstanceState == null) {

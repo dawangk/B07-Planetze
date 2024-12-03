@@ -20,16 +20,57 @@
             android:src="@drawable/app_logo_no_bg"
             android:padding="20dp"/>
 
-        <Button
-            android:id="@+id/searchHabits"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Search Habits"
-            android:textAllCaps="false"
-            android:backgroundTint="@color/dark_gray"
-            android:fontFamily="@font/reg_font"
-            android:gravity="center"
-            android:layout_gravity="center"/>
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/searchHabits"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Search Habits"
+                android:textAllCaps="false"
+                android:backgroundTint="@color/dark_gray"
+                android:fontFamily="@font/reg_font"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:layout_marginRight="10dp"/>
+
+            <Button
+                android:id="@+id/suggestHabit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Get Habit Suggestion"
+                android:textAllCaps="false"
+                android:backgroundTint="@color/dark_gray"
+                android:fontFamily="@font/reg_font"
+                android:gravity="center"
+                android:layout_gravity="center"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <Spinner
+                android:id="@+id/ImpactFilter"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:background="@color/white"
+                android:layout_marginRight="10dp"/>
+
+            <Spinner
+                android:id="@+id/TypeFilter"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:background="@color/white"/>
+
+        </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"

@@ -15,6 +15,12 @@
         android:theme="@style/Theme.B07Planetze.Light"
         tools:targetApi="31">
         <activity
+            android:name=".HabitTracking.NotYetTrackedActivity"
+            android:exported="false" />
+        <activity
+            android:name=".HabitTracking.HabitSearchActivity"
+            android:exported="false" />
+        <activity
             android:name=".HabitTracking.HabitProgressActivity"
             android:exported="false" />
         <activity
@@ -25,7 +31,7 @@
             android:exported="false" />
         <activity
             android:name=".LoginPage.LoginActivityView"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".WelcomeActivity"
             android:exported="true">
@@ -37,10 +43,10 @@
         </activity>
         <activity
             android:name=".RegisterPage.RegisterActivityView"
-            android:label="@string/app_name"></activity>
+            android:label="@string/app_name" />
         <activity
             android:name=".ForgotPasswordPage.ForgotPasswordView"
-            android:label="@string/app_name"></activity>
+            android:label="@string/app_name" />
         <activity
             android:name=".Questionnaire.QuestionnaireActivity"
             android:exported="false" />

@@ -2,6 +2,7 @@ package com.example.b07projectfall2024.NavigationBar.EntryDisplay;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 
 import android.graphics.Color;
@@ -19,6 +20,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.b07projectfall2024.R;
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -58,7 +63,10 @@ public class EcoGaugeFragment extends Fragment {
     private TextView totalEmissionsView;
     private String selectedRange = "This Week";
 
+
+    private BarChart barChart;
     private LineChart EmissionLineChart;
+
 
     private Spinner countrySpinner;
     private TextView countryEmissionsText;
@@ -71,12 +79,13 @@ public class EcoGaugeFragment extends Fragment {
     }
 
     /*
-        Cycle renders the line chart to ensure data is properly displayed
+        Cycle renders all chart to ensure data is properly displayed
      */
-    private void CycleEmissionLineChart(){
+    private void CycleEmissionCharts(){
         entryEmissions = new HashMap<>();
         entryEmissions.put("2024-12-01", new TotalEntryEmission(0,0,0));
         updateLineChart();
+        updateBarChart();
     }
 
     @Override
@@ -85,11 +94,14 @@ public class EcoGaugeFragment extends Fragment {
 
         // Bind UI components
         totalEmissionsView = rootView.findViewById(R.id.total_emissions_text);
+
         EmissionLineChart = rootView.findViewById(R.id.chart);
+        barChart = (BarChart) rootView.findViewById(R.id.bar_chart);
+      
         countrySpinner = rootView.findViewById(R.id.spinner_country);
         countryEmissionsText = rootView.findViewById(R.id.country_emissions_text);
 
-        CycleEmissionLineChart();
+        CycleEmissionCharts();
 
         // Spinner for time range
         Spinner timeRangeSpinner = rootView.findViewById(R.id.spinner_time_range);
@@ -289,16 +301,81 @@ public class EcoGaugeFragment extends Fragment {
         EmissionLineChart.invalidate();
     }
 
+
+    private void updateBarChart() {
+        if (entryEmissions.isEmpty()) return;
+
+        float totalTransportEmission = 0;
+        float totalFoodEmission = 0;
+        float totalConsumptionEmission = 0;
+
+        for (TotalEntryEmission entry : entryEmissions.values()) {
+            totalTransportEmission += entry.transportEmission;
+            totalFoodEmission += entry.foodEmission;
+            totalConsumptionEmission += entry.consumptionEmission;
+        }
+
+        ArrayList<BarEntry> barEntries = new ArrayList<>();
+        barEntries.add(new BarEntry(0, totalTransportEmission));
+        barEntries.add(new BarEntry(1, totalFoodEmission));
+        barEntries.add(new BarEntry(2, totalConsumptionEmission));
+
+        BarDataSet barDataSet = new BarDataSet(barEntries, "Emission Breakdown");
+        barDataSet.setColors(Color.RED, Color.GREEN, Color.BLUE);
+        barDataSet.setValueTextColor(Color.BLACK);
+        barDataSet.setValueTextSize(18f);
+
+        BarData barData = new BarData(barDataSet);
+        barChart.setData(barData);
+
+        barChart.getDescription().setEnabled(false);
+
+        Legend legend = barChart.getLegend();
+        legend.setTextSize(18f);
+
+        YAxis yAxis = barChart.getAxisLeft();
+        yAxis.setTextSize(18f);
+
+        YAxis rightYAxis = barChart.getAxisRight();
+        rightYAxis.setEnabled(false);
+
+        XAxis xAxis = barChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setTextSize(18f);
+        xAxis.setGranularity(1f);
+        xAxis.setLabelCount(3);
+        xAxis.setValueFormatter(new ValueFormatter() {
+            @Override
+            public String getFormattedValue(float value) {
+                switch ((int) value) {
+                    case 0:
+                        return "Transport";
+                    case 1:
+                        return "Food";
+                    case 2:
+                        return "Consumption";
+                    default:
+                        return "";
+                }
+            }
+        });
+
+        barChart.invalidate();
+    }
+
+
     /*
         Update TransportEntry Emissions for the given date with the given emission amount
         Also updates the linechart
      */
+
     private void putTransportEntry(double emission, String date){
         if(entryEmissions.containsKey(date)){
             entryEmissions.get(date).transportEmission+=emission;
         }else{
             entryEmissions.put(date, new TotalEntryEmission(emission, 0, 0));
         }
+        updateBarChart();
         updateLineChart();
     }
 
@@ -312,6 +389,8 @@ public class EcoGaugeFragment extends Fragment {
         }else{
             entryEmissions.put(date, new TotalEntryEmission(0, emission, 0));
         }
+
+        updateBarChart();
         updateLineChart();
     }
 
@@ -325,6 +404,8 @@ public class EcoGaugeFragment extends Fragment {
         }else{
             entryEmissions.put(date, new TotalEntryEmission(0, 0, emission));
         }
+
+        updateBarChart();
         updateLineChart();
     }
 

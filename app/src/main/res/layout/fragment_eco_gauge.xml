@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    android:background="@color/light_gray">
+    android:background="@color/light_gray" >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,93 +17,109 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Eco Gauge"
-            android:textSize="24sp"
+            android:textSize="30sp"
             android:textStyle="bold"
+            android:gravity="center"
             android:textColor="@color/dark_gray"
-            android:layout_marginBottom="20dp" />
+            android:layout_marginBottom="16dp" />
 
-        <!-- Time Range Spinner -->
+        <!-- Section Title: Time Range -->
         <TextView
+            android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Select Time Range"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:textStyle="bold"
             android:layout_marginBottom="8dp"
             android:textColor="@android:color/black" />
 
+        <!-- Spinner for Time Range Selection -->
         <Spinner
             android:id="@+id/spinner_time_range"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:background="@drawable/rounded_spinner"
-            android:layout_marginBottom="20dp" />
+            android:layout_height="50dp"
+            android:layout_marginBottom="16dp"
+            android:spinnerMode="dropdown" />
 
-        <!-- Total Emissions -->
+        <!-- Section Title: Total Emissions -->
         <TextView
+            android:id="@+id/total_emissions_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Total Emissions"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:textStyle="bold"
             android:layout_marginBottom="8dp"
             android:textColor="@android:color/black" />
 
+        <!-- TextView for Total Emissions -->
         <TextView
             android:id="@+id/total_emissions_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0.0 kg CO2e"
-            android:textSize="16sp"
-            android:layout_marginBottom="20dp"
-            android:textColor="@android:color/black" />
-
-        <!-- Emissions Over Time Chart -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Emissions Over Time"
             android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp"
-            android:textColor="@android:color/black" />
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="16dp" />
 
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/chart"
+
+        <TextView
+            android:id="@+id/country_emissions_text"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:layout_marginBottom="20dp"
-            android:background="@android:color/white"
-            android:elevation="4dp" />
-
-        <!-- Country Comparison -->
-        <TextView
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Compare with Other Countries"
-            android:textSize="18sp"
+            android:text="Select a country to see its average emissions"
             android:textStyle="bold"
-            android:layout_marginBottom="8dp"
-            android:textColor="@android:color/black" />
+            android:textSize="20sp"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="8dp" />
 
         <Spinner
             android:id="@+id/spinner_country"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:background="@drawable/rounded_spinner"
-            android:layout_marginBottom="16dp" />
+            android:layout_height="50dp"
+            android:layout_marginBottom="16dp"
+            android:spinnerMode="dropdown" />
 
-        <!-- Country Emissions Text -->
+        <!-- Section Title: Emissions Over Time -->
         <TextView
-            android:id="@+id/country_emissions_text"
+            android:id="@+id/textView31"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Select a country to see its average emissions"
-            android:textSize="16sp"
-            android:gravity="center"
-            android:textColor="@android:color/black"
-            android:layout_marginBottom="16dp" />
+            android:text="Emissions Over Time"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp"
+            android:textColor="@android:color/black" />
+
+        <!-- Line Chart for Emissions -->
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/chart"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginBottom="16dp"
+            android:background="@android:color/white"
+            android:elevation="2dp" />
+
+        <!-- Section Title: Emissions Breakdown -->
+        <TextView
+            android:id="@+id/bar_chart_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Emissions Breakdown by Category"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp"
+            android:textColor="@android:color/black" />
+
+        <!-- Bar Chart for Emissions Breakdown -->
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/bar_chart"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginTop="16dp"
+            android:background="@android:color/white"
+            android:elevation="2dp"/>
 
     </LinearLayout>
 </ScrollView>
-

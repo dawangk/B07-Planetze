@@ -150,29 +150,45 @@ public class HabitProgressActivity extends AppCompatActivity {
         stopTracking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Stop tracking the habit, delete all data
                 DatabaseReference UserHRef = ref.child("users").child(user.getUid()).child("Habits").child(habit);
-                DatabaseReference UserARef = ref.child("users").child(user.getUid()).child("AntiHabits").child(antiHabit[0]);
                 UserHRef.removeValue();
-                //Only remove anti-habit if a tracking instance exists
-                UserARef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+                //Find associated anti-habit
+                DatabaseReference antiHabitRef = ref.child("Habits").child(habit).child("AntiHabit");
+                antiHabitRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.exists()) {
-                            UserARef.removeValue();
-                        }
+                        String antiHabit = snapshot.getValue(String.class);
+                        DatabaseReference UserARef = ref.child("users").child(user.getUid()).child("AntiHabits").child(antiHabit);
+                        //Only remove anti-habit if a tracking instance exists
+                        UserARef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if (snapshot.exists()) {
+                                    UserARef.removeValue();
+                                }
+
+                                //Navigating back to HabitsFragment
+                                if (savedInstanceState == null) {
+                                    getSupportFragmentManager().beginTransaction()
+                                            .replace(R.id.fragment_container, new HabitsFragment())
+                                            .commit();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                            }
+                        });
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
+
                     }
                 });
 
-                //Navigating back to HabitsFragment
-                if (savedInstanceState == null) {
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_container, new HabitsFragment())
-                            .commit();
-                }
             }
         });
 

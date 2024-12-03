@@ -20,7 +20,6 @@
     <string name="logout">Logout</string>
     <string name="dark_mode">Dark Mode</string>
 
-    <!-- Drop down menu options for user to see their total emission based on selected time range -->
     <string-array name="time_ranges">
         <item>This Week</item>
         <item>This Month</item>
@@ -29,7 +28,6 @@
 
     <string name="eco_gauge_title">Eco Gauge</string>
 
-    <!-- List of countries to be used when comparing user's total emissions -->
     <string-array name="countries">
         <item>Select a country</item>
         <item>Afghanistan</item>
@@ -250,6 +248,8 @@
         <item>Yemen</item>
         <item>Zambia</item>
         <item>Zimbabwe</item>
+
+        <!-- Add all other countries -->
     </string-array>
 
 

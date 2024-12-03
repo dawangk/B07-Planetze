@@ -1,7 +1,6 @@
 package com.example.b07projectfall2024.NavigationBar.EntryDisplay;
 
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +28,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map;
 
 public class EntryFragment extends Fragment implements EntryAdapter.OnItemClickListener {
     private RecyclerView entryRecyclerView;

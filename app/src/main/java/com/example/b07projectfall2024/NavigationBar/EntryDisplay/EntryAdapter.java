@@ -4,7 +4,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -16,7 +15,6 @@ import com.example.b07projectfall2024.R;
 
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map;
 
 /*
  * Adapter for individual user entries

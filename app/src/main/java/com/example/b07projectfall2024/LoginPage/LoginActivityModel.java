@@ -1,12 +1,9 @@
 package com.example.b07projectfall2024.LoginPage;
 
-import android.content.Intent;
-
 import androidx.annotation.NonNull;
 
 import com.example.b07projectfall2024.MainActivity;
 import com.example.b07projectfall2024.Questionnaire.QuestionnaireActivity;
-import com.example.b07projectfall2024.UserInformation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -16,9 +13,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.example.b07projectfall2024.R;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 public class LoginActivityModel {
     private FirebaseAuth mAuth;
@@ -47,8 +42,6 @@ public class LoginActivityModel {
                             }else if(user!=null){
                                 db.child("users").child(user.getUid()).get().addOnSuccessListener(documentSnapshot -> {
                                     if (documentSnapshot.exists()) {
-                                        UserInformation.setUserInfo(documentSnapshot);
-
                                         DatabaseReference ref = db.child("users").child(user.getUid()).child("new_user");
 
                                         ref.addListenerForSingleValueEvent(new ValueEventListener() {

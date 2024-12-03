@@ -52,6 +52,7 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
+    implementation(libs.appcompat)
     testImplementation(libs.mockito.core)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)

@@ -1,7 +1,6 @@
 package com.example.b07projectfall2024.HabitTracking;
 
 import androidx.recyclerview.widget.RecyclerView;
-import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 
@@ -9,62 +8,64 @@ import androidx.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
-
-import com.example.b07projectfall2024.R;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 import java.util.ArrayList;
 
 public class HabitSearchAdapter extends RecyclerView.Adapter<HabitSearchAdapter.ViewHolder> {
-    private List<String> dataList;
-    private List<String> fullList;
+    public List<Habit> itemList;
+    public List<Habit> filteredList;
+    private OnItemClickListener onItemClickListener;
 
-    public HabitSearchAdapter() {
-        this.dataList = new ArrayList<>();
-        this.fullList = new ArrayList<>();
+    public HabitSearchAdapter(List<Habit> itemList, OnItemClickListener onItemClickListener) {
+        this.itemList = itemList;
+        this.filteredList = new ArrayList<>(itemList);
+        this.onItemClickListener = onItemClickListener;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(android.R.layout.simple_list_item_1, parent, false);
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(android.R.layout.simple_list_item_1, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.textView.setText(dataList.get(position));
+        final Habit habit = filteredList.get(position);
+        holder.textView.setText(habit.getName());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if (onItemClickListener != null) {
+                    onItemClickListener.onItemClick(habit);
+                }
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        return dataList.size();
+        return filteredList.size();
     }
 
-    public void updateData(List<String> newData) {
-        fullList.clear();
-        fullList.addAll(newData);
-        filter("");
-    }
-
-    public void filter(String text) {
-        dataList.clear();
-        if (text.isEmpty()) {
-            dataList.addAll(fullList);
+    public void filter(String search) {
+        filteredList.clear();
+        if (search.isEmpty()) {
+            filteredList.addAll(itemList);
         } else {
-            for (String item : fullList) {
-                if (item.toLowerCase().contains(text.toLowerCase())) {
-                    dataList.add(item);
+            for (Habit habit : itemList) {
+                if (habit.getName().toLowerCase().contains(search.toLowerCase())) {
+                    filteredList.add(habit);
+                }
+                else if (habit.getKeywordOne().toLowerCase().contains(search.toLowerCase())) {
+                    filteredList.add(habit);
+                }
+                else if (habit.getKeywordTwo().toLowerCase().contains(search.toLowerCase())) {
+                    filteredList.add(habit);
                 }
             }
         }
@@ -72,12 +73,16 @@ public class HabitSearchAdapter extends RecyclerView.Adapter<HabitSearchAdapter.
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView textView;
+        public TextView textView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             textView = itemView.findViewById(android.R.id.text1);
         }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(Habit habit);
     }
 }
 

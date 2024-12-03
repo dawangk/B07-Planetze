@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".HabitTracking.NotYetTrackedActivity"
+    android:orientation="vertical"
+    android:background="@color/light_gray">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_gravity="center"
+        android:src="@drawable/app_logo_no_bg"
+        android:padding="20dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/reg_font"
+        android:layout_gravity="center"
+        android:textColor="@color/black"
+        android:textSize="19dp"
+        android:textStyle="bold"
+        android:text="Oh no! You currently aren't tracking"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/bold_font"
+        android:layout_gravity="center"
+        android:textColor="@color/black"
+        android:textSize="20dp"
+        android:id="@+id/habitName"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/reg_font"
+        android:layout_gravity="center"
+        android:textColor="@color/black"
+        android:textSize="19dp"
+        android:textStyle="bold"
+        android:text="Why not start today though?"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/reg_font"
+        android:layout_gravity="center"
+        android:textColor="@color/black"
+        android:textSize="17dp"
+        android:textStyle="italic"
+        android:id="@+id/habitDesc"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/reg_font"
+        android:layout_gravity="center"
+        android:textColor="@color/black"
+        android:textSize="19dp"
+        android:textStyle="bold"
+        android:text="Don't wait, start tracking now"/>
+
+    <Button
+        android:id="@+id/startTracking"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start Tracking"
+        android:textAllCaps="false"
+        android:fontFamily="@font/bold_font"
+        android:textColor="@color/white"
+        android:textSize="18dp"
+        android:backgroundTint="@color/dark_gray"
+        android:padding="8dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"/>
+
+    <Button
+        android:id="@+id/back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Back to Search"
+        android:textAllCaps="false"
+        android:fontFamily="@font/bold_font"
+        android:textColor="@color/white"
+        android:textSize="18dp"
+        android:backgroundTint="@color/dark_gray"
+        android:padding="8dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"/>
+
+
+
+
+
+
+
+
+
+
+</LinearLayout>

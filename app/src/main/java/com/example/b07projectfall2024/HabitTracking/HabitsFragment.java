@@ -130,18 +130,16 @@ public class HabitsFragment extends Fragment {
                 String selectedItem = parent.getItemAtPosition(position).toString();
                 switch (selectedItem) {
                     case "High":
-                        String[] newHabits = checkImpact(habit_names[0],"High");
-                        displayHabits(habits, adoptees, adopt_buttons, track_buttons, newHabits);
+                        checkImpact(habit_names[0],"High", habits, adoptees, adopt_buttons, track_buttons);
                         break;
                     case "Medium":
-                        String[] newHabits2 = checkImpact(habit_names[0],"Medium");
-                        displayHabits(habits, adoptees, adopt_buttons, track_buttons, newHabits2);
+                        checkImpact(habit_names[0],"Medium", habits, adoptees, adopt_buttons, track_buttons);
                         break;
                     case "Low":
-                        String[] newHabits3 = checkImpact(habit_names[0],"Low");
-                        displayHabits(habits, adoptees, adopt_buttons, track_buttons, newHabits3);
+                        checkImpact(habit_names[0],"Low", habits, adoptees, adopt_buttons, track_buttons);
                         break;
                     default:
+                        displayHabits(habits, adoptees, adopt_buttons, track_buttons, habit_names[0]);
                         break;
                 }
             }
@@ -296,13 +294,12 @@ public class HabitsFragment extends Fragment {
 
         int[] habit_index = {0};
         int[] adoptee_index = {0};
-        int[] adopt_button_index = {0};
-        int[] track_button_index = {0};
 
         for (String habit_name: habit_names) {
 
             //Checking if habit is currently being tracked
-            DatabaseReference userHabitRef = ref.child("users").child(user.getUid()).child("Habits").child(habit_name);
+            DatabaseReference userHabitRef = ref.child("users").child(user.getUid())
+                    .child("Habits").child(habit_name);
             DatabaseReference habitRef = ref.child("Habits").child(habit_name);
 
             //Getting habit info
@@ -327,19 +324,20 @@ public class HabitsFragment extends Fragment {
                                         isTracked[0] = true;
                                     }
 
-                                    //If habit is tracked, we display it's name and description in the "Habits Currently being Tracked" section
+                                    //If habit is tracked, we display it's name and description in
+                                    // the "Habits Currently being Tracked" section
                                     if (isTracked[0]) {
-                                        habits[habit_index[0]].setText(habit_name + "\n" + habitDesc[0] + "\n");
+                                        habits[habit_index[0]].setText(habit_name + "\n"
+                                                + habitDesc[0] + "\n");
+                                        track_buttons[habit_index[0]].setVisibility(View.VISIBLE);
                                         habit_index[0]++;
-                                        track_buttons[track_button_index[0]].setVisibility(View.VISIBLE);
-                                        track_button_index[0]++;
                                     }
                                     //Else, it is displayed in the "Adopt a New Habit" section
                                     else {
-                                        adoptees[adoptee_index[0]].setText(habit_name + "\n" + habitDesc[0] + "\n");
+                                        adoptees[adoptee_index[0]].setText(habit_name + "\n"
+                                                + habitDesc[0] + "\n");
+                                        adopt_buttons[adoptee_index[0]].setVisibility(View.VISIBLE);
                                         adoptee_index[0]++;
-                                        adopt_buttons[adopt_button_index[0]].setVisibility(View.VISIBLE);
-                                        adopt_button_index[0]++;
                                     }
                                 }
 
@@ -364,9 +362,20 @@ public class HabitsFragment extends Fragment {
 
         }
 
+        //Clearing all others from screen (in case of filtering)
+        for (int i = habit_index[0]; i < habits.length; i++) {
+            habits[i].setText("");
+            track_buttons[i].setVisibility(View.GONE);
+        }
+        for (int i = adoptee_index[0]; i < adoptees.length; i++) {
+            adoptees[i].setText("");
+            adopt_buttons[i].setVisibility(View.GONE);
+        }
+
     }
 
-    //Adopts the habit showcased in habitDisplay to the user's information in database, and updates adoptButton to become disabled
+    //Adopts the habit showcased in habitDisplay to the user's information in database,
+    // and updates adoptButton to become disabled
     private void adoptHabit(TextView habitDisplay, Button adoptButton) {
         //Add the habit to the user's tracked habits in database
         DatabaseReference userRef = ref.child("users").child(user.getUid());
@@ -393,18 +402,25 @@ public class HabitsFragment extends Fragment {
         startActivity(intent);
     }
 
-    private String[] checkImpact(String[] habitNames, String impact) {
-        ArrayList<String> mod = new ArrayList<>();
-        for (String habit : habitNames) {
-            DatabaseReference impactRef = ref.child("Habits").child(habit)
-                    .child("Impact");
+    private void checkImpact(String[] habitNames, String impact, TextView[] habits,
+                             TextView[] adoptees, Button[] adopt_buttons, Button[] track_buttons) {
 
-            impactRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        ArrayList<String> matchingHabits = new ArrayList<>();
+        for (String habit : habitNames) {
+            DatabaseReference habitRef = ref.child("Habits").child(habit);
+
+            habitRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    String habitImpact = snapshot.getValue(String.class);
-                    if (habitImpact.equals(impact)) {
-                        mod.add(habit);
+                    Habit h = snapshot.getValue(Habit.class);
+                    if (h.getImpact().equals(impact)) {
+                        matchingHabits.add(habit);
+                        Object[] matchingHabitsArray = matchingHabits.toArray();
+                        String[] newHabitNames = new String[matchingHabitsArray.length];
+                        for (int i = 0; i < newHabitNames.length; i++) {
+                            newHabitNames[i] = (String) matchingHabitsArray[i];
+                        }
+                        displayHabits(habits, adoptees, adopt_buttons, track_buttons, newHabitNames);
                     }
 
                 }
@@ -416,8 +432,5 @@ public class HabitsFragment extends Fragment {
             });
 
         }
-
-        String[] newHabits = (String[]) mod.toArray();
-        return newHabits;
     }
 }

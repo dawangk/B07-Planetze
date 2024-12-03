@@ -63,6 +63,24 @@
             android:textColor="@android:color/black"
             android:layout_marginBottom="16dp" />
 
+
+        <TextView
+            android:id="@+id/country_emissions_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Select a country to see its average emissions"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="8dp" />
+
+        <Spinner
+            android:id="@+id/spinner_country"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginBottom="16dp"
+            android:spinnerMode="dropdown" />
+
         <!-- Section Title: Emissions Over Time -->
         <TextView
             android:id="@+id/textView31"
@@ -104,22 +122,6 @@
             android:elevation="2dp"/>
 
 
-        <TextView
-            android:id="@+id/country_emissions_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Select a country to see its average emissions"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:textColor="@android:color/black"
-            android:layout_marginBottom="8dp" />
-
-        <Spinner
-            android:id="@+id/spinner_country"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginBottom="16dp"
-            android:spinnerMode="dropdown" />
 
 
 

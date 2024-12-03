@@ -63,7 +63,6 @@
             android:textColor="@android:color/black"
             android:layout_marginBottom="16dp" />
 
-
         <TextView
             android:id="@+id/country_emissions_text"
             android:layout_width="match_parent"

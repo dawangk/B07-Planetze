@@ -1,5 +1,6 @@
 package com.example.b07projectfall2024.HabitTracking;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -12,11 +13,13 @@ import androidx.fragment.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.b07projectfall2024.R;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -25,14 +28,18 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 
 public class HabitsFragment extends Fragment {
 
     DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser user = mAuth.getCurrentUser();
+
+    Context currentContext = getContext();
 
     public HabitsFragment() {
         // Required empty public constructor
@@ -88,87 +95,66 @@ public class HabitsFragment extends Fragment {
         Button trackButton8 = rootView.findViewById(R.id.trackButton8);
 
         Button searchHabits = rootView.findViewById(R.id.searchHabits);
+        Button suggestHabit = rootView.findViewById(R.id.suggestHabit);
+
+        Spinner spinner = rootView.findViewById(R.id.Filter);
 
         TextView[] habits = {habit1, habit2, habit3, habit4, habit5, habit6, habit7, habit8};
         TextView[] adoptees = {adopt1, adopt2, adopt3, adopt4, adopt5, adopt6, adopt7, adopt8};
-        String[] habit_names = {"Walking", "Taking the Transit", "Biking", "Eating Fish", "Eating Vegetarian",
-                "Minimal Gas Bill", "Minimal Water Bill", "Minimal Electricity Bill"};
+        String[][] habit_names = {{"Walking", "Taking the Transit", "Biking", "Eating Fish", "Eating Vegetarian",
+                "Minimal Gas Bill", "Minimal Water Bill", "Minimal Electricity Bill"}};
         Button[] adopt_buttons = {adoptButton1, adoptButton2, adoptButton3, adoptButton4,
                 adoptButton5, adoptButton6, adoptButton7, adoptButton8};
         Button[] track_buttons = {trackButton1, trackButton2, trackButton3, trackButton4,
                 trackButton5, trackButton6, trackButton7, trackButton8};
 
-
-        int[] habit_index = {0};
-        int[] adoptee_index = {0};
-        int[] adopt_button_index = {0};
-        int[] track_button_index = {0};
-
         //Displaying the habits and their descriptions in their appropriate section
-        for (String habit_name: habit_names) {
+        displayHabits(habits, adoptees, adopt_buttons, track_buttons, habit_names[0]);
 
-            //Checking if habit is currently being tracked
-            DatabaseReference userHabitRef = ref.child("users").child(user.getUid()).child("Habits").child(habit_name);
-            DatabaseReference habitRef = ref.child("Habits").child(habit_name);
+        //Initializing Spinners for habit filtering
+        List<String> filters = Arrays.asList("Filters" ,"High", "Medium", "Low", "Transportation"
+                , "Diet", "Consumption");
+        ArrayAdapter<String> impactAdapter = new ArrayAdapter<>(
+                requireContext(), android.R.layout.simple_spinner_item, filters);
 
-            //Getting habit info
-            habitRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
+        impactAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(impactAdapter);
+        spinner.setSelection(0);
 
-                    String[] habitDesc = {""};
-                    //Getting habit description
-                    DatabaseReference habitDescRef = habitRef.child("Description");
-                    habitDescRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            habitDesc[0] = snapshot.getValue(String.class);
-
-                            //Checking if habit is already being tracked
-                            boolean[] isTracked = {false};
-                            userHabitRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    if (snapshot.exists()) {
-                                        isTracked[0] = true;
-                                    }
-
-                                    //If habit is tracked, we display it's name and description in the "Habits Currently being Tracked" section
-                                    if (isTracked[0]) {
-                                        habits[habit_index[0]].setText(habit_name + "\n" + habitDesc[0] + "\n");
-                                        habit_index[0]++;
-                                        track_buttons[track_button_index[0]].setVisibility(View.VISIBLE);
-                                        track_button_index[0]++;
-                                    }
-                                    //Else, it is displayed in the "Adopt a New Habit" section
-                                    else {
-                                        adoptees[adoptee_index[0]].setText(habit_name + "\n" + habitDesc[0] + "\n");
-                                        adoptee_index[0]++;
-                                        adopt_buttons[adopt_button_index[0]].setVisibility(View.VISIBLE);
-                                        adopt_button_index[0]++;
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-                        }
-                    });
-
+        //Change the array of habits to only those with the matching impact
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedItem = parent.getItemAtPosition(position).toString();
+                switch (selectedItem) {
+                    case "High":
+                        checkImpact(habit_names[0],"High", habits, adoptees, adopt_buttons, track_buttons);
+                        break;
+                    case "Medium":
+                        checkImpact(habit_names[0],"Medium", habits, adoptees, adopt_buttons, track_buttons);
+                        break;
+                    case "Low":
+                        checkImpact(habit_names[0],"Low", habits, adoptees, adopt_buttons, track_buttons);
+                        break;
+                    case "Transportation":
+                        checkType(habit_names[0],"Transportation", habits, adoptees, adopt_buttons, track_buttons);
+                        break;
+                    case "Diet":
+                        checkType(habit_names[0],"Diet", habits, adoptees, adopt_buttons, track_buttons);
+                        break;
+                    case "Consumption":
+                        checkType(habit_names[0],"Consumption", habits, adoptees, adopt_buttons, track_buttons);
+                        break;
+                    default:
+                        displayHabits(habits, adoptees, adopt_buttons, track_buttons, habit_names[0]);
+                        break;
                 }
+            }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-
-        }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
 
         //The "adopt" buttons add the habit to the user's information in the database
         adoptButton1.setOnClickListener(new View.OnClickListener() {
@@ -296,12 +282,107 @@ public class HabitsFragment extends Fragment {
         searchHabits.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(requireContext(), HabitSearchActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        //Redirects to suggestHabit fragment
+        suggestHabit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 loadFragment(new SuggestHabitFragment());
             }
         });
     }
 
-    //Adopts the habit showcased in habitDisplay to the user's information in database, and updates adoptButton to become disabled
+    private void displayHabits(TextView[] habits, TextView[] adoptees, Button[] adopt_buttons,
+                               Button[] track_buttons, String[] habit_names) {
+
+        int[] habit_index = {0};
+        int[] adoptee_index = {0};
+
+        for (String habit_name: habit_names) {
+
+            //Checking if habit is currently being tracked
+            DatabaseReference userHabitRef = ref.child("users").child(user.getUid())
+                    .child("Habits").child(habit_name);
+            DatabaseReference habitRef = ref.child("Habits").child(habit_name);
+
+            //Getting habit info
+            habitRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                    String[] habitDesc = {""};
+                    //Getting habit description
+                    DatabaseReference habitDescRef = habitRef.child("Description");
+                    habitDescRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            habitDesc[0] = snapshot.getValue(String.class);
+
+                            //Checking if habit is already being tracked
+                            boolean[] isTracked = {false};
+                            userHabitRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (snapshot.exists()) {
+                                        isTracked[0] = true;
+                                    }
+
+                                    //If habit is tracked, we display it's name and description in
+                                    // the "Habits Currently being Tracked" section
+                                    if (isTracked[0]) {
+                                        habits[habit_index[0]].setText(habit_name + "\n"
+                                                + habitDesc[0] + "\n");
+                                        track_buttons[habit_index[0]].setVisibility(View.VISIBLE);
+                                        habit_index[0]++;
+                                    }
+                                    //Else, it is displayed in the "Adopt a New Habit" section
+                                    else {
+                                        adoptees[adoptee_index[0]].setText(habit_name + "\n"
+                                                + habitDesc[0] + "\n");
+                                        adopt_buttons[adoptee_index[0]].setVisibility(View.VISIBLE);
+                                        adoptee_index[0]++;
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                        }
+                    });
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+        }
+
+        //Clearing all others from screen (in case of filtering)
+        for (int i = habit_index[0]; i < habits.length; i++) {
+            habits[i].setText("");
+            track_buttons[i].setVisibility(View.GONE);
+        }
+        for (int i = adoptee_index[0]; i < adoptees.length; i++) {
+            adoptees[i].setText("");
+            adopt_buttons[i].setVisibility(View.GONE);
+        }
+
+    }
+
+    //Adopts the habit showcased in habitDisplay to the user's information in database,
+    // and updates adoptButton to become disabled
     private void adoptHabit(TextView habitDisplay, Button adoptButton) {
         //Add the habit to the user's tracked habits in database
         DatabaseReference userRef = ref.child("users").child(user.getUid());
@@ -326,5 +407,69 @@ public class HabitsFragment extends Fragment {
         Intent intent = new Intent(requireContext(), HabitProgressActivity.class);
         intent.putExtra("habit", habit);
         startActivity(intent);
+    }
+
+    private void checkImpact(String[] habitNames, String impact, TextView[] habits,
+                             TextView[] adoptees, Button[] adopt_buttons, Button[] track_buttons) {
+
+        ArrayList<String> matchingHabits = new ArrayList<>();
+        for (String habit : habitNames) {
+            DatabaseReference habitRef = ref.child("Habits").child(habit);
+
+            habitRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    Habit h = snapshot.getValue(Habit.class);
+                    if (h.getImpact().equals(impact)) {
+                        matchingHabits.add(habit);
+                        Object[] matchingHabitsArray = matchingHabits.toArray();
+                        String[] newHabitNames = new String[matchingHabitsArray.length];
+                        for (int i = 0; i < newHabitNames.length; i++) {
+                            newHabitNames[i] = (String) matchingHabitsArray[i];
+                        }
+                        displayHabits(habits, adoptees, adopt_buttons, track_buttons, newHabitNames);
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+        }
+    }
+
+    private void checkType(String[] habitNames, String type, TextView[] habits,
+                             TextView[] adoptees, Button[] adopt_buttons, Button[] track_buttons) {
+
+        ArrayList<String> matchingHabits = new ArrayList<>();
+        for (String habit : habitNames) {
+            DatabaseReference habitRef = ref.child("Habits").child(habit);
+
+            habitRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    Habit h = snapshot.getValue(Habit.class);
+                    if (h.getKeywordOne().equals(type)) {
+                        matchingHabits.add(habit);
+                        Object[] matchingHabitsArray = matchingHabits.toArray();
+                        String[] newHabitNames = new String[matchingHabitsArray.length];
+                        for (int i = 0; i < newHabitNames.length; i++) {
+                            newHabitNames[i] = (String) matchingHabitsArray[i];
+                        }
+                        displayHabits(habits, adoptees, adopt_buttons, track_buttons, newHabitNames);
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+        }
     }
 }

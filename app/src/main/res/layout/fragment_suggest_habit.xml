@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".HabitTracking.SuggestHabitFragment"
+    android:background="@color/light_gray"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_gravity="center"
+        android:src="@drawable/app_logo_no_bg"
+        android:padding="20dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Based on your daily emission data,\n you should track:"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:textSize="20dp"
+        android:fontFamily="@font/bold_font"/>
+
+    <TextView
+        android:layout_marginTop="15dp"
+        android:id="@+id/suggestedHabit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Walking"
+        android:layout_gravity="center"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="20dp"
+        android:fontFamily="@font/reg_font"/>
+
+    <TextView
+        android:id="@+id/suggestedHabitDesc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Walking"
+        android:layout_gravity="center"
+        android:textColor="@color/black"
+        android:textStyle="italic"
+        android:textSize="16dp"
+        android:fontFamily="@font/reg_font"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <TextView
+            android:layout_marginTop="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="You "
+            android:layout_gravity="center"
+            android:textColor="@color/dark_gray"
+            android:textStyle="bold"
+            android:textSize="18dp"
+            android:fontFamily="@font/reg_font"
+            android:gravity="center"/>
+
+        <TextView
+            android:id="@+id/habitTextDisplay"
+            android:layout_marginTop="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@color/dark_gray"
+            android:textSize="18dp"
+            android:fontFamily="@font/reg_font"
+            android:gravity="center"/>
+
+        <TextView
+            android:id="@+id/habitTotal"
+            android:layout_marginTop="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@color/dark_gray"
+            android:textStyle="bold"
+            android:textSize="18dp"
+            android:text="0"
+            android:fontFamily="@font/bold_font"
+            android:gravity="center"/>
+
+        <TextView
+            android:layout_marginTop="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" times"
+            android:layout_gravity="center"
+            android:textColor="@color/dark_gray"
+            android:textStyle="bold"
+            android:textSize="18dp"
+            android:fontFamily="@font/reg_font"
+            android:gravity="center"/>
+
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_marginTop="15dp"
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="since you began tracking your emissions!"
+        android:layout_gravity="center"
+        android:textColor="@color/dark_gray"
+        android:textStyle="bold"
+        android:textSize="18dp"
+        android:fontFamily="@font/reg_font"
+        android:gravity="center"/>
+
+    <Button
+        android:id="@+id/startTracking"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start Tracking Habit"
+        android:textAllCaps="false"
+        android:fontFamily="@font/bold_font"
+        android:textColor="@color/white"
+        android:textSize="18dp"
+        android:backgroundTint="@color/dark_gray"
+        android:padding="8dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"/>
+
+</LinearLayout>

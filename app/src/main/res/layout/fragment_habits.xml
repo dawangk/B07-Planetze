@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
+    tools:context=".HabitTracking.HabitsFragment"
     android:fillViewport="true">
 
     <LinearLayout
@@ -20,16 +20,44 @@
             android:src="@drawable/app_logo_no_bg"
             android:padding="20dp"/>
 
-        <Button
-            android:id="@+id/searchHabits"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Search Habits"
-            android:textAllCaps="false"
-            android:backgroundTint="@color/dark_gray"
-            android:fontFamily="@font/reg_font"
-            android:gravity="center"
-            android:layout_gravity="center"/>
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/searchHabits"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Search Habits"
+                android:textAllCaps="false"
+                android:backgroundTint="@color/dark_gray"
+                android:fontFamily="@font/reg_font"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:layout_marginRight="10dp"/>
+
+            <Button
+                android:id="@+id/suggestHabit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Get Habit Suggestion"
+                android:textAllCaps="false"
+                android:backgroundTint="@color/dark_gray"
+                android:fontFamily="@font/reg_font"
+                android:gravity="center"
+                android:layout_gravity="center"/>
+
+        </LinearLayout>
+
+            <Spinner
+                android:id="@+id/Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:background="@color/white"
+                android:layout_marginRight="10dp"
+                android:layout_gravity="center"/>
 
         <TextView
             android:layout_width="match_parent"

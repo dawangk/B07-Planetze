@@ -67,26 +67,51 @@ public class HabitProgressActivity extends AppCompatActivity {
         Button stopTracking = findViewById(R.id.stopTracking);
         Button back = findViewById(R.id.back);
 
-        title.setText("Your progress towards " + habit + ":");
+        //Checking if habit is being tracked
+        DatabaseReference userHabitRef = ref.child("users").child(user.getUid())
+                .child("Habits").child(habit);
 
-        //Getting name of the corresponding AntiHabit and updating the current day's habit progress
-        DatabaseReference antiHabitRef = ref.child("Habits").child(habit).child("AntiHabit");
         String[] antiHabit = {""};
-        antiHabitRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        DatabaseReference antiHabitRef = ref.child("Habits").child(habit).child("AntiHabit");
+
+        userHabitRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                antiHabit[0] = snapshot.getValue(String.class);
+                //If it is being tracked, we display the user's progress
+                if (snapshot.exists()) {
+                    //Getting name of the corresponding AntiHabit and updating the current day's habit progress
+                    antiHabitRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            antiHabit[0] = snapshot.getValue(String.class);
+                            //Displaying current day's habit progress
+                            displayHabit(CurrentSelectedDate, habit, numHabitToday, numHabitYday, "Habits", habitProgress);
+                            displayHabit(CurrentSelectedDate, antiHabit[0], numAntiHabitToday, numAntiHabitYday, "AntiHabits", antiHabitProgress);
+                            setTextDisplay(habit, antiHabit[0], habitTextDisplay, antHabitTextDisplay);
+                        }
 
-                //Displaying current day's habit progress
-                displayHabit(CurrentSelectedDate, habit, numHabitToday, numHabitYday, "Habits", habitProgress);
-                displayHabit(CurrentSelectedDate, antiHabit[0], numAntiHabitToday, numAntiHabitYday, "AntiHabits", antiHabitProgress);
-                setTextDisplay(habit, antiHabit[0], habitTextDisplay, antHabitTextDisplay);
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                        }
+                    });
+                }
+                //Else, we give the user the option to start tracking this habit, in notYetTrackedActivity
+                else {
+
+                    Intent intent = new Intent(HabitProgressActivity.this, NotYetTrackedActivity.class);
+                    intent.putExtra("habit", habit);
+                    startActivity(intent);
+                    finish();
+                }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
+
+        title.setText("Your progress towards " + habit + ":");
 
         //If date is changed, display new date's habit progress
         dateUpdate.setOnClickListener(new View.OnClickListener() {
@@ -118,29 +143,45 @@ public class HabitProgressActivity extends AppCompatActivity {
         stopTracking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Stop tracking the habit, delete all data
                 DatabaseReference UserHRef = ref.child("users").child(user.getUid()).child("Habits").child(habit);
-                DatabaseReference UserARef = ref.child("users").child(user.getUid()).child("AntiHabits").child(antiHabit[0]);
                 UserHRef.removeValue();
-                //Only remove anti-habit if a tracking instance exists
-                UserARef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+                //Find associated anti-habit
+                DatabaseReference antiHabitRef = ref.child("Habits").child(habit).child("AntiHabit");
+                antiHabitRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.exists()) {
-                            UserARef.removeValue();
-                        }
+                        String antiHabit = snapshot.getValue(String.class);
+                        DatabaseReference UserARef = ref.child("users").child(user.getUid()).child("AntiHabits").child(antiHabit);
+                        //Only remove anti-habit if a tracking instance exists
+                        UserARef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if (snapshot.exists()) {
+                                    UserARef.removeValue();
+                                }
+
+                                //Navigating back to HabitsFragment
+                                if (savedInstanceState == null) {
+                                    getSupportFragmentManager().beginTransaction()
+                                            .replace(R.id.fragment_container, new HabitsFragment())
+                                            .commit();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                            }
+                        });
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
+
                     }
                 });
 
-                //Navigating back to HabitsFragment
-                if (savedInstanceState == null) {
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_container, new HabitsFragment())
-                            .commit();
-                }
             }
         });
 

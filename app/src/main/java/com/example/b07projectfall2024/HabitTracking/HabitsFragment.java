@@ -20,7 +20,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.b07projectfall2024.R;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -32,7 +31,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 public class HabitsFragment extends Fragment {
@@ -99,8 +97,7 @@ public class HabitsFragment extends Fragment {
         Button searchHabits = rootView.findViewById(R.id.searchHabits);
         Button suggestHabit = rootView.findViewById(R.id.suggestHabit);
 
-        Spinner impactSpinner = rootView.findViewById(R.id.ImpactFilter);
-        Spinner typeSpinner = rootView.findViewById(R.id.TypeFilter);
+        Spinner spinner = rootView.findViewById(R.id.Filter);
 
         TextView[] habits = {habit1, habit2, habit3, habit4, habit5, habit6, habit7, habit8};
         TextView[] adoptees = {adopt1, adopt2, adopt3, adopt4, adopt5, adopt6, adopt7, adopt8};
@@ -115,16 +112,17 @@ public class HabitsFragment extends Fragment {
         displayHabits(habits, adoptees, adopt_buttons, track_buttons, habit_names[0]);
 
         //Initializing Spinners for habit filtering
-        List<String> impacts = Arrays.asList("Impact" ,"High", "Medium", "Low");
+        List<String> filters = Arrays.asList("Filters" ,"High", "Medium", "Low", "Transportation"
+                , "Diet", "Consumption");
         ArrayAdapter<String> impactAdapter = new ArrayAdapter<>(
-                requireContext(), android.R.layout.simple_spinner_item, impacts);
+                requireContext(), android.R.layout.simple_spinner_item, filters);
 
         impactAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        impactSpinner.setAdapter(impactAdapter);
-        impactSpinner.setSelection(0);
+        spinner.setAdapter(impactAdapter);
+        spinner.setSelection(0);
 
         //Change the array of habits to only those with the matching impact
-        impactSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedItem = parent.getItemAtPosition(position).toString();
@@ -137,6 +135,15 @@ public class HabitsFragment extends Fragment {
                         break;
                     case "Low":
                         checkImpact(habit_names[0],"Low", habits, adoptees, adopt_buttons, track_buttons);
+                        break;
+                    case "Transportation":
+                        checkType(habit_names[0],"Transportation", habits, adoptees, adopt_buttons, track_buttons);
+                        break;
+                    case "Diet":
+                        checkType(habit_names[0],"Diet", habits, adoptees, adopt_buttons, track_buttons);
+                        break;
+                    case "Consumption":
+                        checkType(habit_names[0],"Consumption", habits, adoptees, adopt_buttons, track_buttons);
                         break;
                     default:
                         displayHabits(habits, adoptees, adopt_buttons, track_buttons, habit_names[0]);
@@ -414,6 +421,38 @@ public class HabitsFragment extends Fragment {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     Habit h = snapshot.getValue(Habit.class);
                     if (h.getImpact().equals(impact)) {
+                        matchingHabits.add(habit);
+                        Object[] matchingHabitsArray = matchingHabits.toArray();
+                        String[] newHabitNames = new String[matchingHabitsArray.length];
+                        for (int i = 0; i < newHabitNames.length; i++) {
+                            newHabitNames[i] = (String) matchingHabitsArray[i];
+                        }
+                        displayHabits(habits, adoptees, adopt_buttons, track_buttons, newHabitNames);
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+        }
+    }
+
+    private void checkType(String[] habitNames, String type, TextView[] habits,
+                             TextView[] adoptees, Button[] adopt_buttons, Button[] track_buttons) {
+
+        ArrayList<String> matchingHabits = new ArrayList<>();
+        for (String habit : habitNames) {
+            DatabaseReference habitRef = ref.child("Habits").child(habit);
+
+            habitRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    Habit h = snapshot.getValue(Habit.class);
+                    if (h.getKeywordOne().equals(type)) {
                         matchingHabits.add(habit);
                         Object[] matchingHabitsArray = matchingHabits.toArray();
                         String[] newHabitNames = new String[matchingHabitsArray.length];

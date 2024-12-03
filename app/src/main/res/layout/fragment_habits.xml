@@ -51,26 +51,13 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center">
-
             <Spinner
-                android:id="@+id/ImpactFilter"
+                android:id="@+id/Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:background="@color/white"
-                android:layout_marginRight="10dp"/>
-
-            <Spinner
-                android:id="@+id/TypeFilter"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:background="@color/white"/>
-
-        </LinearLayout>
+                android:layout_marginRight="10dp"
+                android:layout_gravity="center"/>
 
         <TextView
             android:layout_width="match_parent"

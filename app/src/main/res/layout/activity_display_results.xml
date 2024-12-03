@@ -127,6 +127,36 @@
 
     </TextView>
 
+    <!-- Country Comparison Label -->
+    <TextView
+        android:id="@+id/select_country_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Compare your emissions to other countries"
+        android:gravity="center"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:layout_marginBottom="18dp"
+        android:textColor="@color/black" />
+
+    <!-- Country Spinner -->
+    <Spinner
+        android:id="@+id/country_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginBottom="18dp"
+        android:spinnerMode="dropdown" />
+
+    <!-- National Comparison -->
+    <TextView
+        android:id="@+id/compare_national"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="National comparison result will appear here"
+        android:textSize="18dp"
+        android:layout_marginBottom="10dp"
+        android:textColor="@color/dark_gray" />
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

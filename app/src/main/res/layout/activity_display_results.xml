@@ -15,6 +15,7 @@
         android:layout_gravity="center"
         android:src="@drawable/app_logo_no_bg"
         android:padding="20dp">
+
     </ImageView>
 
     <TextView
@@ -27,6 +28,7 @@
         android:textColor="#1b1b1e"
         android:textSize="22dp"
         android:fontFamily="@font/reg_font">
+
     </TextView>
 
     <TextView
@@ -37,6 +39,7 @@
         android:textColor="#1b1b1e"
         android:textSize="25dp"
         android:fontFamily="@font/bold_font">
+
     </TextView>
 
     <TextView
@@ -73,6 +76,7 @@
         android:textColor="#1b1b1e"
         android:textSize="20dp"
         android:fontFamily="@font/reg_font">
+
     </TextView>
 
     <TextView
@@ -84,6 +88,7 @@
         android:textColor="#1b1b1e"
         android:textSize="20dp"
         android:fontFamily="@font/reg_font">
+
     </TextView>
 
     <TextView
@@ -95,6 +100,7 @@
         android:textColor="#1b1b1e"
         android:textSize="20dp"
         android:fontFamily="@font/reg_font">
+
     </TextView>
 
     <TextView
@@ -106,6 +112,7 @@
         android:textColor="#1b1b1e"
         android:textSize="20dp"
         android:fontFamily="@font/reg_font">
+
     </TextView>
 
     <TextView
@@ -117,41 +124,7 @@
         android:textColor="#1b1b1e"
         android:textSize="15dp"
         android:fontFamily="@font/reg_font">
-    </TextView>
 
-    <!-- Label for Spinner -->
-    <TextView
-        android:id="@+id/select_country_label"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:padding="5dp"
-        android:text="Compare your total emissions to other countries"
-        android:textStyle="bold"
-        android:textColor="#1b1b1e"
-        android:textSize="18dp"
-        android:fontFamily="@font/reg_font"
-        android:gravity="center" />
-
-    <!-- Spinner for Country Selection -->
-    <Spinner
-        android:id="@+id/country_spinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:padding="10dp"
-        android:backgroundTint="#d8dbe2" />
-
-    <!-- National Comparison Results -->
-    <TextView
-        android:id="@+id/compare_national"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="5dp"
-        android:textColor="#1b1b1e"
-        android:textSize="15dp"
-        android:fontFamily="@font/reg_font">
     </TextView>
 
     <Button
@@ -171,6 +144,5 @@
         android:visibility="visible">
 
     </Button>
-
 
 </LinearLayout>

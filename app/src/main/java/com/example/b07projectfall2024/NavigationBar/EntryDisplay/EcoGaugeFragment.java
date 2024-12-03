@@ -5,7 +5,6 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 
 import android.graphics.Color;
-import android.net.ParseException;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,8 +32,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -61,16 +58,11 @@ public class EcoGaugeFragment extends Fragment {
     private TextView totalEmissionsView;
     private String selectedRange = "This Week";
 
-    private LineChart chart;
+    private LineChart EmissionLineChart;
 
     private Spinner countrySpinner;
     private TextView countryEmissionsText;
     private final DatabaseReference countriesRef = ref.child("Countries");
-
-    public EcoGaugeFragment() {
-        // Required empty public constructor
-
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -78,23 +70,26 @@ public class EcoGaugeFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_eco_gauge, container, false);
     }
 
+    /*
+        Cycle renders the line chart to ensure data is properly displayed
+     */
+    private void CycleEmissionLineChart(){
+        entryEmissions = new HashMap<>();
+        entryEmissions.put("2024-12-01", new TotalEntryEmission(0,0,0));
+        updateLineChart();
+    }
+
     @Override
     public void onViewCreated(@NonNull View rootView, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(rootView, savedInstanceState);
 
-
-
         // Bind UI components
         totalEmissionsView = rootView.findViewById(R.id.total_emissions_text);
-        chart = (LineChart) rootView.findViewById(R.id.chart);
+        EmissionLineChart = rootView.findViewById(R.id.chart);
         countrySpinner = rootView.findViewById(R.id.spinner_country);
         countryEmissionsText = rootView.findViewById(R.id.country_emissions_text);
 
-
-        //cycle render once to fix formatting
-        entryEmissions = new HashMap<>();
-        entryEmissions.put("2024-12-01", new TotalEntryEmission(0,0,0));
-        updateLineGraph();
+        CycleEmissionLineChart();
 
         // Spinner for time range
         Spinner timeRangeSpinner = rootView.findViewById(R.id.spinner_time_range);
@@ -156,26 +151,34 @@ public class EcoGaugeFragment extends Fragment {
         }
     }
 
+    //Key: Date (YYYY-MM-DD)
     private HashMap<String, TotalEntryEmission> entryEmissions;
 
-    private void updateLineGraph(){
-        if(entryEmissions.isEmpty()) return;
-        ArrayList<Entry> lineGraphPoints = new ArrayList<Entry>();
+    /*
+        Given a start and end date in format (YYYY-MM-DD)
+        return a list of all dates between the start and end date inclusive in
+        chronological order
 
-        List<String> dateLabels = new ArrayList<>(entryEmissions.keySet());
-
-        Collections.sort(dateLabels);
-
+        if the given start or end date is not formatted properly throw runtimeexception
+     */
+    private List<String> getListOfDaysBetween(String start, String end){
         List<String> dates = new ArrayList<>();
 
         // Define the SimpleDateFormat for the date string format
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-        String curDate = dateLabels.get(0);
+        String curDate = start;
 
         dates.add(curDate);
 
-        while(!curDate.equals(dateLabels.get(dateLabels.size()-1))){
+        //check if end date is formatted properly
+        try{
+            sdf.parse(end);
+        } catch (java.text.ParseException e) {
+            throw new RuntimeException(e);
+        }
+
+        while(!curDate.equals(end)){
             try {
                 // Convert string to Date
                 Date startDate = sdf.parse(curDate);
@@ -187,8 +190,8 @@ public class EcoGaugeFragment extends Fragment {
                 // Increment day
                 calendar.add(Calendar.DAY_OF_MONTH, 1);
 
-
                 Date newDate = calendar.getTime();
+
                 // Format the new date
                 curDate = sdf.format(newDate);
                 dates.add(curDate);
@@ -197,41 +200,41 @@ public class EcoGaugeFragment extends Fragment {
             }
         }
 
-        int index = 0;
-        for (String date : dates) {
-            if(entryEmissions.containsKey(date)) {
-                lineGraphPoints.add(new Entry(index, (float) (entryEmissions.get(date).consumptionEmission+entryEmissions.get(date).transportEmission+entryEmissions.get(date).foodEmission)));
-            }
-            index++;
-        }
+        return dates;
+    }
 
-        // Create a LineDataSet with the points
-        LineDataSet dataSet = new LineDataSet(lineGraphPoints, "Total Emissions");
+    /*
+        Initializes the given LineDataSets settings
+
+        Adds labels to the xAxis with the given dates
+     */
+    private void InitLineChartSettings(LineDataSet dataSet, List<String> dates){
+        //LineChart Settings:
         dataSet.setColor(Color.BLUE);
         dataSet.setValueTextColor(Color.BLACK);
         dataSet.setFormLineWidth(20f);
         dataSet.setValueTextSize(0f);
 
-        chart.getDescription().setEnabled(false);
+        EmissionLineChart.getDescription().setEnabled(false);
 
         LineData lineData = new LineData(dataSet);
-        chart.setData(lineData);
+        EmissionLineChart.setData(lineData);
 
-        Legend legend = chart.getLegend();
+        Legend legend = EmissionLineChart.getLegend();
         legend.setTextSize(18f);
 
-        YAxis yAxis = chart.getAxisLeft();
+        YAxis yAxis = EmissionLineChart.getAxisLeft();
         yAxis.setTextSize(18f);
 
-        YAxis rightYAxis = chart.getAxisRight();
+        YAxis rightYAxis = EmissionLineChart.getAxisRight();
         rightYAxis.setEnabled(false);
 
         // Customize X-Axis to show dates
-        XAxis xAxis = chart.getXAxis();
+        XAxis xAxis = EmissionLineChart.getXAxis();
         xAxis.setAvoidFirstLastClipping(true);
         xAxis.setTextSize(18f);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setGranularity(1f); // Set granularity to 1 step
+        xAxis.setGranularity(1f);
         if(dates.size()>=2)xAxis.setLabelCount(2, true);
 
         xAxis.setValueFormatter(new ValueFormatter() {
@@ -244,36 +247,85 @@ public class EcoGaugeFragment extends Fragment {
                 return "";
             }
         });
-
-        // Refresh the chart
-        chart.invalidate();
     }
 
+    /*
+        Given Data in entryEmissions, update the emission line chart to reflect changes made
+
+        If no data is given in entryEmissions then don't re-render.
+     */
+    private void updateLineChart(){
+        if(entryEmissions.isEmpty()) return;
+
+
+        //Get and sort dates in entryEmissions
+        List<String> dateLabels = new ArrayList<>(entryEmissions.keySet());
+        Collections.sort(dateLabels);
+
+        List<String> dates = getListOfDaysBetween(dateLabels.get(0),
+                                                  dateLabels.get(dateLabels.size()-1));
+
+        //Add datapoints given in entryEmissions into the linechart datapoint entry list
+        ArrayList<Entry> lineGraphPoints = new ArrayList<Entry>();
+        int index = 0;
+        for (String date : dates) {
+            if(entryEmissions.containsKey(date)) {
+                TotalEntryEmission currentEmissions = entryEmissions.get(date);
+                float TotalEmissions = (float) currentEmissions.consumptionEmission;
+                TotalEmissions+= (float) currentEmissions.transportEmission;
+                TotalEmissions+= (float) currentEmissions.foodEmission;
+
+                lineGraphPoints.add(new Entry(index, TotalEmissions));
+            }
+            index++;
+        }
+
+        // Create a LineDataSet with the points
+        LineDataSet dataSet = new LineDataSet(lineGraphPoints, "Total Emissions");
+
+        InitLineChartSettings(dataSet, dates);
+
+        // Refresh the chart
+        EmissionLineChart.invalidate();
+    }
+
+    /*
+        Update TransportEntry Emissions for the given date with the given emission amount
+        Also updates the linechart
+     */
     private void putTransportEntry(double emission, String date){
         if(entryEmissions.containsKey(date)){
             entryEmissions.get(date).transportEmission+=emission;
         }else{
             entryEmissions.put(date, new TotalEntryEmission(emission, 0, 0));
         }
-        updateLineGraph();
+        updateLineChart();
     }
 
+    /*
+        Update FoodEntry Emissions for the given date with the given emission amount
+        Also updates the linechart
+     */
     private void putFoodEntry(double emission, String date){
         if(entryEmissions.containsKey(date)){
             entryEmissions.get(date).foodEmission+=emission;
         }else{
             entryEmissions.put(date, new TotalEntryEmission(0, emission, 0));
         }
-        updateLineGraph();
+        updateLineChart();
     }
 
+    /*
+        Update ConsumptionEntry Emissions for the given date with the given emission amount
+        Also updates the linechart
+     */
     private void putConsumptionEntry(double emission, String date){
         if(entryEmissions.containsKey(date)){
             entryEmissions.get(date).consumptionEmission+=emission;
         }else{
             entryEmissions.put(date, new TotalEntryEmission(0, 0, emission));
         }
-        updateLineGraph();
+        updateLineChart();
     }
 
     private void calculateEmissionsForRange() {

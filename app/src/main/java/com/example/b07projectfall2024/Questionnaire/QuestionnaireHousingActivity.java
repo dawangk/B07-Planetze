@@ -11,9 +11,12 @@ import android.content.Intent;
 import android.widget.RadioButton;
 import com.example.b07projectfall2024.R;
 
+/**
+ * QuestionnaireHousingActivity
+ * This activity is the first of four responsible for recording the user's yearly housing emissions,
+ * and navigates to QuestionnaireHousingActivity2
+ */
 public class QuestionnaireHousingActivity extends AppCompatActivity {
-
-    Button next;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,18 +31,23 @@ public class QuestionnaireHousingActivity extends AppCompatActivity {
         double transit_emissions = intent.getDoubleExtra("transit_emissions", 0.0);
         double flight_emissions = intent.getDoubleExtra("flight_emissions", 0.0);
 
+        //Type of house options
         RadioButton detached = findViewById(R.id.detached);
         RadioButton semi_detached = findViewById(R.id.semi_detached);
         RadioButton townhouse = findViewById(R.id.town);
         RadioButton condo = findViewById(R.id.apt);
         RadioButton other = findViewById(R.id.other);
+
+        //Number of occupant options
         RadioButton one = findViewById(R.id.one);
         RadioButton two = findViewById(R.id.two);
         RadioButton three = findViewById(R.id.three);
         RadioButton five = findViewById(R.id.five);
-        next = findViewById(R.id.next);
 
+        //next button
+        Button next = findViewById(R.id.next);
 
+        //When next is clicked, do emission calculations and navigate to next set of questions
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -47,7 +55,7 @@ public class QuestionnaireHousingActivity extends AppCompatActivity {
                 String type = "";
                 int num_people = 0;
 
-                //Asking and storing the responses of prerequisite questions for main question in housing 3
+                //Storing responses for the main calculations in QuestionnaireHousingActivity4
                 if (detached.isChecked()) {
                     type = "detached";
                 } else if (semi_detached.isChecked()) {
@@ -71,11 +79,12 @@ public class QuestionnaireHousingActivity extends AppCompatActivity {
                     num_people = 5;
                 }
 
-                //Checking if user responded
+                //Making sure user responded
                 if (!type.isEmpty() && num_people != 0) {
 
-                    //Moving to second set of house related questions
-                    Intent intent = new Intent(QuestionnaireHousingActivity.this, QuestionnaireHousingActivity2.class);
+                    //Navigating to QuestionnaireHousingActivity2
+                    Intent intent = new Intent(QuestionnaireHousingActivity.this,
+                            QuestionnaireHousingActivity2.class);
                     intent.putExtra("current_emissions", emissions);
                     intent.putExtra("house_type", type);
                     intent.putExtra("num_people", num_people);

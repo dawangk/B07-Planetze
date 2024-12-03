@@ -12,6 +12,11 @@ import android.widget.RadioButton;
 
 import com.example.b07projectfall2024.R;
 
+/**
+ * QuestionnaireCarActivity
+ * This activity is started if the user drives a vehicle, and is responsible for recording their
+ * vehicle emissions from the past year, and navigates to QuestionnaireTransitActivity
+ */
 public class QuestionnaireCarActivity extends AppCompatActivity {
 
     Button next;
@@ -22,10 +27,13 @@ public class QuestionnaireCarActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_questionnaire_car);
 
+        //Car type options
         RadioButton gasoline = findViewById(R.id.gasoline);
         RadioButton diesel = findViewById(R.id.diesel);
         RadioButton hybrid = findViewById(R.id.hybrid);
         RadioButton electric = findViewById(R.id.electric);
+
+        //Distance driven options
         RadioButton option1 = findViewById(R.id.option1);
         RadioButton option2 = findViewById(R.id.option2);
         RadioButton option3 = findViewById(R.id.option3);
@@ -34,6 +42,7 @@ public class QuestionnaireCarActivity extends AppCompatActivity {
         RadioButton option6 = findViewById(R.id.option6);
         next = findViewById(R.id.next);
 
+        //When next is clicked, do emission calculations and navigate to transit emission questions
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,14 +77,15 @@ public class QuestionnaireCarActivity extends AppCompatActivity {
 
                 double emissions = rate * distance;
 
-                //Checking if user responded
+                //Making sure user responded
                 if (emissions != 0) {
 
                     //Storing the amount of emissions that come from transit
                     double car_emissions = emissions;
 
-                    //Moving to the next set of questions about transit
-                    Intent intent = new Intent(QuestionnaireCarActivity.this, QuestionnaireTransitActivity.class);
+                    //Navigating to QuestionnaireTransitActivity
+                    Intent intent = new Intent(QuestionnaireCarActivity.this,
+                            QuestionnaireTransitActivity.class);
                     intent.putExtra("current_emissions", emissions);
                     intent.putExtra("car_emissions", car_emissions);
                     startActivity(intent);

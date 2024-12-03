@@ -12,9 +12,13 @@ import android.widget.RadioButton;
 
 import com.example.b07projectfall2024.R;
 
+/**
+ * QuestionnaireMeatActivity
+ * This activity is the second of four responsible for calculating the user's diet emissions, and
+ * the first of two responsible for calculating the user's emissions by meat, if they consume meat.
+ * It navigates to QuestionnaireMeatActivity2
+ */
 public class QuestionnaireMeatActivity extends AppCompatActivity {
-
-    Button next;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,17 +32,23 @@ public class QuestionnaireMeatActivity extends AppCompatActivity {
         double transit_emissions = intent.getDoubleExtra("transit_emissions", 0.0);
         double flight_emissions = intent.getDoubleExtra("flight_emissions", 0.0);
 
+        //frequency options for beef
         RadioButton daily = findViewById(R.id.daily);
         RadioButton frequently = findViewById(R.id.frequently);
         RadioButton occasionally = findViewById(R.id.occasionally);
         RadioButton never = findViewById(R.id.never);
+
+        //frequency options for pork
         RadioButton daily2 = findViewById(R.id.daily2);
         RadioButton frequently2 = findViewById(R.id.frequently2);
         RadioButton occasionally2 = findViewById(R.id.occasionally2);
         RadioButton never2 = findViewById(R.id.never2);
 
-        next = findViewById(R.id.next);
+        //next button
+        Button next = findViewById(R.id.next);
 
+
+        //When next is clicked, do emission calculations and navigate to the second set of questions
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,13 +84,13 @@ public class QuestionnaireMeatActivity extends AppCompatActivity {
                     status2 = true;
                 }
 
-                //Checking if user responded
+                //Making sure user responded
                 if (status1 && status2) {
 
-                    //TEMPORARY: Storing the emissions from diet
+                    //Updating the current emissions from diet
                     double diet_emissions = emissions2 - emissions;
 
-                    //Moving to the next set of questions also about meat
+                    //Navigating to QuestionnaireMeatActivity2
                     Intent intent = new Intent(QuestionnaireMeatActivity.this, QuestionnaireMeatActivity2.class);
                     intent.putExtra("current_emissions", emissions2);
                     intent.putExtra("diet_emissions", diet_emissions);

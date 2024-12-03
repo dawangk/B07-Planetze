@@ -1,19 +1,20 @@
 package com.example.b07projectfall2024.Questionnaire;
 
 import android.os.Bundle;
-
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.view.View;
 import android.widget.Button;
 import android.content.Intent;
 import android.widget.RadioButton;
 import com.example.b07projectfall2024.R;
 
+/**
+ * QuestionnaireConsumptionActivity
+ * This activity is the first of two responsible for recording the user's consumption emissions,
+ * and navigates to QuestionnaireConsumptionActivity2
+ */
 public class QuestionnaireConsumptionActivity extends AppCompatActivity {
-
-    Button next;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,16 +30,21 @@ public class QuestionnaireConsumptionActivity extends AppCompatActivity {
         double transit_emissions = intent.getDoubleExtra("transit_emissions", 0.0);
         double flight_emissions = intent.getDoubleExtra("flight_emissions", 0.0);
 
+        //New clothes frequency options
         RadioButton monthly = findViewById(R.id.monthly);
         RadioButton quarterly = findViewById(R.id.quarterly);
         RadioButton annually = findViewById(R.id.annually);
         RadioButton rarely = findViewById(R.id.rarely);
+
+        //Second-hand/eco-friendly frequency options
         RadioButton regularly = findViewById(R.id.regularly);
         RadioButton occasionally = findViewById(R.id.occasionally);
         RadioButton no = findViewById(R.id.no);
 
-        next = findViewById(R.id.next);
+        //next button
+        Button next = findViewById(R.id.next);
 
+        //When next is clicked, do emission calculations and navigate to next set of questions
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,12 +71,13 @@ public class QuestionnaireConsumptionActivity extends AppCompatActivity {
                     rate = 1;
                 }
 
+                //Current consumption emissions
                 double consumption_emissions = amount * rate;
 
-                //Checking if user responded
+                //Making sure user responded
                 if (consumption_emissions != 0) {
 
-                    //Moving to the next set of consumption questions
+                    //Navigating to QuestionnaireConsumptionActivity2
                     Intent intent = new Intent(QuestionnaireConsumptionActivity.this, QuestionnaireConsumptionActivity2.class);
                     intent.putExtra("current_emissions", emissions);
                     intent.putExtra("consumption_emissions", consumption_emissions);

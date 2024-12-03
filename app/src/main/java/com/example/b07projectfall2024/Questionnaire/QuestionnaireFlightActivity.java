@@ -11,9 +11,12 @@ import android.content.Intent;
 import android.widget.RadioButton;
 import com.example.b07projectfall2024.R;
 
+/**
+ * QuestionnaireFlightActivity
+ * This activity is responsible for recording the user's flight emissions from the past year, and
+ * navigating to QuestionnaireFoodActivity
+ */
 public class QuestionnaireFlightActivity extends AppCompatActivity {
-
-    Button next;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,23 +24,29 @@ public class QuestionnaireFlightActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_questionnaire_flight);
 
+        //Short-haul flight frequency options
         RadioButton never = findViewById(R.id.never);
         RadioButton occasionally = findViewById(R.id.occasionally);
         RadioButton frequently = findViewById(R.id.frequently);
         RadioButton supfrequently = findViewById(R.id.supfrequently);
         RadioButton always = findViewById(R.id.always);
+
+        //Long-haul flight frequency options
         RadioButton never2 = findViewById(R.id.never2);
         RadioButton occasionally2 = findViewById(R.id.occasionally2);
         RadioButton frequently2 = findViewById(R.id.frequently2);
         RadioButton supfrequently2 = findViewById(R.id.supfrequently2);
         RadioButton always2 = findViewById(R.id.always2);
-        next = findViewById(R.id.next);
+
+        //Next button
+        Button next = findViewById(R.id.next);
 
         Intent intent = getIntent();
         double emissions = intent.getDoubleExtra("current_emissions", 0.0);
         double car_emissions = intent.getDoubleExtra("car_emissions", 0.0);
         double transit_emissions = intent.getDoubleExtra("transit_emissions", 0.0);
 
+        //When next is clicked, do emission calculations and navigate to food emission questions
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,13 +88,13 @@ public class QuestionnaireFlightActivity extends AppCompatActivity {
                     status2 = true;
                 }
 
-                //Checking if user responded
+                //Making sure user responded
                 if (status1 && status2) {
 
                     //Storing the amount of emissions that come from flights
                     double flight_emissions = emissions2 - emissions;
 
-                    //Moving to next set of questions about food
+                    //Navigating to QuestionnaireFoodActivity
                     Intent intent = new Intent(QuestionnaireFlightActivity.this, QuestionnaireFoodActivity.class);
                     intent.putExtra("current_emissions", emissions2);
                     intent.putExtra("car_emissions", car_emissions);

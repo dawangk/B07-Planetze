@@ -11,9 +11,12 @@ import android.content.Intent;
 import android.widget.RadioButton;
 import com.example.b07projectfall2024.R;
 
+/**
+ * QuestionnaireHousingActivity2
+ * This activity is the second of four responsible for recording the user's yearly housing
+ * emissions, and navigates to QuestionnaireHousingActivity3.
+ */
 public class QuestionnaireHousingActivity2 extends AppCompatActivity {
-
-    Button next;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,16 +33,22 @@ public class QuestionnaireHousingActivity2 extends AppCompatActivity {
         double transit_emissions = intent.getDoubleExtra("transit_emissions", 0.0);
         double flight_emissions = intent.getDoubleExtra("flight_emissions", 0.0);
 
+        //House size options
         RadioButton min = findViewById(R.id.min);
         RadioButton mid = findViewById(R.id.mid);
         RadioButton max = findViewById(R.id.max);
         RadioButton gas = findViewById(R.id.gas);
+
+        //Energy type options
         RadioButton electricity = findViewById(R.id.electricity);
         RadioButton oil = findViewById(R.id.oil);
         RadioButton propane = findViewById(R.id.propane);
         RadioButton wood = findViewById(R.id.wood);
-        next = findViewById(R.id.next);
 
+        //next button
+        Button next = findViewById(R.id.next);
+
+        //When next is clicked, do emission calculations and navigate to next set of questions
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -47,7 +56,7 @@ public class QuestionnaireHousingActivity2 extends AppCompatActivity {
                 String size = "";
                 String energy_type = "";
 
-                //Asking and storing the responses of prerequisite questions for main question in housing 3
+                //Storing responses for the main calculations in QuestionnaireHousingActivity4
                 if (min.isChecked()) {
                     size = "min_size";
                 } else if (mid.isChecked()) {
@@ -68,11 +77,12 @@ public class QuestionnaireHousingActivity2 extends AppCompatActivity {
                     energy_type = "wood";
                 }
 
-                //Checking if user responded
+                //Making sure user responded
                 if (!size.isEmpty() && !energy_type.isEmpty()) {
 
-                    //Moving to third set of house related questions
-                    Intent intent = new Intent(QuestionnaireHousingActivity2.this, QuestionnaireHousingActivity3.class);
+                    //Navigating to QuestionnaireHousingActivity3
+                    Intent intent = new Intent(QuestionnaireHousingActivity2.this,
+                            QuestionnaireHousingActivity3.class);
                     intent.putExtra("current_emissions", emissions);
                     intent.putExtra("house_type", house_type);
                     intent.putExtra("num_people", num_people);

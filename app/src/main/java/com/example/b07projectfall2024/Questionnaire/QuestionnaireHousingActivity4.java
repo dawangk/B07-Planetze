@@ -17,9 +17,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+/**
+ * QuestionnaireHousingActivity4
+ * This activity is the final of four responsible for recording the user's yearly housing
+ * emissions, and does the actual calculations through Firebase Realtime Database. It navigates to
+ * QuestionnaireConsumptionActivity.
+ */
 public class QuestionnaireHousingActivity4 extends AppCompatActivity {
-
-    Button next;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +31,7 @@ public class QuestionnaireHousingActivity4 extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_questionnaire_housing4);
 
+        //Retrieving all previously recorded information from previous activities
         Intent intent = getIntent();
         double emissions = intent.getDoubleExtra("current_emissions", 0.0);
         double housing_emissions_rough = intent.getDoubleExtra("housing_emissions", 0.0);
@@ -41,31 +46,35 @@ public class QuestionnaireHousingActivity4 extends AppCompatActivity {
         String energy_type2 = intent.getStringExtra("energy_type2");
         int monthly_bill = intent.getIntExtra("monthly_bill", 0);
 
+        //Renewable energy options
         RadioButton primarily = findViewById(R.id.primarily);
         RadioButton partially = findViewById(R.id.partially);
         RadioButton no = findViewById(R.id.no);
 
-        next = findViewById(R.id.next);
+        //next button
+        Button next = findViewById(R.id.next);
 
         //Fetching the emissions corresponding to the house type mentioned by user.
-        FirebaseDatabase db = FirebaseDatabase.getInstance();
-        DatabaseReference ref = db.getReference("Housing Emissions/" + house_type + "/"
-                + house_size + "/" + num_people + "/" + energy_type + "/" + monthly_bill);
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference ref = db.child("Housing Emissions").child(house_type)
+                .child(house_size).child(Integer.toString(num_people)).child(energy_type)
+                .child(Integer.toString(monthly_bill));
 
-
+        //When next is clicked, do emission calculations and navigate to next set of questions
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                //Checking if user responded
+                //Making sure user responded
                 if (primarily.isChecked() || partially.isChecked()|| no.isChecked()) {
 
+                    //Retrieving housing emissions from Firebase Realtime Database
                     ref.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-
                             if (snapshot.exists()) {
 
+                                //Housing emissions
                                 double housing_emissions = snapshot.getValue(double.class);
 
                                 //Updating total emissions based on user response
@@ -82,7 +91,7 @@ public class QuestionnaireHousingActivity4 extends AppCompatActivity {
 
                                 double total_emissions = emissions + housing_emissions;
 
-                                //Moving to next set of questions about consumption
+                                //Navigating to QuestionnaireConsumptionActivity
                                 Intent intent = new Intent(QuestionnaireHousingActivity4.this, QuestionnaireConsumptionActivity.class);
                                 intent.putExtra("current_emissions", total_emissions);
                                 intent.putExtra("diet_emissions", diet_emissions);

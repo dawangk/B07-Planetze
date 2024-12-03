@@ -11,10 +11,12 @@ import android.content.Intent;
 import android.widget.RadioButton;
 import com.example.b07projectfall2024.R;
 
-
+/**
+ * QuestionnaireTransitActivity
+ * This activity is responsible for recording the user's transit emissions from the past year, and
+ * navigates to QuestionnaireFlightActivity
+ */
 public class QuestionnaireTransitActivity extends AppCompatActivity {
-
-    Button next;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,17 +28,23 @@ public class QuestionnaireTransitActivity extends AppCompatActivity {
         double emissions = intent.getDoubleExtra("current_emissions", 0.0);
         double car_emissions = intent.getDoubleExtra("car_emissions", 0.0);
 
+        //Transit frequency options
         RadioButton never = findViewById(R.id.never);
         RadioButton occasionally = findViewById(R.id.occasionally);
         RadioButton frequently = findViewById(R.id.frequently);
         RadioButton always = findViewById(R.id.always);
+
+        //Transit length options
         RadioButton option1 = findViewById(R.id.option1);
         RadioButton option2 = findViewById(R.id.option2);
         RadioButton option3 = findViewById(R.id.option3);
         RadioButton option4 = findViewById(R.id.option4);
         RadioButton option5 = findViewById(R.id.option5);
-        next = findViewById(R.id.next);
 
+        //Next button
+        Button next = findViewById(R.id.next);
+
+        //When next is clicked, do emission calculations and navigate to flight emission questions
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,13 +96,13 @@ public class QuestionnaireTransitActivity extends AppCompatActivity {
 
                 }
 
-                //Checking if user responded
+                //Making sure user responded
                 if (emissions2 != emissions || never.isChecked()) {
 
                     //Storing the amount of emissions that come from transit
                     double transit_emissions = emissions2 - emissions;
 
-                    //Moving to next set of questions about flights
+                    //Navigating to QuestionnaireFlightActivity
                     Intent intent = new Intent(QuestionnaireTransitActivity.this, QuestionnaireFlightActivity.class);
                     intent.putExtra("current_emissions", emissions2);
                     intent.putExtra("car_emissions", car_emissions);

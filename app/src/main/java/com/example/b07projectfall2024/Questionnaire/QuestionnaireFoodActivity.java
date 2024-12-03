@@ -11,10 +11,13 @@ import android.widget.RadioButton;
 import android.content.Intent;
 import com.example.b07projectfall2024.R;
 
+/**
+ * QuestionnaireFoodActivity
+ * This activity is the first of four that are responsible for recording the user's diet emissions
+ * from the past year. It navigates to either QuestionnaireMeatActivity or
+ * QuestionnaireFoodActivity2, depending on the user's responses
+ */
 public class QuestionnaireFoodActivity extends AppCompatActivity {
-
-    Button next;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,19 +31,23 @@ public class QuestionnaireFoodActivity extends AppCompatActivity {
         double transit_emissions = intent.getDoubleExtra("transit_emissions", 0.0);
         double flight_emissions = intent.getDoubleExtra("flight_emissions", 0.0);
 
+        //Diet type options
         RadioButton meat = findViewById(R.id.meat);
         RadioButton vegetarian = findViewById(R.id.vegetarian);
         RadioButton pescatarian = findViewById(R.id.pescat);
         RadioButton vegan = findViewById(R.id.vegan);
-        next = findViewById(R.id.next);
 
+        //next button
+        Button next = findViewById(R.id.next);
+
+        ////When next is clicked, do emission calculations and navigate to next activity
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 double emissions2 = emissions;
 
-                //If the user eats meat, we move to the set of meat related questions
+                //If the user regularly eats meat, navigate to QuestionnaireMeatActivity
                 if (meat.isChecked()) {
                     Intent intent = new Intent(QuestionnaireFoodActivity.this, QuestionnaireMeatActivity.class);
                     intent.putExtra("current_emissions", emissions2);
@@ -51,7 +58,7 @@ public class QuestionnaireFoodActivity extends AppCompatActivity {
                     finish();
                 }
 
-                //If the user has an other type of diet, we update the total emissions accordingly
+                //else, do emission calculations and navigate to QuestionnaireFoodActivity2
                 else {
 
                     if (vegetarian.isChecked()) {
@@ -62,13 +69,13 @@ public class QuestionnaireFoodActivity extends AppCompatActivity {
                         emissions2 += 1500;
                     }
 
-                    //Checking if user responded
+                    //Making sure user responded
                     if (emissions2 != emissions) {
 
-                        //TEMPORARY: Storing the emissions from diet
+                        //Storing the current emissions from diet
                         double diet_emissions = emissions2 - emissions;
 
-                        //Moving to the next set of questions also about food
+                        //Navigating to QuestionnaireFoodActivity2
                         Intent intent = new Intent(QuestionnaireFoodActivity.this, QuestionnaireFoodActivity2.class);
                         intent.putExtra("current_emissions", emissions2);
                         intent.putExtra("diet_emissions", diet_emissions);

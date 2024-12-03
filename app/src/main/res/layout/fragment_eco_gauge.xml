@@ -88,7 +88,7 @@
             android:id="@+id/country_emissions_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Select a country to see its average emissions"
+            android:text="Compare your total emissions to other countries"
             android:textStyle="bold"
             android:textSize="20sp"
             android:textColor="@android:color/black"

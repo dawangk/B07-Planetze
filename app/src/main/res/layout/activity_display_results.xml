@@ -1,176 +1,174 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Questionnaire.QuestionnaireActivity"
-    android:background="#a9bcd0"
-    android:gravity="center"
-    android:orientation="vertical">
+    android:background="@color/light_gray"
+    android:padding="16dp">
 
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:layout_gravity="center"
-        android:src="@drawable/app_logo_no_bg"
-        android:padding="20dp">
-    </ImageView>
-
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_marginTop="25dp"
-        android:padding="5dp"
-        android:text="Your total carbon emissions this past year were:"
-        android:textColor="#1b1b1e"
-        android:textSize="22dp"
-        android:fontFamily="@font/reg_font">
-    </TextView>
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
 
-    <TextView
-        android:id="@+id/total_emissions_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textColor="#1b1b1e"
-        android:textSize="25dp"
-        android:fontFamily="@font/bold_font">
-    </TextView>
+        <!-- App Logo -->
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_gravity="center"
+            android:src="@drawable/app_logo_no_bg"
+            android:padding="20dp">
+        </ImageView>
 
-    <TextView
-        android:id="@+id/car_emissions"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="left"
-        android:layout_marginTop="25dp"
-        android:padding="5dp"
-        android:textColor="#1b1b1e"
-        android:textSize="20dp"
-        android:fontFamily="@font/reg_font">
+        <!-- Total Carbon Emissions -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="25dp"
+            android:padding="5dp"
+            android:text="Your total carbon emissions this past year were :"
+            android:textColor="#1b1b1e"
+            android:textSize="20dp"
+            android:fontFamily="@font/reg_font">
+        </TextView>
 
-    </TextView>
-
-    <TextView
-        android:id="@+id/transit_emissions"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="left"
-        android:padding="5dp"
-        android:textColor="#1b1b1e"
-        android:textSize="20dp"
-        android:fontFamily="@font/reg_font">
-
-    </TextView>
-
-    <TextView
-        android:id="@+id/flight_emissions"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="left"
-        android:padding="5dp"
-        android:textColor="#1b1b1e"
-        android:textSize="20dp"
-        android:fontFamily="@font/reg_font">
-    </TextView>
-
-    <TextView
-        android:id="@+id/diet_emissions"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="left"
-        android:padding="5dp"
-        android:textColor="#1b1b1e"
-        android:textSize="20dp"
-        android:fontFamily="@font/reg_font">
-    </TextView>
-
-    <TextView
-        android:id="@+id/housing_emissions"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="left"
-        android:padding="5dp"
-        android:textColor="#1b1b1e"
-        android:textSize="20dp"
-        android:fontFamily="@font/reg_font">
-    </TextView>
-
-    <TextView
-        android:id="@+id/consumption_emissions"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="left"
-        android:padding="5dp"
-        android:textColor="#1b1b1e"
-        android:textSize="20dp"
-        android:fontFamily="@font/reg_font">
-    </TextView>
-
-    <TextView
-        android:id="@+id/compare_global"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="5dp"
-        android:textColor="#1b1b1e"
-        android:textSize="15dp"
-        android:fontFamily="@font/reg_font">
-    </TextView>
-
-    <!-- Label for Spinner -->
-    <TextView
-        android:id="@+id/select_country_label"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:padding="5dp"
-        android:text="Compare your total emissions to other countries"
-        android:textStyle="bold"
-        android:textColor="#1b1b1e"
-        android:textSize="18dp"
-        android:fontFamily="@font/reg_font"
-        android:gravity="center" />
-
-    <!-- Spinner for Country Selection -->
-    <Spinner
-        android:id="@+id/country_spinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:padding="10dp"
-        android:backgroundTint="#d8dbe2" />
-
-    <!-- National Comparison Results -->
-    <TextView
-        android:id="@+id/compare_national"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="5dp"
-        android:textColor="#1b1b1e"
-        android:textSize="15dp"
-        android:fontFamily="@font/reg_font">
-    </TextView>
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="60dp"
-        android:backgroundTint="@color/dark_gray"
-        android:text="Next"
-        android:textColor="#d8dbe2"
-        android:padding="10dp"
-        android:textSize="25dp"
-        android:fontFamily="@font/bold_font"
-        android:textStyle="bold"
-        android:id="@+id/next"
-        android:visibility="visible">
-
-    </Button>
+        <TextView
+            android:id="@+id/total_emissions_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="#1b1b1e"
+            android:layout_marginTop="18dp"
+            android:textSize="20dp"
+            android:fontFamily="@font/bold_font">
+        </TextView>
 
 
-</LinearLayout>
+        <!-- Breakdown of Emissions -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:background="@drawable/rounded_card"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/car_emissions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Car Emissions: 0.0 tons"
+                android:textSize="18sp"
+                android:textColor="@android:color/black"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:id="@+id/transit_emissions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Transit Emissions: 0.0 tons"
+                android:textSize="18sp"
+                android:textColor="@android:color/black"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:id="@+id/flight_emissions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Flight Emissions: 0.0 tons"
+                android:textSize="18sp"
+                android:textColor="@android:color/black"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:id="@+id/diet_emissions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Diet Emissions: 0.0 tons"
+                android:textSize="18sp"
+                android:textColor="@android:color/black"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:id="@+id/housing_emissions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Housing Emissions: 0.0 tons"
+                android:textSize="18sp"
+                android:textColor="@android:color/black"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:id="@+id/consumption_emissions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Consumption Emissions: 0.0 tons"
+                android:textSize="18sp"
+                android:textColor="@android:color/black" />
+        </LinearLayout>
+
+        <!-- Global Comparison -->
+        <TextView
+            android:id="@+id/compare_global"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textColor="#1b1b1e"
+            android:textSize="16dp"
+            android:fontFamily="@font/reg_font"
+            android:layout_marginBottom="18dp" >
+        </TextView>
+
+        <!-- Country Comparison Label -->
+        <TextView
+            android:id="@+id/select_country_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Compare your emissions to other countries"
+            android:gravity="center"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:layout_marginBottom="18dp"
+            android:textColor="@color/black" />
+
+        <!-- Country Spinner -->
+        <Spinner
+            android:id="@+id/country_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginBottom="18dp"
+            android:spinnerMode="dropdown"
+            android:background="@drawable/rounded_spinner" />
+
+        <!-- National Comparison -->
+        <TextView
+            android:id="@+id/compare_national"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="National comparison result will appear here"
+            android:textSize="18dp"
+            android:layout_marginBottom="10dp"
+            android:textColor="@color/dark_gray" />
+
+        <!-- Next Button -->
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="50dp"
+            android:backgroundTint="@color/dark_gray"
+            android:text="Next"
+            android:textColor="#d8dbe2"
+            android:padding="10dp"
+            android:textSize="25dp"
+            android:fontFamily="@font/bold_font"
+            android:textStyle="bold"
+            android:id="@+id/next"
+            android:visibility="visible"/>
+
+    </LinearLayout>
+</ScrollView>

@@ -1,20 +1,15 @@
 package com.example.b07projectfall2024.ForgotPasswordPage;
 
-import android.content.Intent;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.b07projectfall2024.LoginPage.LoginActivityView;
 import com.example.b07projectfall2024.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
 
 public class ForgotPasswordView extends AppCompatActivity {
     private EditText EmailField;

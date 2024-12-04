@@ -1,4 +1,6 @@
 package com.example.b07projectfall2024.NavigationBar.EntryDisplay;
+import com.example.b07projectfall2024.NavigationBar.DailyEmissionGetterReceiver;
+import com.example.b07projectfall2024.NavigationBar.DailyEmissionsServer;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -45,32 +47,29 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-public class EcoGaugeFragment extends Fragment {
+public class EcoGaugeFragment extends Fragment implements DailyEmissionGetterReceiver {
 
     // Firebase references
     private final FirebaseDatabase db = FirebaseDatabase.getInstance();
     private final DatabaseReference ref = db.getReference();
-    private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    private final FirebaseUser user = mAuth.getCurrentUser();
 
     // Emission variables
     private double totalEmissions;
-    private double transportEmissions;
-    private double dietEmissions;
-    private double consumptionEmissions;
 
     // UI components
     private TextView totalEmissionsView;
     private String selectedRange = "This Week";
 
-
     private BarChart barChart;
     private LineChart EmissionLineChart;
 
-
-    private Spinner countrySpinner;
+    private DailyEmissionsServer EmissionsServer;
     private TextView countryEmissionsText;
     private final DatabaseReference countriesRef = ref.child("Countries");
+
+    public EcoGaugeFragment(){
+        EmissionsServer = new DailyEmissionsServer(this);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -97,8 +96,8 @@ public class EcoGaugeFragment extends Fragment {
 
         EmissionLineChart = rootView.findViewById(R.id.chart);
         barChart = (BarChart) rootView.findViewById(R.id.bar_chart);
-      
-        countrySpinner = rootView.findViewById(R.id.spinner_country);
+
+        Spinner countrySpinner = rootView.findViewById(R.id.spinner_country);
         countryEmissionsText = rootView.findViewById(R.id.country_emissions_text);
 
         CycleEmissionCharts();
@@ -115,7 +114,7 @@ public class EcoGaugeFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selectedRange = parent.getItemAtPosition(position).toString();
-                calculateEmissionsForRange();
+                EmissionsServer.calculateEmissionsForRange(getStartDateForRange(selectedRange), getEndDateForRange());
             }
 
             @Override
@@ -269,7 +268,6 @@ public class EcoGaugeFragment extends Fragment {
     private void updateLineChart(){
         if(entryEmissions.isEmpty()) return;
 
-
         //Get and sort dates in entryEmissions
         List<String> dateLabels = new ArrayList<>(entryEmissions.keySet());
         Collections.sort(dateLabels);
@@ -301,25 +299,7 @@ public class EcoGaugeFragment extends Fragment {
         EmissionLineChart.invalidate();
     }
 
-
-    private void updateBarChart() {
-        if (entryEmissions.isEmpty()) return;
-
-        float totalTransportEmission = 0;
-        float totalFoodEmission = 0;
-        float totalConsumptionEmission = 0;
-
-        for (TotalEntryEmission entry : entryEmissions.values()) {
-            totalTransportEmission += entry.transportEmission;
-            totalFoodEmission += entry.foodEmission;
-            totalConsumptionEmission += entry.consumptionEmission;
-        }
-
-        ArrayList<BarEntry> barEntries = new ArrayList<>();
-        barEntries.add(new BarEntry(0, totalTransportEmission));
-        barEntries.add(new BarEntry(1, totalFoodEmission));
-        barEntries.add(new BarEntry(2, totalConsumptionEmission));
-
+    private void InitBarChartSettings(ArrayList<BarEntry> barEntries){
         BarDataSet barDataSet = new BarDataSet(barEntries, "Emission Breakdown");
         barDataSet.setColors(Color.RED, Color.GREEN, Color.BLUE);
         barDataSet.setValueTextColor(Color.BLACK);
@@ -359,6 +339,28 @@ public class EcoGaugeFragment extends Fragment {
                 }
             }
         });
+    }
+
+
+    private void updateBarChart() {
+        if (entryEmissions.isEmpty()) return;
+
+        float totalTransportEmission = 0;
+        float totalFoodEmission = 0;
+        float totalConsumptionEmission = 0;
+
+        for (TotalEntryEmission entry : entryEmissions.values()) {
+            totalTransportEmission += entry.transportEmission;
+            totalFoodEmission += entry.foodEmission;
+            totalConsumptionEmission += entry.consumptionEmission;
+        }
+
+        ArrayList<BarEntry> barEntries = new ArrayList<>();
+        barEntries.add(new BarEntry(0, totalTransportEmission));
+        barEntries.add(new BarEntry(1, totalFoodEmission));
+        barEntries.add(new BarEntry(2, totalConsumptionEmission));
+
+        InitBarChartSettings(barEntries);
 
         barChart.invalidate();
     }
@@ -409,43 +411,39 @@ public class EcoGaugeFragment extends Fragment {
         updateLineChart();
     }
 
-    private void calculateEmissionsForRange() {
-        totalEmissions = 0;
-        transportEmissions = 0;
-        dietEmissions = 0;
-        consumptionEmissions = 0;
-
-        entryEmissions = new HashMap<>();
-
-        String startDate = getStartDateForRange(selectedRange);
-        String endDate = getEndDateForRange();
-
-
-
-        ref.child("users").child(user.getUid()).child("entries")
-                .orderByKey().startAt(startDate).endAt(endDate)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                        for (DataSnapshot dateSnapshot : snapshot.getChildren()) {
-                            String Date = dateSnapshot.getKey();
-                            DatabaseReference transportEntries = dateSnapshot.child("transportation").getRef();
-                            DatabaseReference foodEntries = dateSnapshot.child("food").getRef();
-                            DatabaseReference consumptionEntries = dateSnapshot.child("consumption").getRef();
-
-                            // Use existing methods to calculate emissions
-                            getTransportEmissions(transportEntries, new TextView(requireContext()), Date);
-                            getFoodEmissions(foodEntries, new TextView(requireContext()), Date);
-                            getConsumptionEmissions(consumptionEntries, new TextView(requireContext()), Date);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {}
-                });
+    @Override
+    public void TransportAction(double AdditionalEmissions, String Date) {
+        putTransportEntry(AdditionalEmissions, Date);
+        totalEmissions += AdditionalEmissions;
+        totalEmissionsView.setText(String.format(Locale.getDefault(), "%.1f kg CO2e", totalEmissions));
     }
 
+    @Override
+    public void FoodAction(double AdditionalEmissions, String Date) {
+        putFoodEntry(AdditionalEmissions, Date);
+        totalEmissions += AdditionalEmissions;
+        totalEmissionsView.setText(String.format(Locale.getDefault(), "%.1f kg CO2e", totalEmissions));
+    }
+
+    @Override
+    public void ConsumptionAction(double AdditionalEmissions, String Date) {
+        putConsumptionEntry(AdditionalEmissions, Date);
+
+        totalEmissions += AdditionalEmissions;
+        totalEmissionsView.setText(String.format(Locale.getDefault(), "%.1f kg CO2e", totalEmissions));
+    }
+
+    @Override
+    public void init() {
+        totalEmissions = 0;
+        entryEmissions = new HashMap<>();
+    }
+
+    /**
+     * Given the range (either "This Week", "This Month", "This Year")
+     * return the start date of this given range
+     * @param range (either "This Week", "This Month", "This Year")
+     */
     private String getStartDateForRange(String range) {
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
@@ -465,494 +463,20 @@ public class EcoGaugeFragment extends Fragment {
         return dateFormat.format(calendar.getTime());
     }
 
+    /**
+     * Returns the current date as the end date
+     */
     private String getEndDateForRange() {
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         return dateFormat.format(calendar.getTime());
     }
 
-    private void getTransportEmissions(DatabaseReference transportEntries, TextView transport_emissions, String Date) {
-        transport_emissions.setText("Transportation Emissions: 0kg");
-
-        transportEntries.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                //Looping over all transportation entries
-                for (DataSnapshot childSnapshot : snapshot.getChildren()) {
-
-                    DatabaseReference transportTypeRef = childSnapshot.getRef().child("TransportationType");
-                    String[] transportType = {""};
-                    transportTypeRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if (snapshot.exists()) {
-                                transportType[0] = snapshot.getValue(String.class);
-
-                                //Different calculations depending on transportation type
-                                switch (transportType[0]) {
-
-                                    case "Car":
-
-                                        DatabaseReference carTypeRef = childSnapshot.getRef().child("CarType");
-                                        String[] carType = {""};
-                                        carTypeRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                if (snapshot.exists()) {
-                                                    carType[0] = snapshot.getValue(String.class);
-
-                                                    DatabaseReference rateRef = FirebaseDatabase.getInstance().getReference().child("Car Emission Rates").child(carType[0]);
-                                                    double[] rate = {0};
-
-                                                    rateRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                        @Override
-                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                            if (snapshot.exists()) {
-                                                                rate[0] = snapshot.getValue(Double.class);
-
-                                                                DatabaseReference distanceDrivenRef = childSnapshot.getRef().child("Distance");
-                                                                double[] distanceDriven = {0.0};
-                                                                distanceDrivenRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                                    @Override
-                                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                                        if (snapshot.exists()) {
-                                                                            distanceDriven[0] = snapshot.getValue(Double.class);
-                                                                            double tmpEmissions = rate[0] * distanceDriven[0];
-                                                                            putTransportEntry(tmpEmissions, Date);
-
-                                                                            transportEmissions += tmpEmissions;
-                                                                            totalEmissions += tmpEmissions;
-
-                                                                            transport_emissions.setText("Transportation Emissions: " +  transportEmissions + "kg");
-                                                                            totalEmissionsView.setText(String.format(Locale.getDefault(), "%.1f kg CO2e", totalEmissions));
-                                                                        }
-                                                                    }
-
-                                                                    @Override
-                                                                    public void onCancelled(@NonNull DatabaseError error) {
-
-                                                                    }
-                                                                });
-                                                            }
-                                                        }
-
-                                                        @Override
-                                                        public void onCancelled(@NonNull DatabaseError error) {
-                                                        }
-                                                    });
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError error) {
-                                            }
-                                        });
-                                        break;
-
-                                    case "Public":
-
-                                        DatabaseReference timeOnPublicRef = childSnapshot.getRef().child("TimeOnPublic");
-                                        double[] timeOnPublic = {0.0};
-                                        timeOnPublicRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                if (snapshot.exists()) {
-                                                    timeOnPublic[0] = snapshot.getValue(Double.class);
-                                                    double tmpEmissions = timeOnPublic[0] * 150;
-
-                                                    putTransportEntry(tmpEmissions, Date);
-
-                                                    transportEmissions += tmpEmissions;
-                                                    totalEmissions += tmpEmissions;
-
-                                                    transport_emissions.setText("Transportation Emissions: " +  transportEmissions + "kg");
-                                                    totalEmissionsView.setText(String.format(Locale.getDefault(), "%.1f kg CO2e", totalEmissions));
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError error) {
-
-                                            }
-                                        });
-                                        break;
-
-                                    case "Plane":
-
-                                        DatabaseReference numFlightsRef = childSnapshot.getRef().child("NmbFlights");
-                                        int[] numFlights = {0};
-                                        numFlightsRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                if (snapshot.exists()) {
-                                                    numFlights[0] = snapshot.getValue(Integer.class);
-
-                                                    DatabaseReference flightTypeRef = childSnapshot.getRef().child("FlightType");
-                                                    String[] flightType = {""};
-                                                    flightTypeRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                        @Override
-                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                            if (snapshot.exists()) {
-                                                                flightType[0] = snapshot.getValue(String.class);
-
-                                                                double rate2;
-
-                                                                if (flightType[0].equals("Short-haul (<1,500 km)")) {
-                                                                    rate2 = 150;
-                                                                }
-                                                                else {
-                                                                    rate2 = 550;
-                                                                }
-
-                                                                double tmpEmissions = rate2 * numFlights[0];
-
-                                                                putTransportEntry(tmpEmissions, Date);
-
-                                                                transportEmissions += tmpEmissions;
-                                                                transport_emissions.setText("Transportation Emissions: " +  transportEmissions + "kg");
-
-                                                                totalEmissions += tmpEmissions;
-                                                                totalEmissionsView.setText(String.format(Locale.getDefault(), "%.1f kg CO2e", totalEmissions));
-                                                            }
-                                                        }
-
-                                                        @Override
-                                                        public void onCancelled(@NonNull DatabaseError error) {
-                                                        }
-                                                    });
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError error) {
-                                            }
-                                        });
-                                        break;
-
-                                    default:
-                                        break;
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        });
-    }
-
-
-    private void getFoodEmissions(DatabaseReference foodEntries, TextView diet_emissions, String Date) {
-        diet_emissions.setText("Diet Emissions: 0kg");
-
-        foodEntries.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                //Looping over all transportation entries
-                for (DataSnapshot childSnapshot: snapshot.getChildren()) {
-
-                    DatabaseReference mealTypeRef = childSnapshot.getRef().child("MealType");
-                    String[] mealType = {""};
-                    mealTypeRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if (snapshot.exists()) {
-                                mealType[0] = snapshot.getValue(String.class);
-
-                                DatabaseReference rateRef = FirebaseDatabase.getInstance().getReference().child("Food Emissions Rates").child(mealType[0]);
-                                double[] rate = {0};
-                                rateRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        if (snapshot.exists()) {
-                                            rate[0] = snapshot.getValue(Double.class);
-
-                                            DatabaseReference numServingsRef = childSnapshot.getRef().child("NmbConsumedServings");
-                                            int[] numServings = {0};
-                                            numServingsRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                    if (snapshot.exists()) {
-
-                                                        numServings[0] = snapshot.getValue(Integer.class);
-                                                        double tmpEmissions = rate[0] * numServings[0];
-
-                                                        putFoodEntry(tmpEmissions, Date);
-
-                                                        dietEmissions += tmpEmissions;
-                                                        diet_emissions.setText("Diet Emissions: " + dietEmissions + "kg");
-                                                        totalEmissions += tmpEmissions;
-                                                        // Update total emissions display
-                                                        totalEmissionsView.setText(String.format(Locale.getDefault(), "%.1f kg CO2e", totalEmissions));
-                                                    }
-                                                }
-
-                                                @Override
-                                                public void onCancelled(@NonNull DatabaseError error) {
-                                                }
-                                            });
-
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
-                                    }
-                                });
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        });
-    }
-
-    private void getConsumptionEmissions(DatabaseReference consumptionEntries, TextView consumption_emissions, String Date) {
-        consumption_emissions.setText("Consumptions Emissions: 0kg");
-
-        consumptionEntries.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                //Looping over all transportation entries
-                for (DataSnapshot childSnapshot: snapshot.getChildren()) {
-
-                    DatabaseReference boughtItemRef = childSnapshot.getRef().child("BoughtItem");
-                    String[] boughtItem = {""};
-                    boughtItemRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if (snapshot.exists()) {
-                                boughtItem[0] = snapshot.getValue(String.class);
-
-                                switch (boughtItem[0]) {
-
-                                    case "Clothes":
-
-                                        DatabaseReference numClothesRef = childSnapshot.getRef().child("NmbClothingBought");
-                                        int[] numClothes = {0};
-                                        numClothesRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                if (snapshot.exists()) {
-                                                    numClothes[0] = snapshot.getValue(Integer.class);
-
-                                                    double tmpEmission = 10 * numClothes[0];
-
-                                                    putConsumptionEntry(tmpEmission, Date);
-
-                                                    consumptionEmissions += tmpEmission;
-                                                    consumption_emissions.setText("Consumption Emissions: " + consumptionEmissions + "kg");
-                                                    totalEmissions += tmpEmission;
-                                                    // Update total emissions display
-                                                    totalEmissionsView.setText(String.format(Locale.getDefault(), "%.1f kg CO2e", totalEmissions));
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError error) {
-                                            }
-                                        });
-                                        break;
-
-                                    case "Electronics":
-
-                                        DatabaseReference numPurchasedRef = childSnapshot.getRef().child("NmbPurchased");
-                                        int[] numPurchased = {0};
-                                        numPurchasedRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                if (snapshot.exists()) {
-                                                    numPurchased[0] = snapshot.getValue(Integer.class);
-
-                                                    DatabaseReference electronicTypeRef = childSnapshot.getRef().child("ElectronicType");
-                                                    String[] electronicType = {""};
-                                                    electronicTypeRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                        @Override
-                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                            if (snapshot.exists()) {
-                                                                electronicType[0] = snapshot.getValue(String.class);
-
-                                                                DatabaseReference rateRef = FirebaseDatabase.getInstance().getReference().child("Electronic Emission Rates").child(electronicType[0]);
-                                                                int[] rate = {0};
-                                                                rateRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                                    @Override
-                                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                                        if (snapshot.exists()) {
-                                                                            rate[0] = snapshot.getValue(Integer.class);
-
-                                                                            double tmpEmissions = rate[0] * numPurchased[0];
-
-                                                                            putConsumptionEntry(tmpEmissions, Date);
-
-                                                                            consumptionEmissions += tmpEmissions;
-                                                                            consumption_emissions.setText("Consumption Emissions: " + consumptionEmissions + "kg");
-                                                                            totalEmissions += tmpEmissions;
-                                                                            // Update total emissions display
-                                                                            totalEmissionsView.setText(String.format(Locale.getDefault(), "%.1f kg CO2e", totalEmissions));
-                                                                        }
-                                                                    }
-
-                                                                    @Override
-                                                                    public void onCancelled(@NonNull DatabaseError error) {
-                                                                    }
-                                                                });
-                                                            }
-                                                        }
-
-                                                        @Override
-                                                        public void onCancelled(@NonNull DatabaseError error) {
-                                                        }
-                                                    });
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError error) {
-                                            }
-                                        });
-                                        break;
-
-                                    case "Utility Bill":
-
-                                        DatabaseReference billPriceRef = childSnapshot.getRef().child("BillPrice");
-                                        int[] billPrice = {0};
-                                        billPriceRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                if (snapshot.exists()) {
-                                                    billPrice[0] = snapshot.getValue(Integer.class);
-
-                                                    DatabaseReference UtilityTypeRef = childSnapshot.getRef().child("UtilityType");
-                                                    String[] UtilityType = {""};
-                                                    UtilityTypeRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                        @Override
-                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                            if (snapshot.exists()) {
-                                                                UtilityType[0] = snapshot.getValue(String.class);
-
-                                                                DatabaseReference rateRef2 = FirebaseDatabase.getInstance().getReference().child("Utility Emission Rates").child(UtilityType[0]);
-                                                                double[] rate2 = {0};
-                                                                rateRef2.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                                    @Override
-                                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                                        if (snapshot.exists()) {
-                                                                            rate2[0] = snapshot.getValue(Double.class);
-                                                                            double tmpEmissions = rate2[0] * billPrice[0];
-
-                                                                            putConsumptionEntry(tmpEmissions, Date);
-
-                                                                            consumptionEmissions += tmpEmissions;
-                                                                            consumption_emissions.setText("Consumption Emissions: " + consumptionEmissions + "kg");
-                                                                            totalEmissions += tmpEmissions;
-                                                                            // Update total emissions display
-                                                                            totalEmissionsView.setText(String.format(Locale.getDefault(), "%.1f kg CO2e", totalEmissions));
-                                                                        }
-                                                                    }
-
-                                                                    @Override
-                                                                    public void onCancelled(@NonNull DatabaseError error) {
-                                                                    }
-                                                                });
-                                                            }
-                                                        }
-
-                                                        @Override
-                                                        public void onCancelled(@NonNull DatabaseError error) {
-                                                        }
-                                                    });
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError error) {
-                                            }
-                                        });
-                                        break;
-
-                                    case "Other":
-
-                                        DatabaseReference numBoughtRef = childSnapshot.getRef().child("NmbPurchased");
-                                        int[] numBought = {0};
-                                        numBoughtRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                if (snapshot.exists()) {
-                                                    numBought[0] = snapshot.getValue(Integer.class);
-
-                                                    DatabaseReference itemTypeRef = childSnapshot.getRef().child("ItemType");
-                                                    String[] itemType = {""};
-                                                    itemTypeRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                        @Override
-                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                            if (snapshot.exists()) {
-                                                                itemType[0] = snapshot.getValue(String.class);
-
-                                                                int rate3 = 1;
-                                                                if (itemType[0].equals("Furniture")) {
-                                                                    rate3 = 100;
-                                                                } else if (itemType[0].equals("Appliances")) {
-                                                                    rate3 = 400;
-                                                                }
-
-                                                                double tmpEmissions = rate3 * numBought[0];
-
-                                                                putConsumptionEntry(tmpEmissions, Date);
-
-                                                                consumptionEmissions += tmpEmissions;
-                                                                consumption_emissions.setText("Consumption Emissions: " + consumptionEmissions + "kg");
-                                                                totalEmissions += tmpEmissions;
-                                                                // Update total emissions display
-                                                                totalEmissionsView.setText(String.format(Locale.getDefault(), "%.1f kg CO2e", totalEmissions));
-                                                            }
-                                                        }
-
-                                                        @Override
-                                                        public void onCancelled(@NonNull DatabaseError error) {
-                                                        }
-                                                    });
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError error) {
-                                            }
-                                        });
-                                        break;
-
-                                    default:
-                                        break;
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        });
-    }
-
+    /**
+     * Given the country retrieve the yearly, monthly, and weekly emissions and render it for the
+     * user to see
+     * @param country (Country of interest)
+     */
     private void fetchCountryEmissions(String country) {
         if (country == null || country.isEmpty()) {
             countryEmissionsText.setText("Please select a valid country.");

@@ -25,35 +25,36 @@ public class WelcomeActivity extends AppCompatActivity {
             startLoginActivityView();
             return;
         }
-
+        
+        // Set the content view to the welcome layout
         setContentView(R.layout.activity_welcome);
-
+        
+        // Initialize the login button and set a click listener
         loginButton = findViewById(R.id.loginButton);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Start the login activity when the login button is clicked
                 Intent intent = new Intent(WelcomeActivity.this, LoginActivityView.class);
                 startActivity(intent);
+                // Finish the current activity so it can't be returned to
                 finish();
             }
         });
 
+        // Initialize the register button and set a click listener
         registerButton = findViewById(R.id.registerButton);
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Start the register activity when the register button is clicked
                 Intent intent = new Intent(WelcomeActivity.this, RegisterActivityView.class);
                 startActivity(intent);
+                // Finish the current activity so it can't be returned to
                 finish();
             }
         });
     }
-
-//    private void startMainActivity() {
-//        Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
-//        startActivity(intent);
-//        finish();
-//    }
 
     private void startLoginActivityView() {
         Intent intent = new Intent(WelcomeActivity.this, LoginActivityView.class);

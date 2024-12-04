@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.Switch;
 
 import com.example.b07projectfall2024.MainActivity;
 import com.example.b07projectfall2024.R;

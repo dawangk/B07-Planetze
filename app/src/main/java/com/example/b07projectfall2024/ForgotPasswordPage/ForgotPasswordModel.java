@@ -1,11 +1,9 @@
 package com.example.b07projectfall2024.ForgotPasswordPage;
 
-import android.widget.EditText;
-import android.widget.Toast;
+
 
 import androidx.annotation.NonNull;
 
-import com.example.b07projectfall2024.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;

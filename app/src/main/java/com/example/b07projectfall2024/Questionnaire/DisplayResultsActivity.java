@@ -106,6 +106,7 @@ public class DisplayResultsActivity extends AppCompatActivity {
 
                 FirebaseAuth mAuth = FirebaseAuth.getInstance();
                 FirebaseUser user = mAuth.getCurrentUser();
+                DatabaseReference db = FirebaseDatabase.getInstance().getReference();
 
                 Map<String, Double> m = new HashMap<>();
                 m.put("total_emissions", final_emissions * kg_to_tons);
@@ -174,6 +175,7 @@ public class DisplayResultsActivity extends AppCompatActivity {
         }
         view.setText("Your emissions are " + Math.abs(diff) + " tons " + overUnder
                 + " global targets to reduce climate change!");
+    }
 
       
     // Set up spinner for country selection and comparison

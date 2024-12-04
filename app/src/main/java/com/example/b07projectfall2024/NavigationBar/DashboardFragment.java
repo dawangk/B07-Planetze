@@ -32,7 +32,11 @@ import java.util.Calendar;
 import java.util.Locale;
 import android.content.Context;
 
-
+/**
+ * DashboardFragment
+ * This fragment is responsible for displaying the user's total carbon emissions for any chosen day,
+ * and a breakdown of the emissions by the factors of transportation, food and consumption
+ */
 public class DashboardFragment extends Fragment {
 
     Context currentContext;
@@ -66,29 +70,31 @@ public class DashboardFragment extends Fragment {
 
         currentContext = getContext();
 
-        //List of buttons on the dashboard page
+        //Buttons on the dashboard page
         Button dateUpdate = rootView.findViewById(R.id.dateUpdate);
         Button dateViewDetails = rootView.findViewById(R.id.viewDateDetails);
         Button viewHabits = rootView.findViewById(R.id.viewHabits);
         Button btnEcoGauge = rootView.findViewById(R.id.btn_eco_gauge); // Button for Eco Gauge
 
-
+        //Date selector
         TextView dateTextView = rootView.findViewById(R.id.date);
         DateFieldInit(dateTextView);
 
-         total_emissions = rootView.findViewById(R.id.total_emissions_text);
-         transport_emissions = rootView.findViewById(R.id.transport_emissions);
-         diet_emissions = rootView.findViewById(R.id.diet_emissions);
-         consumption_emissions = rootView.findViewById(R.id.consumption_emissions);
+        //TextViews for the emission displays
+        total_emissions = rootView.findViewById(R.id.total_emissions_text);
+        transport_emissions = rootView.findViewById(R.id.transport_emissions);
+        diet_emissions = rootView.findViewById(R.id.diet_emissions);
+        consumption_emissions = rootView.findViewById(R.id.consumption_emissions);
 
-         totalEmissions = 0;
-         transportEmissions = 0;
-         dietEmissions = 0;
-         consumptionEmissions = 0;
+        //Initializing emission values to 0
+        totalEmissions = 0;
+        transportEmissions = 0;
+        dietEmissions = 0;
+        consumptionEmissions = 0;
 
-
-        //FOR TODAY
-        DatabaseReference dayRef = ref.child("users").child(user.getUid()).child("entries").child(CurrentSelectedDate);
+        //Displaying the current day's emissions
+        DatabaseReference dayRef = ref.child("users").child(user.getUid())
+                .child("entries").child(CurrentSelectedDate);
         DatabaseReference transportEntries = dayRef.child("transportation");
         DatabaseReference foodEntries = dayRef.child("food");
         DatabaseReference consumptionEntries = dayRef.child("consumption");
@@ -117,7 +123,7 @@ public class DashboardFragment extends Fragment {
             }
         });
 
-
+        //EcoGauge button navigates to EgoGaugeFragment
         btnEcoGauge.setOnClickListener(v -> {
             FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -134,6 +140,7 @@ public class DashboardFragment extends Fragment {
             }
         });
 
+        //ViewDetails button navigates to EntryFragment
         dateViewDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -146,6 +153,7 @@ public class DashboardFragment extends Fragment {
             }
         });
 
+        //viewHabits button navigates to HabitsFragment
         viewHabits.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -162,9 +170,14 @@ public class DashboardFragment extends Fragment {
     }
 
 
+    /**
+     * Updates the dashboard to display the total day emissions of the newly selected date.
+     */
     private void UpdateData (){
-        DatabaseReference dayRef2 = ref.child("users").child(user.getUid()).child("entries").child(CurrentSelectedDate);
+        DatabaseReference dayRef2 = ref.child("users").child(user.getUid()).
+                child("entries").child(CurrentSelectedDate);
 
+        //Initializing emission values to zero
         totalEmissions = 0;
         transportEmissions = 0;
         dietEmissions = 0;
@@ -198,6 +211,15 @@ public class DashboardFragment extends Fragment {
         });
     }
 
+    /**
+     * Rounds a decimal value to 3 decimal places
+     * @param toRound The 'double' value to round
+     * @return toRound rounded to 3 decimal places as a 'double'
+     */
+    private double roundThreeDec(double toRound) {
+        return (double)Math.round(toRound * 1000) / 1000;
+    }
+
     //Initializes DateField allowing users to select any date
     private void DateFieldInit(TextView dateTextView) {
         Calendar calendar = Calendar.getInstance();
@@ -228,8 +250,18 @@ public class DashboardFragment extends Fragment {
         });
     }
 
-    private void getTransportEmissions(DatabaseReference transportEntries, TextView transport_emissions, TextView total_emissions) {
+    /**
+     * Displays the transportation emissions of the currently selected date, and updates the total
+     * emissions accordingly
+     * @param transportEntries The DatabaseReference where transportation entries of the user are
+     *                        stored
+     * @param transport_emissions The TextView to which the transport emissions are updated
+     * @param total_emissions The TextView to which the total emissions are updated
+     */
+    private void getTransportEmissions(DatabaseReference transportEntries,
+                                       TextView transport_emissions, TextView total_emissions) {
 
+        //Initialize transportation emissions to zero
         transportEmissions = 0;
         transport_emissions.setText("Transportation Emissions: 0kg");
 
@@ -239,153 +271,83 @@ public class DashboardFragment extends Fragment {
                 //Looping over all transportation entries
                 for (DataSnapshot childSnapshot : snapshot.getChildren()) {
 
-                    DatabaseReference transportTypeRef = childSnapshot.getRef().child("TransportationType");
-                    String[] transportType = {""};
-                    transportTypeRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if (snapshot.exists()) {
-                                transportType[0] = snapshot.getValue(String.class);
+                    DataSnapshot transportTypeRef = childSnapshot.child("TransportationType");
+                    String transportType = transportTypeRef.getValue(String.class);
 
-                                //Different calculations depending on transportation type
-                                switch (transportType[0]) {
+                    //Different calculations depending on transportation type
+                    switch (transportType) {
 
-                                    case "Car":
+                        case "Car":
 
-                                        DatabaseReference carTypeRef = childSnapshot.getRef().child("CarType");
-                                        String[] carType = {""};
-                                        carTypeRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                if (snapshot.exists()) {
-                                                    carType[0] = snapshot.getValue(String.class);
+                            DataSnapshot carTypeRef = childSnapshot.child("CarType");
+                            String carType = carTypeRef.getValue(String.class);
 
-                                                    DatabaseReference rateRef = FirebaseDatabase.getInstance().getReference().child("Car Emission Rates").child(carType[0]);
-                                                    double[] rate = {0};
+                            //Getting the emission rate of the user's car based on carType
+                            DatabaseReference rateRef = db.getReference()
+                                    .child("Car Emission Rates").child(carType);
+                            double[] rate = {0};
 
-                                                    rateRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                        @Override
-                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                            if (snapshot.exists()) {
-                                                                rate[0] = snapshot.getValue(Double.class);
-
-                                                                DatabaseReference distanceDrivenRef = childSnapshot.getRef().child("Distance");
-                                                                double[] distanceDriven = {0.0};
-                                                                distanceDrivenRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                                    @Override
-                                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                                        if (snapshot.exists()) {
-                                                                            distanceDriven[0] = snapshot.getValue(Double.class);
-
-                                                                            transportEmissions = (double)Math.round((transportEmissions + (rate[0] * distanceDriven[0])) * 1000) / 1000;
-                                                                            totalEmissions = (double)Math.round((totalEmissions + (rate[0] * distanceDriven[0])) * 1000) / 1000;
-                                                                            transport_emissions.setText("Transportation Emissions: " +  transportEmissions + "kg");
-                                                                            total_emissions.setText(totalEmissions + "");
-                                                                        }
-                                                                    }
-
-                                                                    @Override
-                                                                    public void onCancelled(@NonNull DatabaseError error) {
-                                                                    }
-                                                                });
-                                                            }
-                                                        }
-
-                                                        @Override
-                                                        public void onCancelled(@NonNull DatabaseError error) {
-                                                        }
-                                                    });
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError error) {
-                                            }
-                                        });
-                                        break;
-
-                                    case "Public":
-
-                                        DatabaseReference timeOnPublicRef = childSnapshot.getRef().child("TimeOnPublic");
-                                        double[] timeOnPublic = {0.0};
-                                        timeOnPublicRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                if (snapshot.exists()) {
-                                                    timeOnPublic[0] = snapshot.getValue(Double.class);
-
-                                                    transportEmissions = (double)Math.round((transportEmissions + (timeOnPublic[0] * 150)) * 1000) / 1000;
-                                                    transport_emissions.setText("Transportation Emissions: " +  transportEmissions + "kg");
-                                                    totalEmissions = (double)Math.round((totalEmissions + (timeOnPublic[0] * 150)) * 1000) / 1000;
-                                                    total_emissions.setText(totalEmissions + "");
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError error) {
-
-                                            }
-                                        });
-                                        break;
-
-                                    case "Plane":
-
-                                        DatabaseReference numFlightsRef = childSnapshot.getRef().child("NmbFlights");
-                                        int[] numFlights = {0};
-                                        numFlightsRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                if (snapshot.exists()) {
-                                                    numFlights[0] = snapshot.getValue(Integer.class);
-
-                                                    DatabaseReference flightTypeRef = childSnapshot.getRef().child("FlightType");
-                                                    String[] flightType = {""};
-                                                    flightTypeRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                        @Override
-                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                            if (snapshot.exists()) {
-                                                                flightType[0] = snapshot.getValue(String.class);
-
-                                                                double rate2;
-
-                                                                if (flightType[0].equals("Short-haul (<1,500 km)")) {
-                                                                    rate2 = 150;
-                                                                }
-                                                                else {
-                                                                    rate2 = 550;
-                                                                }
-
-                                                                transportEmissions = (double)Math.round((transportEmissions + (rate2 * numFlights[0])) * 1000) / 1000;
-                                                                transport_emissions.setText("Transportation Emissions: " +  transportEmissions + "kg");
-                                                                totalEmissions = (double)Math.round((totalEmissions + (rate2 * numFlights[0])) * 1000) / 1000;
-                                                                total_emissions.setText(totalEmissions + "");
-                                                            }
-                                                        }
-
-                                                        @Override
-                                                        public void onCancelled(@NonNull DatabaseError error) {
-                                                        }
-                                                    });
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError error) {
-                                            }
-                                        });
-                                        break;
-
-                                    default:
-                                        break;
+                            rateRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (snapshot.exists()) {
+                                        rate[0] = snapshot.getValue(Double.class);
+                                        DataSnapshot distanceDrivenRef = childSnapshot
+                                                .child("Distance");
+                                        double distanceDriven = distanceDrivenRef.getValue(Double.class);
+                                        transportEmissions = roundThreeDec(transportEmissions + (rate[0] * distanceDriven));
+                                        totalEmissions = roundThreeDec(totalEmissions + (rate[0] * distanceDriven));
+                                        transport_emissions.setText("Transportation Emissions: " + transportEmissions + "kg");
+                                        total_emissions.setText(totalEmissions + "");
+                                    }
                                 }
-                            }
-                        }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-                        }
-                    });
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                }
+                            });
+
+                            break;
+
+                        case "Public":
+
+                            DataSnapshot timeOnPublicRef = childSnapshot.child("TimeOnPublic");
+                            double timeOnPublic = timeOnPublicRef.getValue(Double.class);
+
+                            transportEmissions = roundThreeDec(transportEmissions + (timeOnPublic * 150));
+                            totalEmissions = roundThreeDec(totalEmissions + (timeOnPublic * 150));
+                            transport_emissions.setText("Transportation Emissions: " + transportEmissions + "kg");
+                            total_emissions.setText(totalEmissions + "");
+                            break;
+
+                        case "Plane":
+
+                            DataSnapshot numFlightsRef = childSnapshot.child("NmbFlights");
+                            int numFlights = numFlightsRef.getValue(Integer.class);
+
+                            DataSnapshot flightTypeRef = childSnapshot.child("FlightType");
+                            String flightType = flightTypeRef.getValue(String.class);
+
+                            double rate2;
+
+                            if (flightType.equals("Short-haul (<1,500 km)")) {
+                                rate2 = 150;
+                            } else {
+                                rate2 = 550;
+                            }
+
+                            transportEmissions = roundThreeDec(transportEmissions + (rate2 * numFlights));
+                            totalEmissions = roundThreeDec(totalEmissions + (rate2 * numFlights));
+                            transport_emissions.setText("Transportation Emissions: " + transportEmissions + "kg");
+                            total_emissions.setText(totalEmissions + "");
+
+                            break;
+
+                        default:
+                            break;
+                    }
                 }
+
             }
 
             @Override
@@ -394,60 +356,43 @@ public class DashboardFragment extends Fragment {
         });
     }
 
+    /**
+     * Displays the diet emissions of the currently selected date, and updates the total
+     * emissions accordingly
+     * @param foodEntries The DatabaseReference where food entries of the user are stored
+     * @param diet_emissions The TextView to which the diet emissions are updated
+     * @param total_emissions The TextView to which the total emissions are updated
+     */
     private void getFoodEmissions(DatabaseReference foodEntries, TextView diet_emissions, TextView total_emissions) {
 
+        //Initialize diet emissions to zero
         dietEmissions = 0;
         diet_emissions.setText("Diet Emissions: 0kg");
 
         foodEntries.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                //Looping over all transportation entries
+                //Looping over all food entries
                 for (DataSnapshot childSnapshot: snapshot.getChildren()) {
 
-                    DatabaseReference mealTypeRef = childSnapshot.getRef().child("MealType");
-                    String[] mealType = {""};
-                    mealTypeRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    DataSnapshot mealTypeRef = childSnapshot.child("MealType");
+                    String mealType = mealTypeRef.getValue(String.class);
+
+                    //Getting the emission rate depending on MealType
+                    DatabaseReference rateRef = db.getReference().child("Food Emissions Rates").child(mealType);
+                    double[] rate = {0};
+                    rateRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             if (snapshot.exists()) {
-                                mealType[0] = snapshot.getValue(String.class);
+                                rate[0] = snapshot.getValue(Double.class);
+                                DataSnapshot numServingsRef = childSnapshot.child("NmbConsumedServings");
+                                int numServings = numServingsRef.getValue(Integer.class);
 
-                                DatabaseReference rateRef = FirebaseDatabase.getInstance().getReference().child("Food Emissions Rates").child(mealType[0]);
-                                double[] rate = {0};
-                                rateRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        if (snapshot.exists()) {
-                                            rate[0] = snapshot.getValue(Double.class);
-
-                                            DatabaseReference numServingsRef = childSnapshot.getRef().child("NmbConsumedServings");
-                                            int[] numServings = {0};
-                                            numServingsRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                    if (snapshot.exists()) {
-                                                        numServings[0] = snapshot.getValue(Integer.class);
-
-                                                        dietEmissions = (double)Math.round((dietEmissions + (rate[0] * numServings[0])) * 1000) / 1000;
-                                                        diet_emissions.setText("Diet Emissions: " + dietEmissions + "kg");
-                                                        totalEmissions = (double)Math.round((totalEmissions + (rate[0] * numServings[0])) * 1000) / 1000;
-                                                        total_emissions.setText(totalEmissions + "");
-                                                    }
-                                                }
-
-                                                @Override
-                                                public void onCancelled(@NonNull DatabaseError error) {
-                                                }
-                                            });
-
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
-                                    }
-                                });
+                                dietEmissions = roundThreeDec(dietEmissions + (rate[0] * numServings));
+                                totalEmissions = roundThreeDec(totalEmissions + (rate[0] * numServings));
+                                diet_emissions.setText("Diet Emissions: " + dietEmissions + "kg");
+                                total_emissions.setText(totalEmissions + "");
                             }
                         }
 
@@ -464,8 +409,17 @@ public class DashboardFragment extends Fragment {
         });
     }
 
+    /**
+     * Displays the consumption emissions of the currently selected date, and updates the total
+     * emissions accordingly
+     * @param consumptionEntries The DatabaseReference where consumption entries of the user are
+     *                         stored
+     * @param consumption_emissions The TextView to which the consumption emissions are updated
+     * @param total_emissions The TextView to which the total emissions are updated
+     */
     private void getConsumptionEmissions(DatabaseReference consumptionEntries, TextView consumption_emissions, TextView total_emissions) {
 
+        //Initialize consumption emissions to zero
         consumptionEmissions = 0;
         consumption_emissions.setText("Consumptions Emissions: 0kg");
 
@@ -473,202 +427,110 @@ public class DashboardFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 //Looping over all transportation entries
-                for (DataSnapshot childSnapshot: snapshot.getChildren()) {
+                for (DataSnapshot childSnapshot : snapshot.getChildren()) {
 
-                    DatabaseReference boughtItemRef = childSnapshot.getRef().child("BoughtItem");
-                    String[] boughtItem = {""};
-                    boughtItemRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if (snapshot.exists()) {
-                                boughtItem[0] = snapshot.getValue(String.class);
+                    DataSnapshot boughtItemRef = childSnapshot.child("BoughtItem");
+                    String boughtItem = boughtItemRef.getValue(String.class);
 
-                                switch (boughtItem[0]) {
+                    switch (boughtItem) {
 
-                                    case "Clothes":
+                        case "Clothes":
 
-                                        DatabaseReference numClothesRef = childSnapshot.getRef().child("NmbClothingBought");
-                                        int[] numClothes = {0};
-                                        numClothesRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                if (snapshot.exists()) {
-                                                    numClothes[0] = snapshot.getValue(Integer.class);
+                            DataSnapshot numClothesRef = childSnapshot.child("NmbClothingBought");
+                            int numClothes = numClothesRef.getValue(Integer.class);
 
-                                                    consumptionEmissions = (double)Math.round((consumptionEmissions + (10 * numClothes[0])) * 1000) / 1000;
-                                                    consumption_emissions.setText("Consumption Emissions: " + consumptionEmissions + "kg");
-                                                    totalEmissions = (double)Math.round((totalEmissions + (10 * numClothes[0])) * 1000) / 1000;
-                                                    total_emissions.setText(totalEmissions + "");
-                                                }
-                                            }
+                            consumptionEmissions = roundThreeDec(consumptionEmissions + (10 * numClothes));
+                            totalEmissions = roundThreeDec(totalEmissions + (10 * numClothes));
+                            consumption_emissions.setText("Consumption Emissions: " + consumptionEmissions + "kg");
+                            total_emissions.setText(totalEmissions + "");
 
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError error) {
-                                            }
-                                        });
-                                        break;
+                            break;
 
-                                    case "Electronics":
+                        case "Electronics":
 
-                                        DatabaseReference numPurchasedRef = childSnapshot.getRef().child("NmbPurchased");
-                                        int[] numPurchased = {0};
-                                        numPurchasedRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                if (snapshot.exists()) {
-                                                    numPurchased[0] = snapshot.getValue(Integer.class);
+                            DataSnapshot numPurchasedRef = childSnapshot.child("NmbPurchased");
+                            int numPurchased = numPurchasedRef.getValue(Integer.class);
 
-                                                    DatabaseReference electronicTypeRef = childSnapshot.getRef().child("ElectronicType");
-                                                    String[] electronicType = {""};
-                                                    electronicTypeRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                        @Override
-                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                            if (snapshot.exists()) {
-                                                                electronicType[0] = snapshot.getValue(String.class);
+                            DataSnapshot electronicTypeRef = childSnapshot.child("ElectronicType");
+                            String electronicType = electronicTypeRef.getValue(String.class);
 
-                                                                DatabaseReference rateRef = FirebaseDatabase.getInstance().getReference().child("Electronic Emission Rates").child(electronicType[0]);
-                                                                int[] rate = {0};
-                                                                rateRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                                    @Override
-                                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                                        if (snapshot.exists()) {
-                                                                            rate[0] = snapshot.getValue(Integer.class);
+                            //Getting the rate (price) based on electronicType
+                            DatabaseReference rateRef = db.getReference().child("Electronic Emission Rates").child(electronicType);
+                            int[] rate = {0};
 
-                                                                            consumptionEmissions = (double)Math.round((consumptionEmissions + (rate[0] * numPurchased[0])) * 1000) / 1000;
-                                                                            consumption_emissions.setText("Consumption Emissions: " + consumptionEmissions + "kg");
-                                                                            totalEmissions = (double)Math.round((totalEmissions + (rate[0] * numPurchased[0])) * 1000) / 1000;
-                                                                            total_emissions.setText(totalEmissions + "");
-                                                                        }
-                                                                    }
-
-                                                                    @Override
-                                                                    public void onCancelled(@NonNull DatabaseError error) {
-                                                                    }
-                                                                });
-                                                            }
-                                                        }
-
-                                                        @Override
-                                                        public void onCancelled(@NonNull DatabaseError error) {
-                                                        }
-                                                    });
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError error) {
-                                            }
-                                        });
-                                        break;
-
-                                    case "Utility Bill":
-
-                                        DatabaseReference billPriceRef = childSnapshot.getRef().child("BillPrice");
-                                        int[] billPrice = {0};
-                                        billPriceRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                if (snapshot.exists()) {
-                                                    billPrice[0] = snapshot.getValue(Integer.class);
-
-                                                    DatabaseReference UtilityTypeRef = childSnapshot.getRef().child("UtilityType");
-                                                    String[] UtilityType = {""};
-                                                    UtilityTypeRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                        @Override
-                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                            if (snapshot.exists()) {
-                                                                UtilityType[0] = snapshot.getValue(String.class);
-
-                                                                DatabaseReference rateRef2 = FirebaseDatabase.getInstance().getReference().child("Utility Emission Rates").child(UtilityType[0]);
-                                                                double[] rate2 = {0};
-                                                                rateRef2.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                                    @Override
-                                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                                        if (snapshot.exists()) {
-                                                                            rate2[0] = snapshot.getValue(Double.class);
-
-                                                                            consumptionEmissions = (double)Math.round((consumptionEmissions + (rate2[0] * billPrice[0])) * 1000) / 1000;
-                                                                            consumption_emissions.setText("Consumption Emissions: " + consumptionEmissions + "kg");
-                                                                            totalEmissions = (double)Math.round((totalEmissions + (rate2[0] * billPrice[0])) * 1000) / 1000;
-                                                                            total_emissions.setText(totalEmissions + "");
-                                                                        }
-                                                                    }
-
-                                                                    @Override
-                                                                    public void onCancelled(@NonNull DatabaseError error) {
-                                                                    }
-                                                                });
-                                                            }
-                                                        }
-
-                                                        @Override
-                                                        public void onCancelled(@NonNull DatabaseError error) {
-                                                        }
-                                                    });
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError error) {
-                                            }
-                                        });
-                                        break;
-
-                                    case "Other":
-
-                                        DatabaseReference numBoughtRef = childSnapshot.getRef().child("NmbPurchased");
-                                        int[] numBought = {0};
-                                        numBoughtRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                if (snapshot.exists()) {
-                                                    numBought[0] = snapshot.getValue(Integer.class);
-
-                                                    DatabaseReference itemTypeRef = childSnapshot.getRef().child("ItemType");
-                                                    String[] itemType = {""};
-                                                    itemTypeRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                        @Override
-                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                            if (snapshot.exists()) {
-                                                                itemType[0] = snapshot.getValue(String.class);
-
-                                                                int rate3 = 1;
-                                                                if (itemType[0].equals("Furniture")) {
-                                                                    rate3 = 100;
-                                                                } else if (itemType[0].equals("Appliances")) {
-                                                                    rate3 = 400;
-                                                                }
-
-                                                                consumptionEmissions = (double)Math.round((consumptionEmissions + (rate3 * numBought[0])) * 1000) / 1000;
-                                                                consumption_emissions.setText("Consumption Emissions: " + consumptionEmissions + "kg");
-                                                                totalEmissions = (double)Math.round((totalEmissions + (rate3 * numBought[0])) * 1000) / 1000;
-                                                                total_emissions.setText(totalEmissions + "");
-                                                            }
-                                                        }
-
-                                                        @Override
-                                                        public void onCancelled(@NonNull DatabaseError error) {
-                                                        }
-                                                    });
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError error) {
-                                            }
-                                        });
-                                        break;
-
-                                    default:
-                                        break;
+                            rateRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (snapshot.exists()) {
+                                        rate[0] = snapshot.getValue(Integer.class);
+                                        consumptionEmissions = roundThreeDec(consumptionEmissions + (rate[0] * numPurchased));
+                                        totalEmissions = roundThreeDec(totalEmissions + (rate[0] * numPurchased));
+                                        consumption_emissions.setText("Consumption Emissions: " + consumptionEmissions + "kg");
+                                        total_emissions.setText(totalEmissions + "");
+                                    }
                                 }
-                            }
-                        }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-                        }
-                    });
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                }
+                            });
+                            break;
+
+                        case "Utility Bill":
+
+                            DataSnapshot billPriceRef = childSnapshot.child("BillPrice");
+                            int billPrice = billPriceRef.getValue(Integer.class);
+
+                            DataSnapshot UtilityTypeRef = childSnapshot.child("UtilityType");
+                            String UtilityType = UtilityTypeRef.getValue(String.class);
+
+                            //Getting rate based on UtilityType
+                            DatabaseReference rateRef2 = db.getReference().child("Utility Emission Rates").child(UtilityType);
+                            double[] rate2 = {0};
+                            rateRef2.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (snapshot.exists()) {
+                                        rate2[0] = snapshot.getValue(Double.class);
+
+                                        consumptionEmissions = roundThreeDec(consumptionEmissions + (rate2[0] * billPrice));
+                                        totalEmissions = roundThreeDec(totalEmissions + (rate2[0] * billPrice));
+                                        consumption_emissions.setText("Consumption Emissions: " + consumptionEmissions + "kg");
+                                        total_emissions.setText(totalEmissions + "");
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                }
+                            });
+                            break;
+
+                        case "Other":
+
+                            DataSnapshot numBoughtRef = childSnapshot.child("NmbPurchased");
+                            int numBought = numBoughtRef.getValue(Integer.class);
+
+                            DataSnapshot itemTypeRef = childSnapshot.child("ItemType");
+                            String itemType = itemTypeRef.getValue(String.class);
+
+                            int rate3 = 1;
+                            if (itemType.equals("Furniture")) {
+                                rate3 = 100;
+                            } else if (itemType.equals("Appliances")) {
+                                rate3 = 400;
+                            }
+
+                            consumptionEmissions = roundThreeDec(consumptionEmissions + (rate3 * numBought));
+                            totalEmissions = roundThreeDec(totalEmissions + (rate3 * numBought));
+                            consumption_emissions.setText("Consumption Emissions: " + consumptionEmissions + "kg");
+                            total_emissions.setText(totalEmissions + "");
+
+                            break;
+
+                        default:
+                            break;
+                    }
                 }
             }
 
@@ -677,5 +539,6 @@ public class DashboardFragment extends Fragment {
             }
         });
     }
+
 }
 

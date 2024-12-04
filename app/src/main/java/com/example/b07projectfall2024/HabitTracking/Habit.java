@@ -1,4 +1,9 @@
 package com.example.b07projectfall2024.HabitTracking;
+
+/**
+ * This class represents a habit and it's associated data fields, identically to the structure
+ * in the Firebase Realtime Database
+ */
 public class Habit {
     private String Name;
     private String KeywordOne;

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".HabitTracking.HabitProgressActivity"
     android:background="#a9bcd0"
     android:orientation="vertical"
@@ -343,42 +344,25 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/stopTracking"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
+        android:text="Stop Tracking"
+        android:textAllCaps="false"
+        android:fontFamily="@font/bold_font"
+        android:textColor="@color/white"
+        android:textSize="18dp"
+        android:backgroundTint="@color/dark_gray"
+        android:padding="8dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"/>
 
-        <Button
-            android:id="@+id/back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Back"
-            android:textAllCaps="false"
-            android:fontFamily="@font/bold_font"
-            android:textColor="@color/white"
-            android:textSize="18dp"
-            android:backgroundTint="@color/dark_gray"
-            android:padding="8dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="10dp"/>
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
-        <Button
-            android:id="@+id/stopTracking"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Stop Tracking"
-            android:textAllCaps="false"
-            android:fontFamily="@font/bold_font"
-            android:textColor="@color/white"
-            android:textSize="18dp"
-            android:backgroundTint="@color/dark_gray"
-            android:padding="8dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp"/>
-
-    </LinearLayout>
 
 </LinearLayout>

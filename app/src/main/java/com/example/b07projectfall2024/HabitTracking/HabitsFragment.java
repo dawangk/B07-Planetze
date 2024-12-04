@@ -1,6 +1,5 @@
 package com.example.b07projectfall2024.HabitTracking;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -38,8 +37,6 @@ public class HabitsFragment extends Fragment {
     DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser user = mAuth.getCurrentUser();
-
-    Context currentContext = getContext();
 
     public HabitsFragment() {
         // Required empty public constructor

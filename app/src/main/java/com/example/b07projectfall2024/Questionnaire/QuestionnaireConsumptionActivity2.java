@@ -12,9 +12,13 @@ import android.widget.RadioButton;
 
 import com.example.b07projectfall2024.R;
 
+/**
+ * QuestionnaireConsumptionActivity2
+ * This activity is the final of two responsible for recording the user's consumption emissions,
+ * and is also the final activity of the questionnaire, responsible for recording the user's total
+ * carbon emissions in the past year. It navigates to DisplayResultsActivity
+ */
 public class QuestionnaireConsumptionActivity2 extends AppCompatActivity {
-
-    Button next;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,18 +35,23 @@ public class QuestionnaireConsumptionActivity2 extends AppCompatActivity {
         double transit_emissions = intent.getDoubleExtra("transit_emissions", 0.0);
         double flight_emissions = intent.getDoubleExtra("flight_emissions", 0.0);
 
+        //Electronic device quantity options
         RadioButton less = findViewById(R.id.less);
         RadioButton min = findViewById(R.id.min);
         RadioButton mid = findViewById(R.id.mid);
         RadioButton more = findViewById(R.id.more);
         RadioButton max = findViewById(R.id.max);
+
+        //Recycling frequency options
         RadioButton never = findViewById(R.id.never);
         RadioButton occasionally = findViewById(R.id.occasionally);
         RadioButton frequently = findViewById(R.id.frequently);
         RadioButton always = findViewById(R.id.always);
 
-        next = findViewById(R.id.next);
+        //next button
+        Button next = findViewById(R.id.next);
 
+        //When next is clicked, do emission calculations and navigate to DisplayResultsActivity
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,12 +90,12 @@ public class QuestionnaireConsumptionActivity2 extends AppCompatActivity {
                     status2 = true;
                 }
 
-                //Checking if user responded
+                //Making sure user responded
                 if (status1 && status2) {
 
                     double total_emissions = emissions + consumption_emissions;
 
-                    //Moving to results page
+                    //Moving to results page, with all recorded information from questionnaire
                     Intent intent = new Intent(QuestionnaireConsumptionActivity2.this, DisplayResultsActivity.class);
                     intent.putExtra("final_emissions", total_emissions);
                     intent.putExtra("diet_emissions", diet_emissions);

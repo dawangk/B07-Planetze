@@ -4,17 +4,18 @@ import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.view.View;
 import android.widget.Button;
 import android.content.Intent;
 import android.widget.RadioButton;
 import com.example.b07projectfall2024.R;
-import com.google.firebase.database.FirebaseDatabase;
 
+/**
+ * QuestionnaireHousingActivity3
+ * This activity is the third of four responsible for recording the user's yearly housing
+ * emissions, and navigates to QuestionnaireHousingActivity4.
+ */
 public class QuestionnaireHousingActivity3 extends AppCompatActivity {
-
-    Button next;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,21 +34,25 @@ public class QuestionnaireHousingActivity3 extends AppCompatActivity {
         double transit_emissions = intent.getDoubleExtra("transit_emissions", 0.0);
         double flight_emissions = intent.getDoubleExtra("flight_emissions", 0.0);
 
+        //Bill price options
         RadioButton min = findViewById(R.id.min);
         RadioButton less = findViewById(R.id.less);
         RadioButton mid = findViewById(R.id.mid);
         RadioButton more = findViewById(R.id.more);
         RadioButton max = findViewById(R.id.max);
         RadioButton gas = findViewById(R.id.gas);
+
+        //Heat type options
         RadioButton electricity = findViewById(R.id.electricity);
         RadioButton oil = findViewById(R.id.oil);
         RadioButton propane = findViewById(R.id.propane);
         RadioButton solar = findViewById(R.id.solar);
         RadioButton other = findViewById(R.id.other);
-        next = findViewById(R.id.next);
 
-        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        //next button
+        Button next = findViewById(R.id.next);
 
+        //When next is clicked, do emission calculations and navigate to next set of questions
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,7 +60,7 @@ public class QuestionnaireHousingActivity3 extends AppCompatActivity {
                 int monthly_bill = 0;
                 String energy_type2 = "";
 
-                //Asking and storing the responses of prerequisite questions for main formula below
+                //Storing responses for the main calculations in QuestionnaireHousingActivity4
                 if (min.isChecked()) {
                     monthly_bill = 50;
                 } else if (less.isChecked()) {
@@ -82,10 +87,10 @@ public class QuestionnaireHousingActivity3 extends AppCompatActivity {
                     energy_type2 = "other";
                 }
 
-                //Checking if user responded
+                //Making sure user responded
                 if (monthly_bill != 0 && !energy_type2.isEmpty()) {
 
-                    //Moving to fourth set of housing questions
+                    //Navigating to QuestionnaireActivity4, with all obtained data thus far
                     Intent intent = new Intent(QuestionnaireHousingActivity3.this, QuestionnaireHousingActivity4.class);
                     intent.putExtra("current_emissions", emissions);
                     intent.putExtra("diet_emissions", diet_emissions);

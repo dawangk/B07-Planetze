@@ -11,9 +11,12 @@ import android.content.Intent;
 import android.widget.RadioButton;
 import com.example.b07projectfall2024.R;
 
+/**
+ * QuestionnaireMeatActivity
+ * This activity is the final of four responsible for calculating the user's diet emissions, and
+ * navigates to QuestionnaireHousingActivity
+ */
 public class QuestionnaireFoodActivity2 extends AppCompatActivity {
-
-    Button next;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,13 +31,16 @@ public class QuestionnaireFoodActivity2 extends AppCompatActivity {
         double transit_emissions = intent.getDoubleExtra("transit_emissions", 0.0);
         double flight_emissions = intent.getDoubleExtra("flight_emissions", 0.0);
 
+        //wasting leftovers frequency
         RadioButton never = findViewById(R.id.never);
         RadioButton rarely = findViewById(R.id.rarely);
         RadioButton occasionally = findViewById(R.id.occasionally);
         RadioButton frequently = findViewById(R.id.frequently);
 
-        next = findViewById(R.id.next);
+        //next button
+        Button next = findViewById(R.id.next);
 
+        //When next is clicked, do emission calculations and navigate to set of housing questions
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -50,13 +56,13 @@ public class QuestionnaireFoodActivity2 extends AppCompatActivity {
                     emissions2 += 140.4;
                 }
 
-                //Checking if user responded
+                //Making sure user responded
                 if (emissions2 != emissions || never.isChecked()) {
 
-                    //FINAL Storing the emissions that come from diet (both food activities + meat activities (if applicable)
+                    //Finalizing the user's emissions by diet
                     double diet_emissions = diet_emissions_rough+ (emissions2 - emissions);
 
-                    //Moving to the next set of questions about housing
+                    //Navigating to QuestionnaireHousingActivity
                     Intent intent = new Intent(QuestionnaireFoodActivity2.this, QuestionnaireHousingActivity.class);
                     intent.putExtra("current_emissions", emissions2);
                     intent.putExtra("diet_emissions", diet_emissions);

@@ -10,9 +10,12 @@ import android.widget.Button;
 
 import com.example.b07projectfall2024.R;
 
+/**
+ * QuestionnaireActivity
+ * This activity is the first that a user is redirected to upon registration. It informs the user of
+ * the questionnaire they are to complete, and gives them the option to begin the questionnaire.
+ */
 public class QuestionnaireActivity extends AppCompatActivity {
-
-    Button start;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,7 +23,10 @@ public class QuestionnaireActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_questionnaire);
 
-        start = findViewById(R.id.start_questionnaire_button);
+        //Start Questionnaire button
+        Button start = findViewById(R.id.start_questionnaire_button);
+
+        //When start is clicked, navigates to QuestionnaireActivity2
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

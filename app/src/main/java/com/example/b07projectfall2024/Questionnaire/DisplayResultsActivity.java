@@ -25,7 +25,14 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+/**
+ * DisplayResultsActivity
+ * This activity is responsible for displaying the user's total carbon emissions from the past year,
+ * with a breakdown of how much came from various factors, all obtained through the questionnaire
+ * activities. It navigates to MainActivity
+ */
 public class DisplayResultsActivity extends AppCompatActivity {
+    double kg_to_tons = 0.00110231; //kg to tons conversion rate
 
     // Firebase database reference
     private DatabaseReference dbReference;
@@ -56,38 +63,38 @@ public class DisplayResultsActivity extends AppCompatActivity {
         double transit_emissions = intent.getDoubleExtra("transit_emissions", 0.0);
         double flight_emissions = intent.getDoubleExtra("flight_emissions", 0.0);
 
+        //Total emissions
         TextView total_emissions_text = findViewById(R.id.total_emissions_text);
+
+        //Emissions my factor
         TextView car_emissions_text = findViewById(R.id.car_emissions);
         TextView transit_emissions_text = findViewById(R.id.transit_emissions);
         TextView flight_emissions_text = findViewById(R.id.flight_emissions);
         TextView diet_emissions_text = findViewById(R.id.diet_emissions);
         TextView housing_emissions_text = findViewById(R.id.housing_emissions);
         TextView consumption_emissions_text = findViewById(R.id.consumption_emissions);
-        TextView compare_global_text = findViewById(R.id.compare_global);
+      
         TextView compare_national_text = findViewById(R.id.compare_national); // Add a new TextView in XML
+
+        //Comparison to global standards
+        TextView compare_global_text = findViewById(R.id.compare_global);
+
+        //next button
         Button next = findViewById(R.id.next);
 
-        double kg_to_tons = 0.00110231;
+        //Displaying the user's total carbon emissions from the past year
+        total_emissions_text.setText(roundThreeDec(final_emissions * kg_to_tons) + " tons");
 
-        // Displaying the user's total carbon emissions
-        total_emissions_text.setText((final_emissions * kg_to_tons) + " tons");
+        //Displaying the breakdown of the user's carbon emissions by factor
+        TextView[] emissionsDisplays = {car_emissions_text, transit_emissions_text, flight_emissions_text,
+                diet_emissions_text, housing_emissions_text, consumption_emissions_text};
+        double[] emissions = {car_emissions, transit_emissions, flight_emissions, diet_emissions,
+                housing_emissions, consumption_emissions};
+        String[] factors = {"Car", "Transit", "Flight", "Diet", "Housing", "Consumption"};
+        displayBreakdown(emissions, emissionsDisplays, factors);
 
-        // Displaying the breakdown of the user's carbon emissions
-        car_emissions_text.setText("Car Emissions: " + (double) Math.round((car_emissions * kg_to_tons) * 1000) / 1000 + " tons");
-        transit_emissions_text.setText("Transit Emissions: " + (double) Math.round((transit_emissions * kg_to_tons) * 1000) / 1000 + " tons");
-        flight_emissions_text.setText("Flight Emissions: " + (double) Math.round((flight_emissions * kg_to_tons) * 1000) / 1000 + " tons");
-        diet_emissions_text.setText("Diet Emissions: " + (double) Math.round((diet_emissions * kg_to_tons) * 1000) / 1000 + " tons");
-        housing_emissions_text.setText("Housing Emissions: " + (double) Math.round((housing_emissions * kg_to_tons) * 1000) / 1000 + " tons");
-        consumption_emissions_text.setText("Consumption Emissions: " + (double) Math.round((consumption_emissions * kg_to_tons) * 1000) / 1000 + " tons");
-
-        // Comparing the user's carbon emissions to global targets (2 tons/CO2 per year)
-        double difference = (double) Math.round((2 - (final_emissions * kg_to_tons)) * 1000) / 1000;
-        boolean under = difference > 0;
-        String overUnder = "above";
-        if (under) {
-            overUnder = "below";
-        }
-        compare_global_text.setText("Your emissions are " + Math.abs(difference) + " tons " + overUnder + " global targets to reduce climate change!");
+        //Comparing the user's carbon emissions to global targets (2tons/CO2 per year)
+        compareGlobal(compare_global_text, final_emissions, 2);
 
         // Set up Spinner for country selection
         setupCountrySpinner(final_emissions * kg_to_tons);
@@ -109,10 +116,14 @@ public class DisplayResultsActivity extends AppCompatActivity {
                 m.put("housing_emissions", housing_emissions * kg_to_tons);
                 m.put("consumption_emissions", consumption_emissions * kg_to_tons);
 
-                dbReference.child("users").child(user.getUid()).child("questionnaire_emissions").setValue(m).addOnSuccessListener(
+                db.child("users").child(user.getUid())
+                        .child("questionnaire_emissions").setValue(m).addOnSuccessListener(
+
                         documentReference -> {
 
-                            Intent intent2 = new Intent(DisplayResultsActivity.this, MainActivity.class);
+                            //Navigating to Main Activity
+                            Intent intent2 = new Intent(DisplayResultsActivity.this,
+                                    MainActivity.class);
                             startActivity(intent2);
                             finish();
 
@@ -123,6 +134,48 @@ public class DisplayResultsActivity extends AppCompatActivity {
         });
     }
 
+
+    /**
+     * Rounds a decimal value to 3 decimal places
+     * @param toRound The 'double' value to round
+     * @return toRound rounded to 3 decimal places as a 'double'
+     */
+    private double roundThreeDec(double toRound) {
+        return (double)Math.round(toRound * 1000) / 1000;
+    }
+
+    /**
+     * Displays a breakdown of emissions to various TextViews in tons, with each statement
+     * working with a the same index from each of the 3 input arrays
+     * @param emissions The array of emissions values to display. Must be in kg.
+     * @param emissionDisplays The array of TextViews to which emissions are displayed
+     * @param factors The array of Strings that each emission corresponds to
+     */
+    private void displayBreakdown(double[] emissions, TextView[] emissionDisplays, String[] factors) {
+        for (int i = 0; i < emissionDisplays.length; i++) {
+            emissionDisplays[i].setText(factors[i] + " Emissions: "
+                    + roundThreeDec(emissions[i] * kg_to_tons) + " tons");
+        }
+
+    }
+
+    /**
+     * Displays a comparison of an emission value and corresponding global standard
+     * @param view The TextView to which the comparison is displayed
+     * @param finalEmissions The emission value to compare (must be in kg)
+     * @param globalStandard The global standard to compare to (must be in tons)
+     */
+    private void compareGlobal(TextView view, double finalEmissions, double globalStandard) {
+        double diff = roundThreeDec(globalStandard - (finalEmissions * kg_to_tons));
+        boolean under = diff > 0;
+        String overUnder = "above";
+        if (under) {
+            overUnder = "below";
+        }
+        view.setText("Your emissions are " + Math.abs(diff) + " tons " + overUnder
+                + " global targets to reduce climate change!");
+
+      
     // Set up spinner for country selection and comparison
     private void setupCountrySpinner(double userEmissionsInTons) {
 
